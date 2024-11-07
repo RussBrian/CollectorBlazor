@@ -2,7 +2,7 @@
 @using Collector.Client.Components.Pages.Register;
 @using Collector.Client.Entities
 
-<MudMainContent Class="login-container">
+<BaseScreen CustomStyles="background-color:#25251D">
     <div Class="secondary-container">
         <!-- Columna izquierda (Bienvenida) -->
         <MudPaper Class="left-container">
@@ -34,30 +34,27 @@
             <MudText Typo="Typo.h4" Class="login-text fw-bold ms-4 mb-2">Iniciar Sesión</MudText>
             <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
 
-                <MudTextField @bind-Value="loginModel.Email" Label="Correo electrónico" Type="email" Class="w-full mb-3" Required="true" />
-                <MudTextField @bind-Value="loginModel.Password" Label="Contraseña" Type="password" Class="w-full" Required="true" />
+            @*Inputs for the user *@
+                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
+                              Label="Correo electrónico" Type="email" Class="custom-label w-full mb-3" />
+                
+                <MudTextField @bind-Value="loginModel.Password" Variant="Variant.Outlined"
+                              Label="Contraseña" Type="password" Class="custom-label w-full" />
+
+                <MudText Class="ms-15 mt-3">
+                    <NavLink href="ForgotPassword" style="color:#4C673C; font-weight:bolder" class="forgetPasswordText">¿Olvidaste tu contraseña?</NavLink>
+                </MudText>
 
                 <MudButton Variant="Variant.Filled" Type="Submit" Class="login-btn">
                     Inicia Sesión
                 </MudButton>
 
-                <MudText Class="text-right mt-3" >
-                    <NavLink href="ForgotPassword" style="color:#4C673C" class="forgetPasswordText">¿Olvidaste tu contraseña?</NavLink>
-                </MudText>
-
             </EditForm>
         </MudPaper>
     </div>
-</MudMainContent>
+</BaseScreen>
 
 <style>
-    .login-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #25251D;
-    }
 
     .secondary-container {
         display: flex;
@@ -100,6 +97,11 @@
         margin-bottom: 24px;
     }
 
+    login-input {
+        background-color: #FFFCFC91;
+        border-radius:20px;
+    }
+
     .register-text {
         font-weight: bold;
         color: #4a4a4a;
@@ -126,6 +128,13 @@
         color: white;
         border-radius: 8px;
         cursor: pointer;
+    }
+
+    .custom-label .mud-input-label {
+        background-color: #D0D0CF; /* Cambia este color al que tienes en el contenedor /
+        color:  black; / Color del texto del label, ajusta según prefieras */
+        padding: 0 4px;
+        font-weight:bold;
     }
 </style>
 

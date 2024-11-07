@@ -1,6 +1,6 @@
 ﻿@inherits ComponentBase
 
-<MudMainContent Class="login-container">
+<MudMainContent Class="login-container" Style="@CustomStyles">
     @ChildContent;
 </MudMainContent>
 
@@ -15,4 +15,5 @@
 
 @code{
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? CustomStyles { get; set; }
 }
