@@ -6,14 +6,15 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudDrawer Variant="@DrawerVariant.Mini" Overlay="true" OverlayAutoClose="true" OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
-        <NavMenu/>
+<MudLayout class="bg-white">
+    <MudDrawer Variant="DrawerVariant.Mini"
+               Overlay="true" OverlayAutoClose="true"
+               OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
+        <NavMenu />
     </MudDrawer>
     @Body
 </MudLayout>
 
-
-@code{
+@code {
     bool _drawerOpen = false;
 }

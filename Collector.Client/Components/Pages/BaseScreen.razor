@@ -1,0 +1,18 @@
+﻿@inherits ComponentBase
+
+<MudMainContent Class="login-container">
+    @ChildContent;
+</MudMainContent>
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
+
+@code{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}
