@@ -1,0 +1,19 @@
+﻿@inherits LayoutComponentBase
+@rendermode InteractiveServer
+
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudDrawer Variant="@DrawerVariant.Mini" Overlay="true" OverlayAutoClose="true" OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
+        <NavMenu/>
+    </MudDrawer>
+    @Body
+</MudLayout>
+
+
+@code{
+    bool _drawerOpen = false;
+}
