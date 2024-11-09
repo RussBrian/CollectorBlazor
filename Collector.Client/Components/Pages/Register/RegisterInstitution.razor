@@ -1,0 +1,257 @@
+﻿@page "/RegisterInstitution"
+@using Collector.Client.Entities
+
+
+<BaseScreen>
+    <div class="main-container">
+        <!-- Form Container -->
+        <MudPaper Class="form-container">
+            <MudForm @ref="form" Model="@registerInstitutionViewModel" OnValidSubmit="HandleValidSubmit">
+
+                <!-- Progress Bar -->
+                <div class="custom-progress-bar">
+                    <div class="custom-content-bar" style="width: @(step * 25)%"></div>
+                </div>
+
+                <!-- Step Header -->
+                <div class="step-header">
+                    <MudText Typo="Typo.h6" Class="custom-step">Paso @(step)-4</MudText>
+                    <MudText Typo="Typo.h6" Class="step-title">Registrar Institucion</MudText>
+                </div>
+
+                <!-- Form Steps -->
+                @if (step == 1)
+                {
+                <MudTextField @bind-Value="@registerInstitutionViewModel.Name" Label="Nombre de la institucion" Required="true" Class="custom-input" />
+                <MudTextField @bind-Value="@registerInstitutionViewModel.RNC" Label="Rnc" Required="true" Class="custom-input" />
+                <MudTextField @bind-Value="@registerInstitutionViewModel.Representative" Label="Representante" Required="true" Class="custom-input" />
+                <p class="custom-message-required">* El campo es requerido.</p>
+                }
+                @if (step == 2)
+                {
+                <MudTextField @bind-Value="@registerInstitutionViewModel.Email" Label="Correo electrónico" Required="true" Class="custom-input" />
+                <MudTextField @bind-Value="@registerInstitutionViewModel.Address" Label="Direccion" Required="true" Class="custom-input" />
+                <MudTextField @bind-Value="@registerInstitutionViewModel.Phone" Label="Teléfono" Required="true" Class="custom-input" />
+                <p class="custom-message-required">* El campo es requerido.</p>
+                }
+                @if (step == 3)
+                {
+                <MudTextField @bind-Value="@registerInstitutionViewModel.Password" Label="Contraseña" Required="true" InputType="InputType.Password" Class="custom-input" />
+                <MudTextField @bind-Value="@registerInstitutionViewModel.ConfirmPassword" Label="Confirmar Contraseña" Required="true" InputType="InputType.Password" Class="custom-input" />
+                <p class="custom-message">La contraseña debe contener al menos: 1 letra, 8 caracteres, 1 número y 1 carácter especial ("@@", "!", "#", ".") </p>
+                }
+                @if (step == 4)
+                {
+                <div class="custom-image-title">Foto de Perfil</div>
+                <MudFileUpload T="IBrowserFile" @bind-Value="@registerInstitutionViewModel.ProfileImage" AcceptedFileTypes="image/*" MaxFileSize="2097152" />
+                @if (registerInstitutionViewModel.ProfileImage != null)
+                {
+                <MudText Typo="Typo.body2">Vista previa:</MudText>
+                <img src="@GetImagePreview(registerInstitutionViewModel.ProfileImage)" alt="Imagen de perfil" width="100" height="100" class="image-preview" />
+                }
+                <p class="custom-message-image">Puedes dar clic en el círculo para seleccionar una imagen o dejar el avatar por defecto.</p>
+                }
+
+                <!-- Navigation Buttons -->
+                <div class="buttons-container">
+                    <MudButton OnClick="PreviousStep" Disabled="@(step == 1)" Class="return-login-btn return-login-btn-apparience">Paso anterior</MudButton>
+                    @if (step < 4)
+                    {
+                    <MudButton OnClick="NextStep" Class="custom-next-Btn custom-next-Btn-apparience">Siguiente</MudButton>
+                    }
+                    else
+                    {
+                    <MudButton Type="Submit" Class="custom-next-Btn custom-next-Btn-apparience">Registrar</MudButton>
+                    }
+                </div>
+
+            </MudForm>
+        </MudPaper>
+        <!-- Aside Background -->
+        <aside class="aside-background"></aside>
+    </div>
+</BaseScreen>
+
+
+@code {
+    private int step = 1; 
+    private MudForm form;
+    private RegisterInstitutionViewModel registerInstitutionViewModel = new();
+
+    
+    private void NextStep()
+    {
+        if (step < 4)
+            step++;
+    }
+
+    private void PreviousStep()
+    {
+        if (step > 1)
+            step--;
+    }
+    
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("Formulario enviado exitosamente.");
+    }
+
+    private string GetImagePreview(IBrowserFile file)
+    {
+        var buffer = new byte[file.Size];
+        file.OpenReadStream().ReadAsync(buffer);
+        return $"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}";
+    }
+}
+
+<style>
+    .main-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        background-color: #25251D;
+        overflow: hidden;
+    }
+
+    .aside-background {
+        background-color: #474A42;
+        width: 25%;
+        height: 100vh;
+    }
+
+    .form-container {
+        width: 50%;
+        padding: 2rem;
+        margin: auto;
+        background-color: #1f1f1f;
+        border-radius: 8px;
+        max-width: 600px;
+        min-width: 400px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-progress-bar {
+        width: 100%;
+        height: 20px;
+        background-color: #555;
+        border: 4px solid #B4DCAC;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+    }
+
+    .custom-content-bar {
+        height: 100%;
+        background-color: green;
+        border-radius: 5px;
+    }
+
+    .step-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .custom-step {
+        color: #7B885B;
+        font-weight: bold;
+        margin-right: 1rem;
+    }
+
+    .step-title {
+        color: #62D8AC;
+        font-size: 1.2rem;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: transparent;
+        color: white;
+        border: 2px solid #B4DCAC;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .custom-message-required {
+        color: #7B885B;
+        font-weight: bold;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+    }
+
+    .custom-message {
+        color: #9C6262;
+        font-weight: bold;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+    }
+
+    .custom-image-title {
+        color: #BDBBBB;
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 1rem;
+    }
+
+    .image-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-top: 1rem;
+    }
+
+    .buttons-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+
+    .return-login-btn {
+        font-size: 0.875rem;
+        font-weight: bold;
+        color: #A1A1A1;
+        background-color: transparent;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .return-login-btn-apparience {
+        background-color: #7B885B;
+        color: white;
+    }
+
+    .return-login-btn:hover {
+        background-color: #555555;
+    }
+
+    .custom-next-Btn {
+        font-size: 0.875rem;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .custom-next-Btn-apparience {
+        background-color: #62D8AC;
+        color: white;
+    }
+
+    .custom-next-Btn:hover {
+        background-color: #3EBD92;
+    }
+
+    .custom-message-image {
+        color: #A9A9A9;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+</style>

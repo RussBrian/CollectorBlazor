@@ -2,7 +2,7 @@
 @using Collector.Client.Components.Pages.Register;
 @using Collector.Client.Entities
 @using Newtonsoft.Json
-@inject Collector.Client.SessionHelpers.CookieService cookies;
+@inject CookieService cookies;
 @inject NavigationManager Navigation;
 
 <BaseScreen CustomStyles="background-color:#25251D">
@@ -24,7 +24,7 @@
                 <span class="font-bold">¡Vamos regístrate!</span>
             </MudText>
             <MudButtonGroup Variant="Variant.Filled">
-                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" Href="/RegisterUser">
+                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" Href="/RegisterInstitution">
                     Institución
                 </MudButton>
                 <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" Href="/RegisterUser">
