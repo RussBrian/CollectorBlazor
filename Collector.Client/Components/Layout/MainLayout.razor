@@ -1,13 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @rendermode InteractiveServer
 
-<MudThemeProvider />
+<MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout class="bg-white">
-@*     <MudDrawer Variant="DrawerVariant.Mini"
+   @*  <MudDrawer Variant="DrawerVariant.Mini"
                Overlay="true" OverlayAutoClose="true"
                OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
         <NavMenu />
@@ -17,4 +17,40 @@
 
 @code {
     bool _drawerOpen = false;
+    bool _isDark = true;
+
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            PaletteDark = new PaletteDark()
+            {
+                Background = "#141625",
+                TextPrimary = Colors.Gray.Lighten1,
+                TextSecondary = Colors.Gray.Lighten1,
+                Primary = "#7B885B",
+                Secondary = "#fff",
+                Tertiary = "rgba(255,64,129,1)",
+                AppbarBackground = Colors.BlueGray.Lighten2,
+                DrawerBackground = "#13151f",
+                DrawerText = Colors.Gray.Lighten5,
+                DrawerIcon = "rgba(255,64,129,1)",
+            },
+            PaletteLight = new PaletteLight()
+            {
+                Background = Colors.Gray.Lighten4,
+                TextPrimary = Colors.Gray.Darken4,
+                Primary = "rgba(255,64,129,1)",
+                Secondary = "#fff",
+                Tertiary = "rgba(255,64,129,1)",
+                AppbarBackground = Colors.BlueGray.Lighten2,
+                DrawerBackground = Colors.Gray.Lighten4,
+                DrawerText = Colors.Gray.Darken4,
+                DrawerIcon = "rgba(255,64,129,1)",
+            },
+
+            LayoutProperties = new LayoutProperties()
+            {
+                DrawerWidthLeft = "260px",
+                DrawerWidthRight = "300px"
+            }
+        };
 }
