@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @rendermode InteractiveServer
 
-<MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark" />
+<MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark"/>
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -24,14 +24,14 @@
             PaletteDark = new PaletteDark()
             {
                 Background = "#141625",
-                TextPrimary = Colors.Gray.Lighten1,
-                TextSecondary = Colors.Gray.Lighten1,
+                TextPrimary = Colors.Gray.Darken4,
+                TextSecondary = Colors.Gray.Darken4,
                 Primary = "#7B885B",
-                Secondary = "#fff",
+                Secondary = Colors.Gray.Darken4,
                 Tertiary = "rgba(255,64,129,1)",
                 AppbarBackground = Colors.BlueGray.Lighten2,
                 DrawerBackground = "#13151f",
-                DrawerText = Colors.Gray.Lighten5,
+                DrawerText = Colors.Gray.Darken4,
                 DrawerIcon = "rgba(255,64,129,1)",
             },
             PaletteLight = new PaletteLight()

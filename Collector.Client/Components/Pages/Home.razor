@@ -1,11 +1,15 @@
 ﻿@page "/"
 @using Collector.Client.Components.Pages.Register;
 @using Collector.Client.Entities
+@using Newtonsoft.Json
+@inject Collector.Client.SessionHelpers.CookieService cookies;
+@inject NavigationManager Navigation;
 
 <BaseScreen CustomStyles="background-color:#25251D">
+    
     <div Class="secondary-container">
         <!-- Columna izquierda (Bienvenida) -->
-        <MudPaper Class="left-container">
+        <div Class="left-container">
             <MudText Typo="Typo.h4" Class="welcome-text">
                 BIENVENIDO <br />A<br /> COLLECTORD
             </MudText>
@@ -20,37 +24,42 @@
                 <span class="font-bold">¡Vamos regístrate!</span>
             </MudText>
             <MudButtonGroup Variant="Variant.Filled">
-                <MudButton Class="register-btn" Href="/RegisterUser">
+                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" Href="/RegisterUser">
                     Institución
                 </MudButton>
-                <MudButton Class="register-btn" Href="/RegisterUser">
+                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" Href="/RegisterUser">
                     Persona
                 </MudButton>
             </MudButtonGroup>
-        </MudPaper>
+        </div>
 
         <!-- Columna derecha (Formulario de inicio de sesión) -->
-        <MudPaper Class="right-container">
+        <div Class="right-container">
             <MudText Typo="Typo.h4" Class="login-text fw-bold ms-4 mb-2">Iniciar Sesión</MudText>
-            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
-
+            <EditForm Model="@loginModel" OnValidSubmit="() => HandleLogin(loginModel)">
+            <DataAnnotationsValidator/>
             @*Inputs for the user *@
-                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
-                              Label="Correo electrónico" Type="email" Class="custom-label w-full mb-3" />
                 
+                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined" 
+                              Label="Correo electrónico" Type="email" Class="custom-label w-full mb-3" />
+                <ValidationMessage For="(() => loginModel.Email)"/>
+
                 <MudTextField @bind-Value="loginModel.Password" Variant="Variant.Outlined"
                               Label="Contraseña" Type="password" Class="custom-label w-full" />
+                <ValidationMessage For="(() => loginModel.Password)"/>
 
                 <MudText Class="ms-15 mt-3">
                     <NavLink href="ForgotPassword" style="color:#4C673C; font-weight:bolder" class="forgetPasswordText">¿Olvidaste tu contraseña?</NavLink>
                 </MudText>
 
-                <MudButton Variant="Variant.Filled" Type="Submit" Class="login-btn">
-                    Inicia Sesión
+                <MudButton Variant="Variant.Filled" 
+                Style="background-color:#7B885B; margin-top:10px; 
+                        color:white; width:100%">
+                    Iniciar Sesion
                 </MudButton>
 
             </EditForm>
-        </MudPaper>
+        </div>
     </div>
 </BaseScreen>
 
@@ -127,7 +136,6 @@
         padding: 12px 0;
         color: white;
         border-radius: 8px;
-        cursor: pointer;
     }
 
     .custom-label .mud-input-label {
@@ -140,10 +148,34 @@
 
 
 @code {
-    private LoginViewModel loginModel = new LoginViewModel();
+    private LoginViewModel loginModel = new();
 
-    private void HandleLogin()
+    public async Task<Response<SessionViewModel>> HandleLogin(LoginViewModel loginModel)
     {
-        // Lógica para manejar el inicio de sesión
+        var url = new Uri("http://localhost:5004/api/Authentication/login");
+        Response<SessionViewModel> session = new();
+
+        using(var client = new HttpClient())
+        {
+            using(var response = await client.PostAsJsonAsync(url,loginModel))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    session = JsonConvert.DeserializeObject<Response<SessionViewModel>>(content);
+                    cookies.SetCookies("session", session.value);
+                    return session;
+                }
+                else
+                {
+                    return session;   
+                }
+            }
+        }
+    }
+
+    public void Navigator()
+    {
+        
     }
 }
