@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @rendermode InteractiveServer
 
-<MudThemeProvider />
+<MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark"/>
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -17,4 +17,40 @@
 
 @code {
     bool _drawerOpen = false;
+    bool _isDark = true;
+
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            PaletteDark = new PaletteDark()
+            {
+                Background = "#141625",
+                TextPrimary = Colors.Gray.Darken4,
+                TextSecondary = Colors.Gray.Darken4,
+                Primary = "#7B885B",
+                Secondary = Colors.Gray.Darken4,
+                Tertiary = "rgba(255,64,129,1)",
+                AppbarBackground = Colors.BlueGray.Lighten2,
+                DrawerBackground = "#13151f",
+                DrawerText = Colors.Gray.Darken4,
+                DrawerIcon = "rgba(255,64,129,1)",
+            },
+            PaletteLight = new PaletteLight()
+            {
+                Background = Colors.Gray.Lighten4,
+                TextPrimary = Colors.Gray.Darken4,
+                Primary = "rgba(255,64,129,1)",
+                Secondary = "#fff",
+                Tertiary = "rgba(255,64,129,1)",
+                AppbarBackground = Colors.BlueGray.Lighten2,
+                DrawerBackground = Colors.Gray.Lighten4,
+                DrawerText = Colors.Gray.Darken4,
+                DrawerIcon = "rgba(255,64,129,1)",
+            },
+
+            LayoutProperties = new LayoutProperties()
+            {
+                DrawerWidthLeft = "260px",
+                DrawerWidthRight = "300px"
+            }
+        };
 }
