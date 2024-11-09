@@ -6,6 +6,8 @@ namespace Collector.Client
     {
         public static void AddWebDependencies(this IServiceCollection services)
         {
+            services.AddHttpClient();
+
             services.AddRazorComponents()
                  .AddInteractiveServerComponents();
             services.AddHttpContextAccessor();
