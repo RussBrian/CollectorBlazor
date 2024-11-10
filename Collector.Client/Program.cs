@@ -1,10 +1,18 @@
 using Collector.Client.Components;
 using Collector.Client;
 using MudBlazor.Services;
+using Collector.Client.Utilities.Options;
+using Collector.Client.Utilities.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Configuracion de propiedades para las propiedades de configuracion
+//Estas propiedades se definen en el launchSetting. Aunque se le puede asignar un valor por defecto.
+builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(nameof(AppOptions)));
+
 // Add services to the container.
+
+builder.Services.AddTransient<HttpClientServiceExtensions>();
 
 builder.Services.AddMudServices();
 builder.Services.AddWebDependencies();
