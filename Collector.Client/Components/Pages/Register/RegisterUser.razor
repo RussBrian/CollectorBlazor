@@ -1,5 +1,7 @@
 ﻿@page "/RegisterUser"
 @using Collector.Client.Entities
+@using Collector.Client.Services.Register
+@inject IRegisterService _registerService
 
 <BaseScreen>
     <div class="main-container">
@@ -60,7 +62,7 @@
                     }
                     else
                     {
-                        <MudButton Type="Submit" Class="custom-next-Btn custom-next-Btn-apparience">Registrar</MudButton>
+                        <MudButton Type="Submit" Class="custom-next-Btn custom-next-Btn-apparience" OnClick="HandleValidSubmit">Registrar</MudButton>
                     }
                 </div>
 
@@ -88,15 +90,41 @@
             step--;
     }
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-        Console.WriteLine("Formulario enviado exitosamente.");
+        byte[] imageBytes = null;
+
+        if (registerUserViewModel.ProfileImage != null)
+        {
+            using (var stream = registerUserViewModel.ProfileImage.OpenReadStream())
+            {
+                imageBytes = new byte[registerUserViewModel.ProfileImage.Size];
+                await stream.ReadAsync(imageBytes);
+            }
+        }
+
+        var response = await _registerService.RegisterUserAsync(new ReqRegistrationDto
+        {
+            FristName = registerUserViewModel.Name,
+            LastName = registerUserViewModel.LastName,
+            UserName = registerUserViewModel.UserName,
+            Phone = registerUserViewModel.Phone,
+            Email = registerUserViewModel.Email,
+            Identification = registerUserViewModel.Identification,
+            Gender = registerUserViewModel.Gender,
+            Address = registerUserViewModel.Address,
+            Password = registerUserViewModel.Password,
+            RoleId = registerUserViewModel.RoleId,
+            Image = "image.jpg" 
+        }, imageBytes);
+
+        Console.WriteLine(response);
     }
 
-    private string GetImagePreview(IBrowserFile file)
+    private async Task<string> GetImagePreview(IBrowserFile file)
     {
-        var buffer = new byte[file.Size];
-        file.OpenReadStream().ReadAsync(buffer);
+        byte[] buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
         return $"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}";
     }
 }

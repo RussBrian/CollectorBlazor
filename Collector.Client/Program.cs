@@ -1,5 +1,6 @@
 using Collector.Client.Components;
 using Collector.Client;
+using Collector.Client.Services;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMudServices();
 builder.Services.AddWebDependencies();
+builder.Services.AddServicesRegistration();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using Collector.Client.SessionHelpers;
+﻿using Collector.Client.Services.Register;
+using Collector.Client.SessionHelpers;
 
 namespace Collector.Client
 {
