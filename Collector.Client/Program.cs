@@ -3,6 +3,7 @@ using Collector.Client;
 using MudBlazor.Services;
 using Collector.Client.Utilities.Options;
 using Collector.Client.Utilities.Extensions;
+using Collector.Client.Services.Login;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(nameof(AppOptions)));
 
 // Add services to the container.
-
 builder.Services.AddTransient<HttpClientServiceExtensions>();
-
 builder.Services.AddMudServices();
 builder.Services.AddWebDependencies();
 

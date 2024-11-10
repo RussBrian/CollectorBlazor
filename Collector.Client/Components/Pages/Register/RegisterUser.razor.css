@@ -40,6 +40,7 @@
     background-color: green;
     border-radius: 5px;
 }
+
 .step-header {
     display: flex;
     align-items: center;
@@ -80,6 +81,6 @@
 
 .buttons-container {
     display: flex;
-  width: 100%;
+    width: 100%;
 }
 
