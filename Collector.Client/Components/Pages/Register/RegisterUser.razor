@@ -74,6 +74,8 @@
             @if (step == 4)
             {
                 <div class="custom-image-title">Foto de Perfil</div>
+                <MudTextField @bind-Value="@registerUserViewModel.ProfileImage" InputType="InputType.Hidden" />
+
                 <MudFileUpload T="IBrowserFile" @bind-Value="@registerUserViewModel.ProfileImage" AcceptedFileTypes="image/*" MaxFileSize="2097152" />
                 @if (registerUserViewModel.ProfileImage != null)
                 {
