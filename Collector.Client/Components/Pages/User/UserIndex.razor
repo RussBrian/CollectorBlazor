@@ -1,0 +1,25 @@
+﻿@page "/user/index"
+@using Collector.Client.Services.Login;
+@inject ILoginService loginservice;
+@inject NavigationManager navigatorManager
+
+<BaseScreen CustomStyles="background-color:#CED6C8">
+    <h1>Welcome to collector</h1>
+
+    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+               Style="background-color:#7B885B; margin-top:10px;
+                  color:white; width:100%"
+               OnClick="CerrarSesion">
+        Cerrar sesión
+    </MudButton>
+
+</BaseScreen>
+
+
+@code{
+    public async Task CerrarSesion()
+    {
+        await loginservice.Logout();
+        navigatorManager.NavigateTo("/");
+    }
+}

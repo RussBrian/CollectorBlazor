@@ -1,6 +1,6 @@
 ﻿@page "/RegisterUser"
-@inject NavigationManager Navigation
-@using Collector.Client.Entities
+@using Collector.Client.Dtos.Login
+@using Collector.Client.Dtos
 
 
 <div class="main-container">
@@ -109,7 +109,7 @@
 @code {
     private int step = 1;
     private MudForm form;
-    private RegisterUserViewModel registerUserViewModel = new();
+    private ReqUserDto registerUserViewModel = new();
 
     private void NextStep()
     {

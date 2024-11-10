@@ -1,6 +1,5 @@
-﻿using Collector.Client.Entities;
+﻿using Collector.Client.Dtos.Login;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 
 namespace Collector.Client.Validations
 {
@@ -8,7 +7,7 @@ namespace Collector.Client.Validations
     {
         protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
-            var model = (LoginViewModel)validationContext.ObjectInstance;
+            var model = (ReqLoginDto)validationContext.ObjectInstance;
 
             if (model.Password.Length >= 20)
             {
