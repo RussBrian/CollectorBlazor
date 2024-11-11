@@ -15,7 +15,7 @@ namespace Collector.Client.Services
             _appOptions = options.Value;
         }
 
-        public async Task<object?> GetUser() => await _httpClientService.CustomGetAsync<User>(_appOptions.UrlExampleService, null);
+        public async Task<object?> GetUser() => await _httpClientService.CustomGetAsync<User>(_appOptions.UrlExampleService);
         public async Task<object?> GetUserById(int id) => await _httpClientService.CustomGetAsync<User>(_appOptions.UrlExampleService, id);
 
         public async Task<ResponseUser?> PostUser(User user)

@@ -15,9 +15,9 @@ namespace Collector.Client.Utilities.Extensions
         //Dirigirse a la carpeta service, al archivo "ExampleService", este permitira que puedan ver como crear los metodos para consumir estos servicios.
 
 
-        public async Task<object?> CustomGetAsync<TResponse>(string uri, object? identificador)
+        public async Task<object?> CustomGetAsync<TResponse>(string uri, object? identifier = null)
         {
-            string fullUri = $"{uri}{identificador}";
+            string fullUri = $"{uri}{identifier}";
 
             Uri url = new(fullUri);
 
