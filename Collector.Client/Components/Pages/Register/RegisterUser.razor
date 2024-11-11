@@ -20,9 +20,7 @@
                 <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 10px;">Registrar Persona</MudText>
             </div>
 
-            <div>
-                @if (step == 1)
-                {
+            <div> 
                     <button class="back-to-login-btn" @onclick="NavigateToLogin">
                         <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
                             <path d="M0 0h24v24H0z" fill="none" />
@@ -30,17 +28,6 @@
                         </svg>
                         Login
                     </button>
-                }
-                else
-                {
-                    <button class="back-to-login-btn" @onclick="PreviousStep">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
-                            <path d="M0 0h24v24H0z" fill="none" />
-                            <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" fill="#BDBBBB" transform="scale(1.4, 1.4)" />
-                        </svg>
-                        Paso Anterior
-                    </button>
-                }
 
             </div>
             <!-- Form Steps -->
@@ -96,7 +83,7 @@
                 {
                     <MudButton Type="Submit" Variant="Variant.Filled" Style="color:white; background-color:#7B885B; width:250px;">Registrar</MudButton>
                 }
-                <button @onclick="NavigateToLogin" Variant="Variant.Filled" class="return-login-btn return-login-btn-apparience">Volver al Login</button>
+                <button @onclick="PreviousStep" Variant="Variant.Filled" class="previous-step-btn previous-step-btn-apparience">Paso Anterior</button>
             </div>
 
         </MudForm>
