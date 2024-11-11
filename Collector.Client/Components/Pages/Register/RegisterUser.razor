@@ -17,17 +17,17 @@
             <!-- Step Header -->
             <div class="step-header">
                 <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-4</MudText>
-                <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 10px;">Registrar Persona</MudText>
+                <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Registrar Persona</MudText>
             </div>
 
-            <div> 
-                    <button class="back-to-login-btn" @onclick="NavigateToLogin">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
-                            <path d="M0 0h24v24H0z" fill="none" />
-                            <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" fill="#BDBBBB" transform="scale(1.4, 1.4)" />
-                        </svg>
-                        Login
-                    </button>
+            <div>
+                <button class="back-to-login-btn" @onclick="NavigateToLogin">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" fill="#BDBBBB" transform="scale(1.4, 1.4)" />
+                    </svg>
+                    Login
+                </button>
 
             </div>
             <!-- Form Steps -->
@@ -54,7 +54,7 @@
             @if (step == 3)
             {
                 <label class="custom-label">Contraseña</label>
-                <MudTextField @bind-Value="@registerUserViewModel.Password" Required="true" InputType="InputType.Password" Variant="Variant.Outlined" Style="color:white;"/>
+                <MudTextField @bind-Value="@registerUserViewModel.Password" Required="true" InputType="InputType.Password" Variant="Variant.Outlined" Style="color:white;" />
                 <label class="custom-label mt-5">Confirmar Contraseña</label>
                 <MudTextField @bind-Value="@registerUserViewModel.ConfirmPassword" Required="true" InputType="InputType.Password" Variant="Variant.Outlined" Style="color:white;" />
                 <p class="custom-message">La contraseña debe contener al menos: 1 letra, 8 caracteres, 1 número y 1 carácter especial ("@@", "!", "#", ".") </p>
@@ -83,7 +83,10 @@
                 {
                     <MudButton Type="Submit" Variant="Variant.Filled" Style="color:white; background-color:#7B885B; width:250px;">Registrar</MudButton>
                 }
-                <button @onclick="PreviousStep" Variant="Variant.Filled" class="previous-step-btn previous-step-btn-apparience">Paso Anterior</button>
+                @if (step > 1)
+                {    
+                    <MudButton OnClick="PreviousStep" Variant="Variant.Outlined" Style="background-color:transparent; width: 180px; border: 3px solid #767572; color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
+                }
             </div>
 
         </MudForm>
