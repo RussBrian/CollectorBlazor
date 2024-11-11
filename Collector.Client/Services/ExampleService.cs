@@ -4,10 +4,16 @@ using Microsoft.Extensions.Options;
 
 namespace Collector.Client.Services
 {
-    public class ExampleService(HttpClientServiceExtensions httpClientService, IOptions<AppOptions> options)
+    public class ExampleService
     {
-        private readonly HttpClientServiceExtensions _httpClientService = httpClientService;
-        private readonly AppOptions _appOptions = options.Value;
+        private readonly HttpClientServiceExtensions _httpClientService;
+        private readonly AppOptions _appOptions;
+
+        public ExampleService(HttpClientServiceExtensions httpClientService, IOptions<AppOptions> options)
+        {
+            _httpClientService = httpClientService;
+            _appOptions = options.Value;
+        }
 
         public async Task<object?> GetUser() => await _httpClientService.CustomGetAsync<ReqExample>(_appOptions.UrlExampleService);
         public async Task<object?> GetUserById(int id) => await _httpClientService.CustomGetAsync<ReqExample>(_appOptions.UrlExampleService, id);
