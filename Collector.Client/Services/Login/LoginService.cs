@@ -1,5 +1,5 @@
-﻿using Collector.Client.Dtos;
-using Collector.Client.Dtos.Login;
+﻿using Collector.Client.Dtos.Login;
+using Collector.Client.Dtos.Response;
 using Collector.Client.SessionHelpers;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
@@ -24,14 +24,12 @@ namespace Collector.Client.Services.Login
         {
            var result = await _httpclientService.CustomPostAsync<Response<ResLoginDto>,
                 ReqLoginDto>(_options.UrlLoginService, loginVm);
-                await _sesionManager.SetSessions("session", result.Value);
+                await _sesionManager.UpdateAuthenticationState(result.Value);
         }
 
-        public async Task Logout()
+        public async Task Logout(ResLoginDto userVm)
         {
-            await _sesionManager.DeleteSession("session");
+            await _sesionManager.UpdateAuthenticationState(userVm);
         }
     }
-
-
 }
