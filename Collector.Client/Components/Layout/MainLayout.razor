@@ -1,23 +1,27 @@
-﻿@inherits LayoutComponentBase
+﻿@using Collector.Client.SessionHelpers
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inherits LayoutComponentBase
 @rendermode InteractiveServer
+
 
 <MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark"/>
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout class="bg-white">
-@*     <MudDrawer Variant="DrawerVariant.Mini"
-               Overlay="true" OverlayAutoClose="true"
-               OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
-        <NavMenu />
-    </MudDrawer> *@
-    @Body
-</MudLayout>
+    <MudLayout class="bg-white">
+        <MudDrawer Variant="DrawerVariant.Mini"
+                   Overlay="true" OverlayAutoClose="true"
+                   OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
+            <NavMenu />
+        </MudDrawer>
+        @Body
+    </MudLayout>
 
 @code {
     bool _drawerOpen = false;
     bool _isDark = true;
+
 
     MudTheme MyCustomTheme = new MudTheme()
         {

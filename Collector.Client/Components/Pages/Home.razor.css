@@ -1,9 +1,5 @@
-﻿.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #25251D;
+﻿.validation-message {
+    color: #BE4145
 }
 
 .secondary-container {
@@ -39,38 +35,4 @@
     font-weight: bolder;
     margin-bottom: 16px;
     text-align: center;
-}
-
-.description-text {
-    color: #4a4a4a;
-    text-align: center;
-    margin-bottom: 24px;
-}
-
-.register-text {
-    font-weight: bold;
-    color: #4a4a4a;
-    text-align: center;
-    margin-bottom: 19px;
-}
-
-.mud-button.register-btn {
-    background-color: #7B885B;
-    color: black;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: 3px solid #767572;
-    cursor: pointer;
-}
-
-.login-btn {
-    margin-top: 20px;
-    background-color: #7B885B;
-    font-weight: 600;
-    width: 100%;
-    padding: 12px 0;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
 }

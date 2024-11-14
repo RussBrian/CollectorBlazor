@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
 
-namespace Collector.Client.Entities;
-
-    public class RegisterUserViewModel
+namespace Collector.Client.Dtos.Login
+{
+    public class ReqUserDto
     {
         public string Name { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
@@ -19,12 +19,6 @@ namespace Collector.Client.Entities;
 
         [Compare("Password")]
         public string ConfirmPassword { get; set; } = string.Empty;
-
-        public string Gender { get; set; } = string.Empty;
-        public string Address { get; set; } = string.Empty;
-        public string RoleId { get; set; } = string.Empty;
         public IBrowserFile? ProfileImage { get; set; }
-
-        public string? ProfileImageBase64 { get; set; }
     }
-
+}

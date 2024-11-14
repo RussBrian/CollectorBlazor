@@ -1,6 +1,6 @@
-﻿namespace Collector.Client.Entities
+﻿namespace Collector.Client.Dtos.Login
 {
-    public class SessionViewModel
+    public class ResLoginDto
     {
         public string UserId { get; set; } = null!;
         public string Email { get; set; } = null!;
