@@ -40,9 +40,6 @@ namespace Collector.Client.Utilities.Extensions
 
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync(url, request);
 
-            //Esto es solo una validacion simple
-            _ = response.IsSuccessStatusCode ? true : throw new AggregateException($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
-
             string result = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<TResponse>(result);

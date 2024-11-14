@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Collector.Client.Services.Login;
+using Collector.Client.Services.Password;
 using Collector.Client.SessionHelpers;
 
 namespace Collector.Client
@@ -9,7 +10,8 @@ namespace Collector.Client
         public static void AddWebDependencies(this IServiceCollection services)
         {
             services.AddHttpClient();
-            services.AddBlazoredLocalStorage(config => 
+            services.AddTransient<IPasswordService, PasswordService>();
+            services.AddBlazoredLocalStorage(config =>
             config.JsonSerializerOptions.WriteIndented = true);
             services.AddTransient<ILoginService, LoginService>();
             services.AddRazorComponents()
