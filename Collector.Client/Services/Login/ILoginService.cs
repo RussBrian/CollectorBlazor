@@ -6,5 +6,6 @@ namespace Collector.Client.Services.Login
     {
         Task Login(ReqLoginDto loginVm);
         Task Logout(ResLoginDto userVm);
+
     }
 }
