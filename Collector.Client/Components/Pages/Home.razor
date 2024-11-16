@@ -1,9 +1,13 @@
 ﻿@page "/"
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Services.Login
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies
 @inject Collector.Client.SessionHelpers.SessionManager sesionManager;
 @inject ILoginService loginservice;
 @inject NavigationManager Navigation;
+
 
 <BaseScreen CustomStyles="background-color:#25251D">
     
@@ -112,11 +116,13 @@
 
 
 @code {
-    private ReqLoginDto loginModel = new();
+
+    [CascadingParameter]
+    private ReqLoginDto loginModel { set; get; } = new();
 
     public async Task Onsubmit()
     {
         await loginservice.Login(loginModel);
-        Navigation.NavigateTo("user/index");
+        Navigation.NavigateTo("/User/Reports");
     }
 }

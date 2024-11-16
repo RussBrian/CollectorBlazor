@@ -1,4 +1,12 @@
-﻿<div class="top-row bg-dark ps-3 navbar navbar-dark">
+﻿@using Collector.Client.Services.Login
+@inject ILoginService LoginService;
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject NavigationManager navigationManager;
+@attribute [StreamRendering]
+
+
+
+<div class="top-row bg-dark ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href=""></a>
     </div>
@@ -19,6 +27,22 @@
                 <span class="bi text-black bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
+
+        <AuthorizeView Roles="Person">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <button class="btn btn-danger" @onclick="LogOutMethod">Log Out</button>
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </nav>
 </div>
 
+@code {
+
+    private async Task LogOutMethod()
+    {
+        await LoginService.Logout(null);
+        navigationManager.NavigateTo("/",forceLoad:true);
+    }
+}
