@@ -3,7 +3,6 @@
 @using Collector.Client.Dtos
 @inject NavigationManager Navigation
 
-
 <div class="main-container">
     <div class="form-container">
         <MudForm @ref="form" Model="@reqUserDto" OnValidSubmit="HandleValidSubmit">
@@ -110,11 +109,9 @@
                     <MudButton OnClick="PreviousStep" Variant="Variant.Outlined" Style="background-color:transparent; width: 180px; border: 3px solid #767572; color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
                 }
             </div>
-
         </MudForm>
     </div>
     <div class="aside-background"></div>
-
 </div>
 
 
