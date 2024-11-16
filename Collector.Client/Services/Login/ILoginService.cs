@@ -5,6 +5,6 @@ namespace Collector.Client.Services.Login
     public interface ILoginService
     {
         Task Login(ReqLoginDto loginVm);
-        Task Logout();
+        Task Logout(ResLoginDto userVm);
     }
 }

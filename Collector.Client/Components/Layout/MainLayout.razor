@@ -1,27 +1,39 @@
-﻿@using Collector.Client.SessionHelpers
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+﻿@using Collector.Client.Dtos.Login
+@using Collector.Client.SessionHelpers
 @inherits LayoutComponentBase
-@rendermode InteractiveServer
+@using Blazored.SessionStorage
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject Collector.Client.SessionHelpers.SessionManager sesionManager
 
 
-<MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark"/>
+<MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-    <MudLayout class="bg-white">
-        @* <MudDrawer Variant="DrawerVariant.Mini"
-                   Overlay="true" OverlayAutoClose="true"
-                   OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
-            <NavMenu />
-        </MudDrawer> *@
+<AuthorizeView Roles="Person">
+    <Authorized>
+        <MudLayout class="bg-white">
+            <MudDrawer Variant="DrawerVariant.Mini"
+                       Overlay="true" OverlayAutoClose="true"
+                       OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
+                <NavMenu />
+            </MudDrawer>
+            @Body
+        </MudLayout>
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView>
+    <NotAuthorized>
         @Body
-    </MudLayout>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     bool _drawerOpen = false;
     bool _isDark = true;
-
+    bool _isInSession;
 
     MudTheme MyCustomTheme = new MudTheme()
         {

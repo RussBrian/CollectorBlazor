@@ -1,6 +1,8 @@
-﻿using Blazored.LocalStorage;
-using Collector.Client.Services.Login;
+﻿using Collector.Client.Services.Login;
+using Collector.Client.Services.Reports;
 using Collector.Client.SessionHelpers;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace Collector.Client
 {
@@ -8,13 +10,20 @@ namespace Collector.Client
     {
         public static void AddWebDependencies(this IServiceCollection services)
         {
+            services.AddScoped<ProtectedSessionStorage>();
+            services.AddScoped<AuthenticationStateProvider, SessionManager>();
+            services.AddScoped<SessionManager>();
+            services.AddAuthentication();
+            services.AddAuthorizationCore();
+
             services.AddHttpClient();
-            services.AddBlazoredLocalStorage(config => 
-            config.JsonSerializerOptions.WriteIndented = true);
+
+            services.AddTransient<ReportsService>();
+            
             services.AddTransient<ILoginService, LoginService>();
+            
             services.AddRazorComponents()
                  .AddInteractiveServerComponents();
-            services.AddHttpContextAccessor();
             services.AddScoped<SessionManager>();
         }
     }
