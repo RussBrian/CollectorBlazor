@@ -78,7 +78,7 @@
                 <h5 class="card-title mt-2 text-secondary">No se han encontrado reportes registrados ¿desea crear uno?</h5>
                 <a href="/User/Create/Reports" class="btn-new-report btn mt-2">Nuevo Reporte</a>
             </div>
-        </div>
+        </div>  
     }
 </div>
 
@@ -97,7 +97,6 @@
         if (firstRender)
         {
             var authState = await sesionManager.GetAuthenticationStateAsync();
-            await Task.Delay(100);  // Esto es opcional, pero puede ayudar a evitar el error si el código se ejecuta demasiado rápido.
             StateHasChanged();  // Forzamos un redibujado después de haber realizado la verificación.
         }
     }
