@@ -9,22 +9,19 @@ namespace Collector.Client.SessionHelpers
     {
         private readonly ProtectedSessionStorage _sessionStorage;
         private ClaimsPrincipal _anonymus = new ClaimsPrincipal(new ClaimsIdentity());
-        private AuthenticationState _cachedAuthState;
-
         public SessionManager(ProtectedSessionStorage sessionStorage)
         {
             _sessionStorage = sessionStorage;
         }
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            if (_cachedAuthState != null) return _cachedAuthState; 
-            
             try
             {
                 var userSessionStorageResult = await _sessionStorage.GetAsync<ResLoginDto>("session");
                 var userSession = userSessionStorageResult.Success ? userSessionStorageResult.Value : null;
                 if (userSession == null)
-                { 
+                {
                     return await Task.FromResult(new AuthenticationState(_anonymus));
                 }
                 else
@@ -37,9 +34,8 @@ namespace Collector.Client.SessionHelpers
                       new Claim("Jwt", userSession.IdToken),
                       new Claim("UserId", userSession.UserId.ToString())
                         }));
-                     return await Task.FromResult(new AuthenticationState(claimsPrincipal));
+                    return await Task.FromResult(new AuthenticationState(claimsPrincipal));
                 }
-
             }
             catch
             {
@@ -52,7 +48,7 @@ namespace Collector.Client.SessionHelpers
         {
             ClaimsPrincipal claimsPrincipal;
 
-            if(model != null)
+            if (model != null)
             {
                 await _sessionStorage.SetAsync("session", model);
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
@@ -62,7 +58,7 @@ namespace Collector.Client.SessionHelpers
                       new Claim(ClaimTypes.Email, model.Email),
                       new Claim("Jwt", model.IdToken),
                       new Claim("UserId", model.UserId.ToString())
-                      
+
                 }));
             }
             else

@@ -1,131 +1,112 @@
-﻿@page "/RegisterUser"
+﻿@page "/RegisterUser/{_IsInstitution:bool}"
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Dtos
+@using Collector.Client.Services.Login
 @inject NavigationManager Navigation
 
 <div class="main-container">
     <div class="form-container">
-        <MudForm @ref="form" Model="@reqUserDto" OnValidSubmit="HandleValidSubmit">
-            <div class="custom-progress-bar">
-                <div class="custom-content-bar" style="width: @(step * (100 / 3))%"></div>
-            </div>
-            <div class="step-header">
-                <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-3</MudText>
-                <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Registrar Persona</MudText>
-            </div>
-            <div>
-                <button class="back-to-login-btn" @onclick="NavigateToLogin">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" fill="#BDBBBB" transform="scale(1.4, 1.4)" />
-                    </svg>
-                    Login
-                </button>
-            </div>
+        
+        <div class="custom-progress-bar">
+            <div class="custom-content-bar" style="width: @(step * (100 / 3))%"></div>
+        </div>
+        
+        <div class="step-header">
+            <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-3</MudText>
+            <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Registrar Persona</MudText>
+        </div>
 
-            @if (step == 1)
-            {
-                <label class="custom-label">Nombre</label>
-                <MudTextField @ref="nameField" @bind-Value="@reqUserDto.Name" Required="true" Variant="Variant.Outlined" Style="color:white;"
-                              OnKeyDown="@((e) => HandleKeyDown(e, lastNameField))" />
-                <label class="custom-label mt-5">Apellido</label>
-                <MudTextField @ref="lastNameField" @bind-Value="@reqUserDto.LastName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
-                <div class="d-flex justify-content-between mt-5">
-                    <label class="custom-label">Nombre de Usuario</label>
-                    <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
-                        <ChildContent>
-                            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
-                        </ChildContent>
-                        <TooltipContent>
-                            <MudText Style="font-weight:bold; font-size:small">No debe iniciar con un número.</MudText>
-                            <MudText Style="font-weight:bold; font-size:small">No debe tener espacios.</MudText>
-                        </TooltipContent>
-                    </MudTooltip>
-                </div>
-                <MudTextField @ref="userNameField" @bind-Value="@reqUserDto.UserName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
-                <p class="custom-message-required">El campo es requerido.</p>
-            }
-            @if (step == 2)
-            {
-                <label class="custom-label">Teléfono</label>
-                <MudTextField @ref="phoneField" @bind-Value="@reqUserDto.Phone" Required="true" Variant="Variant.Outlined" Style="color:white;"
-                              OnKeyDown="@((e) => HandleKeyDown(e, passwordField))" />
-                <div class="d-flex justify-content-between mt-5">
-                    <label class="custom-label">Contraseña</label>
-                    <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
-                        <ChildContent>
-                            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
-                        </ChildContent>
-                        <TooltipContent>
-                            <MudText Style="font-weight:normal; font-size:small;">La <strong>contraseña</strong> debe contener al menos:</MudText>
-                            <MudText Style="font-weight:normal; font-size:small;">
-                                1 letra, 8 caracteres, 1 número y
-                            </MudText>
-                            <MudText Style="font-weight:normal; font-size:small;">
-                                1 carácter
-                                especial (“@@”,”!”,”#”,”.”)
-                            </MudText>
-                        </TooltipContent>
-                    </MudTooltip>
-                </div>
-                <MudTextField @ref="passwordField" @bind-Value="@reqUserDto.Password" Required="true" InputType="InputType.Password" Variant="Variant.Outlined" Style="color:white;" />
-                <div class="d-flex justify-content-between mt-5">
-                    <label class="custom-label">Confirmar Contraseña</label>
-                    <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
-                        <ChildContent>
-                            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
-                        </ChildContent>
-                        <TooltipContent>
-                            <MudText Style="font-weight:bold; font-size:small">Las contraseñas deben coincidir.</MudText>
-                        </TooltipContent>
-                    </MudTooltip>
-                </div>
-                <MudTextField @ref="confirmPasswordField" @bind-Value="@reqUserDto.ConfirmPassword" Required="true" InputType="InputType.Password" Variant="Variant.Outlined" Style="color:white;" />
-            }
-            @if (step == 3)
-            {
-                <div class="custom-image-title">Foto de Perfil</div>
-                <MudTextField @bind-Value="@reqUserDto.ProfileImage" InputType="InputType.Hidden" />
 
-                <MudFileUpload T="IBrowserFile" @bind-Value="@reqUserDto.ProfileImage" AcceptedFileTypes="image/*" MaxFileSize="2097152" />
-                @if (reqUserDto.ProfileImage != null)
-                {
-                    <MudText Typo="Typo.body2">Vista previa:</MudText>
-                    <img src="@GetImagePreview(reqUserDto.ProfileImage)" alt="Imagen de perfil" width="100" height="100" class="image-preview" />
-                }
-                <p class="custom-message-image">Puedes dar clic en el círculo para seleccionar una imagen o dejar el avatar por defecto.</p>
+        <div>
+            <button class="back-to-login-btn" @onclick="NavigateToLogin">
+                <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" fill="#BDBBBB" transform="scale(1.4, 1.4)" />
+                </svg>
+                Login
+            </button>
+        </div>
+
+        @switch (step)
+        {
+            case 1:
+                <Step1UserReg reqUserDto="reqUserDto"
+                              IsInstitution="_IsInstitution" />
+                break;
+            case 2:
+                <Step2UserReg reqUserDto="reqUserDto"
+                              IsInstitution="_IsInstitution" />
+                break;
+            case 3:
+                <Step3UserReg reqUserDto="reqUserDto"
+                              IsInstitution="_IsInstitution" />
+                break;
+            default:
+                <Step1UserReg reqUserDto="reqUserDto"
+                              IsInstitution="_IsInstitution" />
+                break;
+        }
+
+        <div class="buttons-container">
+            @if (step < 3)
+            {
+                <div>
+@*                     <MudButton OnClick="() => ValidateForm(step)" Color="Color.Primary"
+                               Variant="Variant.Filled">Siguiente</MudButton> *@
+                </div>
             }
-            <div class="buttons-container">
-                @if (step < 3)
-                {
-                    <MudButton OnClick="NextStep" Variant="Variant.Filled" Style="color:white; background-color:#7B885B; width:250px;">Siguiente</MudButton>
-                }
-                else
-                {
-                    <MudButton Type="Submit" Variant="Variant.Filled" Style="color:white; background-color:#7B885B; width:250px;">Registrar</MudButton>
-                }
-                @if (step > 1)
-                {
-                    <MudButton OnClick="PreviousStep" Variant="Variant.Outlined" Style="background-color:transparent; width: 180px; border: 3px solid #767572; color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
-                }
-            </div>
-        </MudForm>
+            else
+            {
+                <MudButton Type="Submit" Color="Color.Primary"
+                           Variant="Variant.Filled">Registrar</MudButton>
+            }
+            @if (step > 1)
+            {
+                <MudButton OnClick="PreviousStep" Class=""
+                           Variant="Variant.Outlined">Paso anterior</MudButton>
+            }
+        </div>
     </div>
     <div class="aside-background"></div>
 </div>
 
 
 @code {
+    [Parameter]
+    public bool _IsInstitution { get; set; }
+    public Step1UserReg? _step1UserReg;
     private int step = 1;
     private MudForm form;
     private ReqUserDto reqUserDto = new();
-
     private MudTextField<string> nameField;
     private MudTextField<string> lastNameField;
     private MudTextField<string> userNameField;
     private MudTextField<string> phoneField;
     private MudTextField<string> passwordField;
     private MudTextField<string> confirmPasswordField;
+
+    // public async Task ValidateForm(int _step)
+    // {
+    //     switch (step)
+    //     {
+    //         case 1:
+    //             var isValid = await _step1UserReg?.ValidateForm();
+    //             if (isValid)
+    //             {
+    //                 step++;
+    //             }
+    //             break;
+    //         case 2:
+                
+    //             break;
+    //         case 3:
+
+    //             break;
+    //         default:
+
+    //             break;
+    //     }
+    // }
 
     #region Step Methods
     private void NextStep()
@@ -185,19 +166,4 @@
         Navigation.NavigateTo("/");
     }
     #endregion
-
-    #region Handle Form Methods
-    private void HandleValidSubmit()
-    {
-        Console.WriteLine("Formulario enviado exitosamente.");
-    }
-
-    private string GetImagePreview(IBrowserFile file)
-    {
-        var buffer = new byte[file.Size];
-        file.OpenReadStream().ReadAsync(buffer);
-        return $"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}";
-    }
-    #endregion
 }
-

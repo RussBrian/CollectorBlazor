@@ -3,6 +3,6 @@
     public class PaginationDto
     {
         public int Page { get; set; }
-        public int AmountofInfo { get; set; }
+        public int AmountofInfo { get; set; } = 4;
     }
 }
