@@ -20,11 +20,13 @@ namespace Collector.Client.Services.Login
             _options = options.Value;
         }
 
-        public async Task Login(ReqLoginDto loginVm)
+        public async Task<Response<ResLoginDto>> Login(ReqLoginDto loginVm)
         {
            var result = await _httpclientService.CustomPostAsync<Response<ResLoginDto>,
                 ReqLoginDto>(_options.UrlLoginService, loginVm);
-                await _sesionManager.UpdateAuthenticationState(result.Value);
+            if (result.IsSuccess) return result; 
+            await _sesionManager.UpdateAuthenticationState(result.Value);
+            return result; 
         }
 
         public async Task Logout(ResLoginDto userVm)

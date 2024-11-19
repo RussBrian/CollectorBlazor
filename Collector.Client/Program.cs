@@ -16,6 +16,7 @@ builder.Services.AddTransient<HttpClientServiceExtensions>();
 builder.Services.AddMudServices();
 builder.Services.AddWebDependencies();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
