@@ -19,16 +19,10 @@
                        OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
                 <NavMenu />
             </MudDrawer>
-            @Body
         </MudLayout>
     </Authorized>
 </AuthorizeView>
-
-<AuthorizeView>
-    <NotAuthorized>
-        @Body
-    </NotAuthorized>
-</AuthorizeView>
+@Body
 
 @code {
     bool _drawerOpen = false;
