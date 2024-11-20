@@ -1,12 +1,18 @@
 ﻿@page "/"
-@using Collector.Client.Dtos.Login
-@using Collector.Client.Services.Login
+@using Collector.Client.Dtos.Login;
+@using Collector.Client.Dtos.Response
+@using Collector.Client.Services.Login;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using Blazored.FluentValidation;
 @inject Collector.Client.SessionHelpers.SessionManager sesionManager;
 @inject ILoginService loginservice;
 @inject NavigationManager Navigation;
+@inject IJSRuntime JSRuntime
 
 <BaseScreen CustomStyles="background-color:#25251D">
-    
+
     <div Class="secondary-container">
         <!-- Columna izquierda (Bienvenida) -->
         <div Class="left-container">
@@ -24,10 +30,10 @@
                 <span class="font-bold">¡Vamos regístrate!</span>
             </MudText>
             <MudButtonGroup Variant="Variant.Filled">
-                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" Href="/RegisterUser">
+                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" OnClick="SendToInstitutionReg">
                     Institución
                 </MudButton>
-                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" Href="/RegisterUser">
+                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" OnClick="SendToInstitutionReg">
                     Persona
                 </MudButton>
             </MudButtonGroup>
@@ -37,12 +43,12 @@
         <div Class="right-container">
             <MudText Typo="Typo.h4" Class="login-text fw-bold ms-4 mb-2">Iniciar Sesión</MudText>
             <EditForm Model="@loginModel" OnValidSubmit="Onsubmit">
-            <DataAnnotationsValidator/>
-            @*Inputs for the user *@
-                
-                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined" 
+                <FluentValidationValidator />
+                @*Inputs for the user *@
+
+                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
                               Label="Correo electrónico" InputType="InputType.Email" Class="custom-label w-full mb-3" />
-                <ValidationMessage style="validation-message" For="(() => loginModel.Email)"/>
+                <ValidationMessage style="validation-message" For="(() => loginModel.Email)" />
 
                 <MudTextField @bind-Value="loginModel.Password" Variant="Variant.Outlined"
                               Label="Contraseña" InputType="InputType.Password" Class="custom-label w-full" />
@@ -53,7 +59,7 @@
                 </MudText>
 
                 <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
-                Style="background-color:#7B885B; margin-top:10px; 
+                           Style="background-color:#7B885B; margin-top:10px;
                         color:white; width:100%">
                     Iniciar Sesion
                 </MudButton>
@@ -72,7 +78,7 @@
 
     login-input {
         background-color: #FFFCFC91;
-        border-radius:20px;
+        border-radius: 20px;
     }
 
     .register-text {
@@ -103,20 +109,60 @@
     }
 
     .custom-label .mud-input-label {
-        background-color: #D0D0CF; /* Cambia este color al que tienes en el contenedor /
-        color:  black; / Color del texto del label, ajusta según prefieras */
+        background-color: #D0D0CF;
         padding: 0 4px;
-        font-weight:bold;
+        font-weight: bold;
     }
 </style>
 
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon){
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: icon,
+            title: Message
+        });
+    };
+</script>
+
 
 @code {
-    private ReqLoginDto loginModel = new();
+
+    [CascadingParameter]
+    private ReqLoginDto loginModel { set; get; } = new();
+    public bool IsInstitution { set; get; } = true;
+    private Response<ResLoginDto> resModel { set; get; }
 
     public async Task Onsubmit()
     {
-        await loginservice.Login(loginModel);
-        Navigation.NavigateTo("user/index");
+        var resModel = await loginservice.Login(loginModel);
+
+        if (resModel.IsSuccess)
+        {
+            Navigation.NavigateTo("/User/Reports", forceLoad: true);
+        }
+        else
+        {
+            resModel.ErrorMessage = "Credenciales no validas!";
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", resModel.ErrorMessage, "error");
+        }
+    }
+
+    public void SendToInstitutionReg()
+    {
+        Navigation.NavigateTo($"/RegisterUser/{IsInstitution}");
     }
 }

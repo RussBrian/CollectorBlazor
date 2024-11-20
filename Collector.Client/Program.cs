@@ -4,7 +4,7 @@ using Collector.Client.Services;
 using MudBlazor.Services;
 using Collector.Client.Utilities.Options;
 using Collector.Client.Utilities.Extensions;
-using Collector.Client.Services.Login;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +18,7 @@ builder.Services.AddMudServices();
 builder.Services.AddWebDependencies();
 builder.Services.AddServicesRegistration();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,7 +31,8 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
