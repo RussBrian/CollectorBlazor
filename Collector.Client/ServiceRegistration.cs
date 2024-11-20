@@ -1,4 +1,5 @@
 ﻿using Collector.Client.Services.Login;
+using Collector.Client.Services.Password;
 using Collector.Client.Services.Reports;
 using Collector.Client.SessionHelpers;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,6 +16,8 @@ namespace Collector.Client
             services.AddScoped<SessionManager>();
             services.AddAuthentication();
             services.AddAuthorizationCore();
+            
+            services.AddScoped<IPasswordService,PasswordService>();
 
             services.AddHttpClient();
 

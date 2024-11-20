@@ -1,7 +1,5 @@
-﻿
-using Collector.Client.Components.Pages.ForgotPassword;
-using Collector.Client.Dtos;
-using Collector.Client.Dtos.ForgotPassword;
+﻿using Collector.Client.Dtos.ForgotPassword;
+using Collector.Client.Dtos.Response;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
