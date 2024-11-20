@@ -49,17 +49,19 @@
             {
                 <div>
                     <MudButton OnClick="() => NextStep()" Color="Color.Primary"
-                               Variant="Variant.Filled">Siguiente</MudButton>
+                               Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
                 </div>
             }
             else
             {
                 <MudButton Type="Submit" Color="Color.Primary"
-                           Variant="Variant.Filled">Registrar</MudButton>
+                           Variant="Variant.Filled" Style="width:230px">Registrar</MudButton>
             }
             @if (step > 1)
             {
-                <MudButton OnClick="PreviousStep" Variant="Variant.Outlined" Style="background-color:transparent; width: 180px; border: 3px solid #767572; color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
+                <MudButton OnClick="PreviousStep" Variant="Variant.Outlined" 
+                Style="background-color:transparent; width: 155px; border: 3px solid #767572; 
+                color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
 
             }
         </div>
