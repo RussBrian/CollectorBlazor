@@ -6,16 +6,13 @@
 
 <div class="main-container">
     <div class="form-container">
-        
-        <div class="custom-progress-bar">
-            <div class="custom-content-bar" style="width: @(step * (100 / 3))%"></div>
-        </div>
+
+        <ProgressBar Value="Value"/>
         
         <div class="step-header">
             <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-3</MudText>
             <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Registrar Persona</MudText>
         </div>
-
 
         <div>
             <button class="back-to-login-btn" @onclick="NavigateToLogin">
@@ -51,8 +48,8 @@
             @if (step < 3)
             {
                 <div>
-@*                     <MudButton OnClick="() => ValidateForm(step)" Color="Color.Primary"
-                               Variant="Variant.Filled">Siguiente</MudButton> *@
+                    <MudButton OnClick="() => NextStep()" Color="Color.Primary"
+                               Variant="Variant.Filled">Siguiente</MudButton>
                 </div>
             }
             else
@@ -62,8 +59,8 @@
             }
             @if (step > 1)
             {
-                <MudButton OnClick="PreviousStep" Class=""
-                           Variant="Variant.Outlined">Paso anterior</MudButton>
+                <MudButton OnClick="PreviousStep" Variant="Variant.Outlined" Style="background-color:transparent; width: 180px; border: 3px solid #767572; color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
+
             }
         </div>
     </div>
@@ -72,11 +69,12 @@
 
 
 @code {
+
     [Parameter]
     public bool _IsInstitution { get; set; }
     public Step1UserReg? _step1UserReg;
     private int step = 1;
-    private MudForm form;
+    public double Value { get; set; }
     private ReqUserDto reqUserDto = new();
     private MudTextField<string> nameField;
     private MudTextField<string> lastNameField;
@@ -85,40 +83,40 @@
     private MudTextField<string> passwordField;
     private MudTextField<string> confirmPasswordField;
 
-    // public async Task ValidateForm(int _step)
-    // {
-    //     switch (step)
-    //     {
-    //         case 1:
-    //             var isValid = await _step1UserReg?.ValidateForm();
-    //             if (isValid)
-    //             {
-    //                 step++;
-    //             }
-    //             break;
-    //         case 2:
-                
-    //             break;
-    //         case 3:
+    public void AdvanceProgress()
+    {
+        Value += 33.3;
+        StateHasChanged();
+    }
 
-    //             break;
-    //         default:
+    public void GoBackProgress()
+    {
+        Value -= 33.3;
+        StateHasChanged();
+    }
 
-    //             break;
-    //     }
-    // }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            AdvanceProgress();
+        }
+        base.OnAfterRender(firstRender);
+    }
 
     #region Step Methods
     private void NextStep()
     {
         if (step < 3)
             step++;
+        AdvanceProgress();
     }
 
     private void PreviousStep()
     {
         if (step > 1)
             step--;
+        GoBackProgress();
     }
     #endregion
 
