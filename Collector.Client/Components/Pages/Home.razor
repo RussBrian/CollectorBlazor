@@ -11,11 +11,6 @@
 @inject NavigationManager Navigation;
 @inject IJSRuntime JSRuntime
 
-<HeadContent>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-</HeadContent>
-
 <BaseScreen CustomStyles="background-color:#25251D">
 
     <div Class="secondary-container">
@@ -120,9 +115,11 @@
     }
 </style>
 
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    const showSweetAlert = (Message, icon) =>
-    {
+    function showSweetAlert(Message, icon){
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -135,10 +132,10 @@
             }
         });
         Toast.fire({
-            icon: "success",
-            title: "Message"
+            icon: icon,
+            title: Message
         });
-    }
+    };
 </script>
 
 
@@ -152,16 +149,20 @@
     public async Task Onsubmit()
     {
         var resModel = await loginservice.Login(loginModel);
-        if (resModel.IsSuccess) Navigation.NavigateTo("/User/Reports", forceLoad: true);
-        await JSRuntime.InvokeVoidAsync("showSweetAlert",resModel.ErrorMessage,"error");
 
+        if (resModel.IsSuccess)
+        {
+            Navigation.NavigateTo("/User/Reports", forceLoad: true);
+        }
+        else
+        {
+            resModel.ErrorMessage = "Credenciales no validas!";
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", resModel.ErrorMessage, "error");
+        }
     }
 
     public void SendToInstitutionReg()
     {
         Navigation.NavigateTo($"/RegisterUser/{IsInstitution}");
     }
-
-
-
 }

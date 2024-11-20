@@ -2,7 +2,7 @@
 @inherits ComponentBase;
 
 <div class="step1-container">
-    <MudForm Model="reqUserDto" @ref="form" @IsValid="IsFormValid">
+    <MudForm Model="reqUserDto">
         <label class="custom-label">Nombre</label>
         <MudTextField @bind-Value="@reqUserDto.Name" Required="true" Variant="Variant.Outlined" Style="color:white;" />
         <label class="custom-label mt-5">Apellido</label>
@@ -43,15 +43,4 @@
 
     [Parameter]
     public bool IsInstitution { get; set; }
-
-    public bool IsFormValid;
-
-    public MudForm form;
-
-    // public async Task<bool> ValidateForm()
-    // {
-    //     await form.Validate();
-    //     if (IsFormValid) return true;
-    //     return false;
-    // }
 }

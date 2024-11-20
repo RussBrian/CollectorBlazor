@@ -35,13 +35,9 @@ namespace Collector.Client.Utilities.Extensions
 
         public async Task<TResponse?> CustomPostAsync<TResponse, TRequest>(string uri, TRequest request)
         {
-            // Esta url la deben pasar por el parametro del metodo, puede ser una referencia a la propiedad.
             Uri url = new(uri);
 
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync(url, request);
-
-            ////Esto es solo una validacion simple
-            //_ = response.IsSuccessStatusCode ? true : throw new AggregateException($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
 
             string result = await response.Content.ReadAsStringAsync();
 
