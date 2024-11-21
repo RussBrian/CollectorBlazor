@@ -14,11 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Components\Pages\User\UserReports.razor.css" />
+    <None Remove="Pages\User\UserReports.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Components\Pages\User\UserReports.razor.css" />
+    <Content Include="Pages\User\UserReports.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,7 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\User\Components\" />
+    <Folder Include="Components\" />
+    <Folder Include="Pages\User\Components\" />
   </ItemGroup>
 
 </Project>
