@@ -1,41 +1,30 @@
 ﻿@page "/EmailVerification"
-@using Collector.Client.Components.Pages.Register
 @using Collector.Client.Dtos.Login
+@using Collector.Client.Pages.Register
+@using Collector.Client.Components.Shared
 @inject NavigationManager Navigation
 
 <div class="main-container">
     <div class="form-container">
-        
 
-            <ProgressBar Value="Value"></ProgressBar>
 
-            <div class="step-header">
-                <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-2</MudText>
-                <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Verificación</MudText>
-            </div>
+        <ProgressBar Value="Value"></ProgressBar>
 
-            <div>
-                @if (step == 1)
-                {
+        <div class="step-header">
+            <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-2</MudText>
+            <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Verificación</MudText>
+        </div>
 
-                    <button class="back-to-login-btn" @onclick="NavigateToLogin">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
-                            <path d="M0 0h24v24H0z" fill="none" />
-                            <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" fill="#BDBBBB" transform="scale(1.4, 1.4)" />
-                        </svg>
-                        Inicio de sesión
-                    </button>
-                }
-                else
-                {
-                    <button class="back-to-login-btn" @onclick="NavigateToLogin">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 36 32" width="36">
-                            <path d="M0 0h24v24H0z" fill="none" />
-                            <path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z" fill="#BDBBBB" transform="scale(1.4, 1.4)" />
-                        </svg>
-                        Paso anterior
-                    </button>
-                }
+        <div>
+            @if (step == 1)
+            {
+                <BackToLoginBtn ButtonText="Inicio de sesión" OnClick="NavigateToLogin" />
+            }
+            else
+            {
+                <BackToLoginBtn ButtonText="Paso anterior" OnClick="PreviousStep" />
+            }
+
             </div>
 
             @if (step == 1)
