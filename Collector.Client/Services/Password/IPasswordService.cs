@@ -1,5 +1,4 @@
-﻿using Collector.Client.Components.Pages.ForgotPassword;
-using Collector.Client.Dtos.ForgotPassword;
+﻿using Collector.Client.Dtos.ForgotPassword;
 
 namespace Collector.Client.Services.Password
 {
