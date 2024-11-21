@@ -3,7 +3,7 @@
 
 <div class="step1-container">
     <MudForm Model="reqUserDto">
-        @if (IsInstitution == true)
+        @if (_IsInstitution == true)
         {
             <div class="d-flex justify-content-between">
                 <label class="custom-label">Rnc</label>
@@ -69,5 +69,5 @@
     [Parameter]
     public ReqUserDto reqUserDto { get; set; }
     [Parameter]
-    public bool IsInstitution { get; set; }
+    public bool _IsInstitution { get; set; }
 }
