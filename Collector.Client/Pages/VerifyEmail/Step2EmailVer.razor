@@ -1,0 +1,28 @@
+﻿@inherits ComponentBase;
+
+ <MudForm @ref="form">
+    <p class="custom-message">
+        Ingrese el código enviado a su correo electrónico.
+    </p>
+    <MudTextField @bind-Value="Code" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+  </MudForm>
+
+  <style>
+    .custom-label {
+        font-weight: 700;
+        color: #BDBABA;
+    }
+
+       
+    .custom-message {
+        color: #7B885B;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+  </style>
+
+@code {
+    MudForm form;
+    private int Code { get; set; }
+}

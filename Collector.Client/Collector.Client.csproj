@@ -14,11 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Components\Pages\User\UserReports.razor.css" />
+    <None Remove="Pages\User\UserReports.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Components\Pages\User\UserReports.razor.css" />
+    <Content Include="Pages\User\UserReports.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +28,10 @@
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
     <PackageReference Include="MudBlazor" Version="7.15.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\User\Components\" />
   </ItemGroup>
 
 </Project>

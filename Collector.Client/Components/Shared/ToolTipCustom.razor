@@ -1,0 +1,18 @@
+﻿@inherits ComponentBase;
+
+<MudTooltip Style="background-color:darkgray; color:black"
+            Arrow="true" Placement="Placement.Right" Delay="400">
+    <ChildContent>
+        <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                 Size="Size.Small" Style="@ToolTipStyle" />
+    </ChildContent>
+    <TooltipContent>
+        <MudText Style="@ToolTipTextStyle">@TooplTipDescription</MudText>
+    </TooltipContent>
+</MudTooltip>
+
+@code {
+    [Parameter] public string? TooplTipDescription { get; set; }
+    [Parameter] public string? ToolTipStyle { get; set; }
+    [Parameter] public string? ToolTipTextStyle { get; set; }
+}

@@ -1,0 +1,58 @@
+﻿@page "/User/Create/Reports"
+@using Blazored.FluentValidation
+@using Collector.Client.Components.Shared;
+
+<div class="primary-container">
+    <main class="secundary-container">
+
+        <h3 class="title">Crea un reporte</h3>
+
+        <div class="card-body-container">
+
+            <div class="text-field-container">
+                <div class="text-field-style">
+
+                    <div class="d-flex justify-content-between">
+                        <label class="custom-label">Titulo del reporte</label>
+                        <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
+                                       TooplTipDescription="Biggy es el final de los gordo" 
+                                       ToolTipStyle="color:#37490B"/>
+                    </div>
+                    <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="text-input" />
+                    <p class="text-secondary">Coloque un titulo que identifique su reporte.</p>
+                </div>
+                
+                <div class="text-field-style">
+                    <label class="custom-label">Fecha</label>
+                    <MudTextField InputType="InputType.Date" @bind-Value="TValue" 
+                    Variant="Variant.Outlined" Style="text-input" />
+                </div>
+            </div>
+
+            <div class="description-container">
+                <label class="custom-label">Description</label>
+                <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="text-input" />
+                <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
+            </div>
+        </div>
+        <div class="button-send-container">
+            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+                       Style="background-color:#515B3B; margin-buttom:10px;
+                        color:white; width:250px">
+                Crear reporte
+            </MudButton>
+        </div>
+    </main>
+</div>
+
+<style>
+    .text-input{
+        color:black;
+        border: 6px solid #37490B
+    }
+</style>
+
+@code {
+    public string TValue { get; set; }
+    public string TValue2 { get; set; }
+}

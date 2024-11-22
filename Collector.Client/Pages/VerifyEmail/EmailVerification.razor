@@ -1,0 +1,116 @@
+﻿@page "/EmailVerification/{_IsInstitution:bool}"
+@using Collector.Client.Dtos.Login
+@using Collector.Client.Pages.Register
+@using Collector.Client.Components.Shared
+@inject NavigationManager Navigation
+
+<div class="main-container">
+    <div class="form-container">
+
+
+        <ProgressBar Value="Value"></ProgressBar>
+
+        <div class="step-header">
+            <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-2</MudText>
+            <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Verificación</MudText>
+        </div>
+
+        <div>
+            @if (step == 1)
+            {
+                <BackToLoginBtn ButtonText="Inicio de sesión" OnClick="NavigateToLogin" />
+            }
+            else
+            {
+                <BackToLoginBtn ButtonText="Paso anterior" OnClick="PreviousStep" />
+            }
+
+            </div>
+
+            @if (step == 1)
+            {
+            <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution"/>
+            }
+            @if(step == 2)
+            {
+                <Step2EmailVer/>
+            }
+
+
+            <div class="buttons-container">
+                @if (step < 2)
+                {
+                    <div>
+                        <MudButton OnClick="() => NextStep()" Color="Color.Primary"
+                                   Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
+                    </div>
+                }
+                else
+                {
+                    <MudButton Type="Submit" Color="Color.Primary"
+                               Variant="Variant.Filled" Style="width:230px">Registrarme</MudButton>
+                }
+
+                @if (step > 1)
+                {
+                    <MudButton OnClick="PreviousStep" Variant="Variant.Outlined"
+                               Style="background-color:transparent; width: 155px; border: 3px solid #767572;
+                color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
+                }
+            </div>
+    </div>
+    <div class="aside-background"></div>
+</div>
+
+@code {
+    [Parameter]
+    public bool _IsInstitution { get; set; }
+    private ReqUserDto reqUserDto = new();
+
+    private MudForm form;
+    private int step = 1;
+    private double Value { get; set; }
+
+    public void AdvanceProgress()
+    {
+        Value += 50;
+        StateHasChanged();
+    }
+
+    public void GoBackProgress()
+    {
+        Value -= 50;
+        StateHasChanged();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            AdvanceProgress();
+        }
+        base.OnAfterRender(firstRender);
+    }
+
+    #region Step Methods
+    private void NextStep()
+    {
+        if (step < 2)
+            step++;
+        AdvanceProgress();
+    }
+
+    private void PreviousStep()
+    {
+        if (step > 1)
+            step--;
+        GoBackProgress();
+    }
+    #endregion
+
+    private void NavigateToLogin()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+}

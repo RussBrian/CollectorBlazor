@@ -16,6 +16,17 @@
     height:75%;
 }
 
+.d-flex.flex-row {
+    display: flex;
+    width: 100%; 
+}
+
+.title {
+    flex: 1; /* Esto permite que el título use el espacio necesario */
+    text-align: center; /* Centra el título */
+    margin-left:310px;
+}
+
 .btn-new-report {
     background-color: #7B885B;
     height: 45px;
@@ -23,6 +34,7 @@
     border-radius: 10px;
     color: white;
     font-weight: bold;
+    margin-right:100px
 }
 
 .title {

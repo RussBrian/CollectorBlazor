@@ -1,4 +1,5 @@
 ﻿@using Collector.Client.Dtos.Login
+@using MudBlazor
 @inherits ComponentBase;
 
 <div class="step1-container">
@@ -24,6 +25,7 @@
     </MudForm>
 </div>
 
+
 <style>
     .custom-label {
         font-weight: 700;
@@ -31,6 +33,19 @@
     }
 
         .custom-label::before {
+            content: '*';
+            color: #ef4444;
+            margin-right: 0.25rem;
+        }
+
+    .custom-message-required {
+        color: #7B885B;
+        font-weight: bold;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+    }
+
+        .custom-message-required::before {
             content: '*';
             color: #ef4444;
             margin-right: 0.25rem;
