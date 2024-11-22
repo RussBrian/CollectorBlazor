@@ -11,6 +11,7 @@ namespace Collector.Client.Dtos.Login
 
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
+        
         public string Identification { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
 
@@ -21,5 +22,5 @@ namespace Collector.Client.Dtos.Login
         public string ConfirmPassword { get; set; } = string.Empty;
         public IBrowserFile? ProfileImage { get; set; }
         public string? ImageBase64 { get; set; }
-    }
+    } 
 }
