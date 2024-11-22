@@ -145,7 +145,7 @@
 
     [CascadingParameter]
     private ReqLoginDto loginModel { set; get; } = new();
-    public bool IsInstitution { set; get; } = true;
+    public bool _IsInstitution { set; get; } = true;
     private Response<ResLoginDto> resModel { set; get; }
 
     public async Task Onsubmit()
@@ -165,6 +165,6 @@
 
     public void SendToInstitutionReg()
     {
-        Navigation.NavigateTo($"/RegisterUser/{IsInstitution}");
+        Navigation.NavigateTo($"/EmailVerification/{_IsInstitution}");
     }
 }
