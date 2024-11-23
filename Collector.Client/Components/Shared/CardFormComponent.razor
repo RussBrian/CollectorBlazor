@@ -1,0 +1,15 @@
+﻿@inherits ComponentBase
+
+<div class="primary-container">
+    <main class="secondary-container">
+        <h3 class="title">Crea un reporte</h3>
+            @ChildContent
+    </main>
+</div>
+
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Tittle { get; set; }
+
+}
