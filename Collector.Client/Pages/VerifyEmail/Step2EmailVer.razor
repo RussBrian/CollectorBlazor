@@ -7,6 +7,12 @@
     <MudTextField @bind-Value="Code" Required="true" Variant="Variant.Outlined" Style="color:white;" />
   </MudForm>
 
+
+@code {
+    MudForm form;
+    private int Code { get; set; }
+}
+
   <style>
     .custom-label {
         font-weight: 700;
@@ -21,8 +27,3 @@
         margin-top: 1rem;
     }
   </style>
-
-@code {
-    MudForm form;
-    private int Code { get; set; }
-}

@@ -1,4 +1,5 @@
 using Collector.Client;
+using Collector.Client.Services;
 using MudBlazor.Services;
 using Collector.Client.Utilities.Options;
 using Collector.Client.Utilities.Extensions;
@@ -17,6 +18,7 @@ builder.Services.AddTransient<HttpClientServiceExtensions>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<SweetAlert>();
 builder.Services.AddWebDependencies();
+builder.Services.AddServicesRegistration();
 
 
 var app = builder.Build();
