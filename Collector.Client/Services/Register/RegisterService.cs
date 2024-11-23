@@ -1,7 +1,6 @@
-﻿using System;
-using System.Net.Http;
+﻿using Collector.Client.Dtos.Login;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
+
 
 namespace Collector.Client.Services.Register;
 
@@ -14,14 +13,14 @@ namespace Collector.Client.Services.Register;
             _httpClient = httpClient;
         }
 
-        public async Task<string> RegisterUserAsync(ReqRegistrationDto dto, byte[] file = null)
+        public async Task<string> RegisterUserAsync(ReqUserDto dto, byte[]? file = null)
         {
             try
             {
                 using var formData = new MultipartFormDataContent();
 
-                if (!string.IsNullOrEmpty(dto.FristName))
-                    formData.Add(new StringContent(dto.FristName), "fristName");
+                if (!string.IsNullOrEmpty(dto.FirstName))
+                    formData.Add(new StringContent(dto.FirstName), "firstName");
 
                 if (!string.IsNullOrEmpty(dto.LastName))
                     formData.Add(new StringContent(dto.LastName), "lastName");
@@ -38,17 +37,14 @@ namespace Collector.Client.Services.Register;
                 if (!string.IsNullOrEmpty(dto.Identification))
                     formData.Add(new StringContent(dto.Identification), "identification");
 
-                if (!string.IsNullOrEmpty(dto.Gender))
-                    formData.Add(new StringContent(dto.Gender), "gender");
-
-                if (!string.IsNullOrEmpty(dto.Address))
-                    formData.Add(new StringContent(dto.Address), "address");
+                //if (!string.IsNullOrEmpty(dto.Gender))
+                //    formData.Add(new StringContent(dto.Gender), "gender");
 
                 if (!string.IsNullOrEmpty(dto.Password))
                     formData.Add(new StringContent(dto.Password), "password");
 
-                if (!string.IsNullOrEmpty(dto.RoleId))
-                    formData.Add(new StringContent(dto.RoleId), "roleId");
+                //if (!string.IsNullOrEmpty(dto.RoleId))
+                //    formData.Add(new StringContent(dto.RoleId), "roleId");
 
                 if (!string.IsNullOrEmpty(dto.Image))
                     formData.Add(new StringContent(dto.Image), "image");

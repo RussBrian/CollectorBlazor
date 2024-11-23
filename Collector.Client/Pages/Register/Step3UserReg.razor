@@ -52,7 +52,7 @@ private async Task OnFileSelected(InputFileChangeEventArgs e)
         await stream.CopyToAsync(memoryStream);
         var base64 = Convert.ToBase64String(memoryStream.ToArray());
         ImagePreview = $"data:{file.ContentType};base64,{base64}";
-        reqUserDto.ImageBase64 = ImagePreview;
+        reqUserDto.Image = ImagePreview;
     }
 }
 

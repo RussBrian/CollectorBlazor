@@ -120,7 +120,7 @@
     #region OnFocus Methods
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (step == 1 && string.IsNullOrWhiteSpace(reqUserDto.Name) && nameField != null)
+        if (step == 1 && string.IsNullOrWhiteSpace(reqUserDto.FirstName) && nameField != null)
         {
             await nameField.FocusAsync();
         }
