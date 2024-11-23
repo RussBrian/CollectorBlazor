@@ -13,7 +13,7 @@
                     <div class="d-flex justify-content-between">
                         <label class="custom-label">Título del reporte</label>
                         <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
-                                       TooplTipDescription="Coloque un titulo que permita identificar su reporte. Ej: Gran cantidad de basura en Sabana Perdida"
+                                       TooplTipDescription="Ayudame"
                                        ToolTipStyle="color:#37490B" />
                     </div>
                     <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
@@ -28,15 +28,28 @@
             </div>
 
             <div class="description-container">
-                <label class="custom-label">Description</label>
+                <label class="custom-label">Descripción</label>
                 <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
                 <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
             </div>
 
             <div class="map-container">
-                <Map width="250px" height="250px" />
                 <div>
-                    <img class="rounded-3" src="./BosqueLindo.png" width="250px" height="250px" />
+                    <label class="custom-label">Ubicación</label>
+                    <Map width="275px" height="250px" />
+                    <MudButtonComponent Text="Confirmar ubicación"
+                                        Variant="Variant.Outlined" Style="background-color:transparent;
+                                    width: 200px; border: 3px solid #767572; color:white;
+                                    border-radius: 0.5rem;font-weight:bold; margin-top:15px ; margin-left:25px" />
+                </div>
+                
+                <div>
+                    <label class="custom-label">Imágenes</label>
+                    <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
+                    <MudButtonComponent Text="Añadir imagen"
+                                        Variant="Variant.Outlined" Style="background-color:transparent;
+                                    width: 155px; border: 3px solid #767572; color: white;
+                                        border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px" />
                 </div>
             </div>
 
@@ -49,7 +62,7 @@
         <div class="button-send-container">
             <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
                        Style="background-color:#515B3B; margin-buttom:10px;
-                        color:white; width:250px">
+                        color:white; width:400px;">
                 Crear reporte
             </MudButton>
         </div>
