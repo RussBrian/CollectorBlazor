@@ -1,0 +1,32 @@
+﻿@using Collector.Client.Services.Login
+@inject ILoginService LoginService;
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject NavigationManager navigationManager;
+
+
+<MudNavMenu Class="heightFix d-flex flex-column">
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
+        Inicio
+    </MudNavLink>
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Filled.LibraryBooks" Href="/" Match="NavLinkMatch.All">
+        Reports
+    </MudNavLink>
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
+        Create 
+    </MudNavLink>
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
+        Inicio
+    </MudNavLink>
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
+        <MudButton Color="Color.Error" OnClick="LogOutMethod">LogOut</MudButton>
+    </MudNavLink>
+</MudNavMenu>
+
+@code {
+
+    private async Task LogOutMethod()
+    {
+        await LoginService.Logout(null);
+        navigationManager.NavigateTo("/",forceLoad:true);
+    }
+}

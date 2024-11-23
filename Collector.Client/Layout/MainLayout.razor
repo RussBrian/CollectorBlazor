@@ -1,0 +1,66 @@
+﻿@using Collector.Client.Dtos.Login
+@using Collector.Client.SessionHelpers
+@inherits LayoutComponentBase
+@using Blazored.SessionStorage
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject Collector.Client.SessionHelpers.SessionManager sesionManager
+
+
+<MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<AuthorizeView Roles="Person">
+    <Authorized>
+        <MudLayout class="bg-white">
+            <MudDrawer Variant="DrawerVariant.Mini"
+                       Overlay="true" OverlayAutoClose="true"
+                       OpenMiniOnHover="true" @bind-Open="@_drawerOpen">
+                <NavMenu />
+            </MudDrawer>
+        </MudLayout>
+    </Authorized>
+</AuthorizeView>
+@Body
+
+@code {
+    bool _drawerOpen = false;
+    bool _isDark = true;
+    bool _isInSession;
+
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            PaletteDark = new PaletteDark()
+            {
+                Background = "#141625",
+                TextPrimary = Colors.Gray.Darken4,
+                TextSecondary = Colors.Gray.Darken4,
+                Primary = "#7B885B",
+                Secondary = Colors.Gray.Darken4,
+                Tertiary = "rgba(255,64,129,1)",
+                AppbarBackground = Colors.BlueGray.Lighten2,
+                DrawerBackground = "#13151f",
+                DrawerText = Colors.Gray.Darken4,
+                DrawerIcon = "rgba(255,64,129,1)",
+            },
+            PaletteLight = new PaletteLight()
+            {
+                Background = Colors.Gray.Lighten4,
+                TextPrimary = Colors.Gray.Darken4,
+                Primary = "rgba(255,64,129,1)",
+                Secondary = "#fff",
+                Tertiary = "rgba(255,64,129,1)",
+                AppbarBackground = Colors.BlueGray.Lighten2,
+                DrawerBackground = Colors.Gray.Lighten4,
+                DrawerText = Colors.Gray.Darken4,
+                DrawerIcon = "rgba(255,64,129,1)",
+            },
+
+            LayoutProperties = new LayoutProperties()
+            {
+                DrawerWidthLeft = "260px",
+                DrawerWidthRight = "300px"
+            }
+        };
+}

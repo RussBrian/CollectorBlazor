@@ -1,0 +1,61 @@
+﻿@using Collector.Client.Dtos.Login
+@using MudBlazor
+@inherits ComponentBase;
+
+<div class="step1-container">
+    <MudForm Model="reqUserDto">
+        <label class="custom-label">Nombre</label>
+        <MudTextField @bind-Value="@reqUserDto.FirstName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+        <label class="custom-label mt-5">Apellido</label>
+        <MudTextField @bind-Value="@reqUserDto.LastName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+        <div class="d-flex justify-content-between mt-5">
+            <label class="custom-label">Nombre de Usuario</label>
+            <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
+                <ChildContent>
+                    <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
+                </ChildContent>
+                <TooltipContent>
+                    <MudText Style="font-weight:bold; font-size:small">No debe iniciar con un número.</MudText>
+                    <MudText Style="font-weight:bold; font-size:small">No debe tener espacios.</MudText>
+                </TooltipContent>
+            </MudTooltip>
+        </div>
+        <MudTextField @bind-Value="@reqUserDto.UserName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+        <p class="custom-message-required">El campo es requerido.</p>
+    </MudForm>
+</div>
+
+
+<style>
+    .custom-label {
+        font-weight: 700;
+        color: #BDBABA;
+    }
+
+        .custom-label::before {
+            content: '*';
+            color: #ef4444;
+            margin-right: 0.25rem;
+        }
+
+    .custom-message-required {
+        color: #7B885B;
+        font-weight: bold;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+    }
+
+        .custom-message-required::before {
+            content: '*';
+            color: #ef4444;
+            margin-right: 0.25rem;
+        }
+</style>
+
+@code {
+    [Parameter]
+    public ReqUserDto reqUserDto { get; set; }
+
+    [Parameter]
+    public bool IsInstitution { get; set; }
+}

@@ -1,0 +1,171 @@
+﻿@page "/"
+@using Collector.Client.Dtos.Login;
+@using Collector.Client.Dtos.Response
+@using Collector.Client.Services.Login;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using Blazored.FluentValidation;
+@using Microsoft.JSInterop
+@using MudBlazor
+@inject Collector.Client.SessionHelpers.SessionManager sesionManager;
+@inject ILoginService loginservice;
+@inject NavigationManager Navigation;
+@inject IJSRuntime JSRuntime
+
+<BaseScreen CustomStyles="background-color:#25251D">
+
+    <div Class="secondary-container">
+        <!-- Columna izquierda (Bienvenida) -->
+        <div Class="left-container">
+            <h4 class="welcome-text">
+                BIENVENIDO <br />A<br /> COLLECTORD
+            </h4>
+
+            <MudText Typo="Typo.body1" Class="description-text">
+                CollectoRD es una iniciativa que surge para colaborar con el medio ambiente, esta
+                iniciativa permite que puedas conectar con autoridades o personas para limpiar el futuro del país.
+            </MudText>
+
+            <MudText Typo="Typo.body1" Class="register-text">
+                ¿No tienes una cuenta? <br />
+                <span class="font-bold">¡Vamos regístrate!</span>
+            </MudText>
+            <MudButtonGroup Variant="Variant.Filled">
+                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" OnClick="@(() =>SendToInstitutionReg(true))">
+                    Institución
+                </MudButton>
+                <MudButton Class="register-btn" Style="background-color:#7B885B; color:white" OnClick="@(() => SendToInstitutionReg(false))">
+                    Persona
+                </MudButton>
+            </MudButtonGroup>
+        </div>
+
+        <!-- Columna derecha (Formulario de inicio de sesión) -->
+        <div Class="right-container">
+            <MudText Typo="Typo.h4" Class="login-text fw-bold ms-4 mb-2">Iniciar Sesión</MudText>
+            <EditForm Model="@loginModel" OnValidSubmit="Onsubmit">
+                <FluentValidationValidator />
+
+
+                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
+                Label="Correo electrónico" InputType="InputType.Email" Class="custom-label w-full mb-3" />
+                <ValidationMessage style="validation-message" For="(() => loginModel.Email)" />
+
+                <MudTextField @bind-Value="loginModel.Password" Variant="Variant.Outlined"
+                Label="Contraseña" InputType="InputType.Password" Class="custom-label w-full" />
+                <ValidationMessage class="validation-message" For="(() => loginModel.Password)" />
+
+                <MudText Class="ms-15 mt-3">
+                    <NavLink href="ForgotPassword" style="color:#4C673C; font-weight:bolder" class="forgetPasswordText">¿Olvidaste tu contraseña?</NavLink>
+                </MudText>
+
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+                Style="background-color:#7B885B; margin-top:10px;
+                        color:white; width:100%">
+                    Iniciar Sesion
+                </MudButton>
+
+            </EditForm>
+        </div>
+    </div>
+</BaseScreen>
+
+<style>
+    .description-text {
+    color: #4a4a4a;
+    text-align: center;
+    margin-bottom: 24px;
+    }
+
+    login-input {
+    background-color: #FFFCFC91;
+    border-radius: 20px;
+    }
+
+    .register-text {
+    font-weight: bold;
+    color: #4a4a4a;
+    text-align: center;
+    margin-bottom: 19px;
+    }
+
+    .mud-button.register-btn {
+    background-color: #7B885B;
+    color: black;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 3px solid #767572;
+    cursor: pointer;
+    }
+
+    .login-btn {
+    margin-top: 20px;
+    background-color: #7B885B;
+    font-weight: 600;
+    width: 100%;
+    padding: 12px 0;
+    color: white;
+    border-radius: 8px;
+    }
+
+    .custom-label .mud-input-label {
+    background-color: #D0D0CF;
+    padding: 0 4px;
+    font-weight: bold;
+    }
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon){
+    const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+    }
+    });
+    Toast.fire({
+    icon: icon,
+    title: Message
+    });
+    };
+</script>
+
+
+@code {
+
+    [CascadingParameter]
+    private ReqLoginDto loginModel { set; get; } = new();
+    public bool _IsInstitution { set; get; }
+    private Response<ResLoginDto> resModel { set; get; }
+
+    public async Task Onsubmit()
+    {
+        var resModel = await loginservice.Login(loginModel);
+
+        if (resModel.IsSuccess)
+        {
+            Navigation.NavigateTo("/User/Reports", forceLoad: true);
+        }
+        else
+        {
+            resModel.ErrorMessage = "Credenciales no validas!";
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", resModel.ErrorMessage, "error");
+        }
+    }
+
+    public void SendToInstitutionReg(bool isInstitution)
+    {
+        _IsInstitution = isInstitution;
+        Navigation.NavigateTo($"/EmailVerification/{_IsInstitution}");
+    }
+}
