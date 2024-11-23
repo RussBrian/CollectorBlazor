@@ -1,15 +1,12 @@
 ﻿@page "/RegisterUser/{_IsInstitution:bool}"
 @using Collector.Client.Dtos.Login
-@using Collector.Client.Dtos
-@using Collector.Client.Services.Login
-@using Microsoft.AspNetCore.Components.Web
 @using Collector.Client.Components.Shared
-@using MudBlazor
 @inject NavigationManager Navigation
 
 <div class="main-container">
     <div class="form-container">
-
+        
+        
         <ProgressBar Value="Value" />
 
         <div class="step-header">
@@ -123,7 +120,7 @@
     #region OnFocus Methods
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (step == 1 && string.IsNullOrWhiteSpace(reqUserDto.Name) && nameField != null)
+        if (step == 1 && string.IsNullOrWhiteSpace(reqUserDto.FirstName) && nameField != null)
         {
             await nameField.FocusAsync();
         }
