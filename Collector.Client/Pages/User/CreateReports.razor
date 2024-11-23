@@ -3,36 +3,47 @@
 @using Collector.Client.Components.Shared;
 
 <div class="primary-container">
-    <main class="secundary-container">
+    <main class="secondary-container">
 
         <h3 class="title">Crea un reporte</h3>
-
         <div class="card-body-container">
-
             <div class="text-field-container">
-                <div class="text-field-style">
 
-                    <div class="d-flex justify-content-between">
-                        <label class="custom-label">Titulo del reporte</label>
-                        <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
-                                       TooplTipDescription="Biggy es el final de los gordo" 
-                                       ToolTipStyle="color:#37490B"/>
-                    </div>
-                    <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="text-input" />
-                    <p class="text-secondary">Coloque un titulo que identifique su reporte.</p>
-                </div>
-                
                 <div class="text-field-style">
+                    <div class="d-flex justify-content-between">
+                        <label class="custom-label">Título del reporte</label>
+                        <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
+                                       TooplTipDescription="Biggy es el final de los gordo"
+                                       ToolTipStyle="color:#37490B" />
+                    </div>
+                    <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
+                    <p class="text-secondary">Coloque un título que identifique su reporte.</p>
+                </div>
+
+                <div class="text-field-style" style="width: 30%;">
                     <label class="custom-label">Fecha</label>
-                    <MudTextField InputType="InputType.Date" @bind-Value="TValue" 
-                    Variant="Variant.Outlined" Style="text-input" />
+                    <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
+                                  Variant="Variant.Outlined" Style="custom-textfield" />
                 </div>
             </div>
 
             <div class="description-container">
                 <label class="custom-label">Description</label>
-                <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="text-input" />
+                <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
                 <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
+            </div>
+
+            <div class="map-container">
+                <Map width="250px" height="250px"/>
+                  <div>
+                    <img class="rounded-3" src="./BosqueLindo.png" width="250px" height="250px"/>
+                </div>
+            </div>
+
+            <div class="container-message d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                         Size="Size.Small" Style="background-color:darkgray"/>
+                <p class="text-secondary">Dar click sobre el icono para ver mas detalles del campo a completar.</p>
             </div>
         </div>
         <div class="button-send-container">
@@ -45,14 +56,7 @@
     </main>
 </div>
 
-<style>
-    .text-input{
-        color:black;
-        border: 6px solid #37490B
-    }
-</style>
-
 @code {
-    public string TValue { get; set; }
-    public string TValue2 { get; set; }
+    public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
+    public string? TValue2 { get; set; }
 }
