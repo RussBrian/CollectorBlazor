@@ -64,5 +64,28 @@ namespace Collector.Client.Utilities.Extensions
 
             return JsonConvert.DeserializeObject<TResponse>(result);
         }
+
+        public async Task<TResponse?> CustomFormDataAsync<TResponse, TRequest>(string uri, TRequest request)
+        {
+            Uri url = new(uri);
+
+            using MultipartFormDataContent content = [];
+
+            foreach(var property in typeof(TRequest).GetProperties())
+            {
+                string? value = property.GetValue(request)?.ToString();
+
+                content.Add(new StringContent(value), property.Name);
+            }
+
+            HttpResponseMessage response = await _httpClient.PostAsync(url, content);
+
+            _ = response.IsSuccessStatusCode ? true : throw new AggregateException("");
+
+            string result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<TResponse>(result);
+
+        }
     }
 }
