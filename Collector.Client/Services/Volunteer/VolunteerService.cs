@@ -20,9 +20,9 @@ namespace Collector.Client.Services.Volunteer
         }
 
         public async Task<ResVolunteerDto?> CreateVolunteer(ReqVolunteerDto request)
-            => await _httpExtension.CustomPostFormAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService,request);
+            => await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService,request);
 
         public async Task<ResVolunteerDto?> RegisterUserInVolunteer(ReqVolunteerDto request)
-            => await _httpExtension.CustomPostFormAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
+            => await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
     }
 }
