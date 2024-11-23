@@ -83,7 +83,7 @@
 
     public void NavigateToCreateReports()
     {
-        navManager.NavigateTo("/User/Create/Reports");
+        navManager.NavigateTo("/User/Create/Reports", forceLoad:true);
     }
 
     private async Task<List<ReportDto>> GetUserReports(string UserId = "9zeirWQJnldZ2qizLbalnxjxpQh2")
