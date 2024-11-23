@@ -13,7 +13,7 @@
                     <div class="d-flex justify-content-between">
                         <label class="custom-label">Título del reporte</label>
                         <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
-                                       TooplTipDescription="Biggy es el final de los gordo"
+                                       TooplTipDescription="Coloque un titulo que permita identificar su reporte. Ej: Gran cantidad de basura en Sabana Perdida"
                                        ToolTipStyle="color:#37490B" />
                     </div>
                     <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
@@ -34,15 +34,15 @@
             </div>
 
             <div class="map-container">
-                <Map width="250px" height="250px"/>
-                  <div>
-                    <img class="rounded-3" src="./BosqueLindo.png" width="250px" height="250px"/>
+                <Map width="250px" height="250px" />
+                <div>
+                    <img class="rounded-3" src="./BosqueLindo.png" width="250px" height="250px" />
                 </div>
             </div>
 
             <div class="container-message d-flex">
                 <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
-                         Size="Size.Small" Style="background-color:darkgray"/>
+                         Size="Size.Small" Style="background-color:darkgray" />
                 <p class="text-secondary">Dar click sobre el icono para ver mas detalles del campo a completar.</p>
             </div>
         </div>
