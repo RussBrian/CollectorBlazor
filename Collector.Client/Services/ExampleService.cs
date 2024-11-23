@@ -15,14 +15,14 @@ namespace Collector.Client.Services
             _appOptions = options.Value;
         }
 
-        public async Task<object?> GetUser() => await _httpClientService.CustomGetAsync<User>(_appOptions.UrlExampleService);
-        public async Task<object?> GetUserById(int id) => await _httpClientService.CustomGetAsync<User>(_appOptions.UrlExampleService, id);
+        public async Task<object?> GetUser() => await _httpClientService.CustomGetAsync<ReqExample>(_appOptions.UrlExampleService);
+        public async Task<object?> GetUserById(int id) => await _httpClientService.CustomGetAsync<ReqExample>(_appOptions.UrlExampleService, id);
 
-        public async Task<ResponseUser?> PostUser(User user)
-            => await _httpClientService.CustomPostAsync<ResponseUser, User>(_appOptions.UrlExampleService, user);
+        public async Task<ResponseExample?> PostUser(ReqExample example)
+            => await _httpClientService.CustomPostAsync<ResponseExample, ReqExample>(_appOptions.UrlExampleService, example);
     }
 
-    public class User
+    public class ReqExample
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
@@ -30,7 +30,7 @@ namespace Collector.Client.Services
         public int Age { get; set; }
     }
 
-    public class ResponseUser
+    public class ResponseExample
     {
         public string Message { get; set; } = string.Empty;
     }

@@ -1,55 +1,57 @@
-﻿@page "/User/Create/Reports"
+﻿@page "/Volunteer/Create"
 @using Blazored.FluentValidation
 @using Collector.Client.Components.Shared;
+@using Collector.Client.Dtos.Volunteer
+
 
 <div class="primary-container">
     <main class="secondary-container">
 
-        <h3 class="title">Crea un reporte</h3>
+        <h3 class="title">Crea un voluntariado</h3>
         <div class="card-body-container">
             <div class="text-field-container">
 
                 <div class="text-field-style">
                     <div class="d-flex justify-content-between">
-                        <label class="custom-label">Título del reporte</label>
+                        <label class="custom-label">Título del voluntariado</label>
                         <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
                                        TooplTipDescription="Ayudame"
                                        ToolTipStyle="color:#37490B" />
                     </div>
-                    <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
-                    <p class="text-secondary">Coloque un título que identifique su reporte.</p>
+                    <MudTextField @bind-Value="ReqVolunteerDto.name" Variant="Variant.Outlined" Style="custom-textfield" />
+                    <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
                 </div>
 
                 <div class="text-field-style" style="width: 30%;">
                     <label class="custom-label">Fecha</label>
-                    <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
+                    <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="ReqVolunteerDto.volunteerDate"
                                   Variant="Variant.Outlined" Style="custom-textfield" />
                 </div>
             </div>
 
             <div class="description-container">
                 <label class="custom-label">Descripción</label>
-                <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
-                <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
+                <MudTextField @bind-Value="ReqVolunteerDto.details" Variant="Variant.Outlined" Style="custom-textfield" />
+                <p class="text-secondary">Coloque una descripción que permita detallar las actividades a realizar o algunas indumentarias requeridas.</p>
             </div>
 
             <div class="map-container">
                 <div>
                     <label class="custom-label">Ubicación</label>
                     <Map width="275px" height="250px" />
-                    <MudButtonComponent Text="Confirmar ubicación"
-                                        Variant="Variant.Outlined" Style="background-color:transparent;
+                    <MudButton Variant="Variant.Outlined" Style="background-color:transparent;
                                     width: 200px; border: 3px solid #767572; color:white;
-                                    border-radius: 0.5rem;font-weight:bold; margin-top:15px ; margin-left:25px" />
+                                    border-radius: 0.5rem;font-weight:bold; margin-top:15px ; margin-left:25px">Confirmar ubicación</MudButton>
+
                 </div>
-                
+
                 <div>
                     <label class="custom-label">Imágenes</label>
                     <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
-                    <MudButtonComponent Text="Añadir imagen"
-                                        Variant="Variant.Outlined" Style="background-color:transparent;
+                    <MudButton Variant="Variant.Outlined" Style="background-color:transparent;
                                     width: 155px; border: 3px solid #767572; color: white;
-                                        border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px" />
+                                        border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px">Añadir imagen</MudButton>
+
                 </div>
             </div>
 
@@ -70,6 +72,7 @@
 </div>
 
 @code {
-    public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
-    public string? TValue2 { get; set; }
+    [Parameter]
+    public ReqVolunteerDto ReqVolunteerDto { get; set; } = new();
+    public string Date { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
 }
