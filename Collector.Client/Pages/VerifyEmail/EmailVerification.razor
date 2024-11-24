@@ -1,4 +1,4 @@
-﻿@page "/EmailVerification/{_IsInstitution:bool}"
+﻿@page "/EmailVerification{_IsInstitution:bool}"
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Pages.Register
 @using Collector.Client.Components.Shared
@@ -29,7 +29,7 @@
 
             @if (step == 1)
             {
-            <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution"/>
+            <Step1EmailVer reqUserDto="reqUserDto" IsInstitution="_IsInstitution"/>
             }
             @if(step == 2)
             {

@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using System.ComponentModel.DataAnnotations;
 
 namespace Collector.Client.Dtos.Login
 {
     public class ReqUserDto
     {
-        public string FirstName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
 
@@ -18,7 +19,6 @@ namespace Collector.Client.Dtos.Login
 
         [Compare("Password")]
         public string ConfirmPassword { get; set; } = string.Empty;
-        public IFormFile? ProfileImage { get; set; }
-        public string? Image { get; set; }
-    } 
+        public IBrowserFile? ProfileImage { get; set; }
+    }
 }
