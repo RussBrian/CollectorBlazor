@@ -1,5 +1,4 @@
-﻿using Collector.Client.Dtos.Response;
-using Collector.Client.Dtos.Volunteer;
+﻿using Collector.Client.Dtos.Volunteer;
 
 namespace Collector.Client.Services.Volunteer
 {
