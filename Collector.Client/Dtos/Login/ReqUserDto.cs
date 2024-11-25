@@ -17,7 +17,8 @@ namespace Collector.Client.Dtos.Login
         public string? Password { get; set; } 
 
         [Compare("Password")]
-        public string? ConfirmPassword { get; set; } 
+        public string? ConfirmPassword { get; set; }
+        public IBrowserFile? ProfileImage { get; set; }
         public string? Image { get; set; }
     } 
 }
