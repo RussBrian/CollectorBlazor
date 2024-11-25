@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JS
+﻿@using Collector.Client.Dtos.Reports
+@inject IJSRuntime JS
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -9,12 +10,10 @@
 @code {
     [Parameter] public string Width { get; set; } = "100%";
     [Parameter] public string Height { get; set; } = "400px";
-    [Parameter] public double Latitude { get; set; } = 18.4885; // Coordenadas iniciales de Santo Domingo Este
-    [Parameter] public double Longitude { get; set; } = -69.8577;
+    public double Latitude { get; set; } = 18.4506168;
+    public double Longitude { get; set; } = -69.6633953;
     [Parameter] public int Zoom { get; set; } = 12;
-
-    public double SelectedLatitude { get; set; }
-    public double SelectedLongitude { get; set; }
+    [Parameter] public EventCallback<(double Latitude, double Longitude)> OnLocationSelected { get; set; }
 
     private DotNetObjectReference<LeafletMap>? dotNetRef;
 
@@ -28,10 +27,9 @@
     }
 
     [JSInvokable("OnMapClick")]
-    public void OnMapClick(double latitude, double longitude)
+    public async Task OnMapClick(double latitude, double longitude)
     {
-        SelectedLatitude = latitude;
-        SelectedLongitude = longitude;
-        StateHasChanged(); 
+        await OnLocationSelected.InvokeAsync((latitude, longitude));
     }
+
 }

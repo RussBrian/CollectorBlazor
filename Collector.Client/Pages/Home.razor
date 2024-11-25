@@ -7,8 +7,8 @@
 @using Microsoft.AspNetCore.Authentication.Cookies;
 @using Blazored.FluentValidation;
 @using Microsoft.JSInterop
-@using MudBlazor
-@inject Collector.Client.SessionHelpers.SessionManager sesionManager;
+@using MudBlazor;
+@inject Collector.Client.SessionHelpers.SessionManager _sessionManager;
 @inject ILoginService loginservice;
 @inject NavigationManager Navigation;
 @inject IJSRuntime JSRuntime
@@ -46,7 +46,6 @@
             <MudText Typo="Typo.h4" Class="login-text fw-bold ms-4 mb-2">Iniciar Sesión</MudText>
             <EditForm Model="@loginModel" OnValidSubmit="Onsubmit">
                 <FluentValidationValidator />
-                @*Inputs for the user *@
 
                 <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
                               Label="Correo electrónico" InputType="InputType.Email" Class="custom-label w-full mb-3" />
@@ -154,7 +153,7 @@
 
         if (resModel.IsSuccess)
         {
-            Navigation.NavigateTo("/User/Reports", forceLoad: true);
+            Navigation.NavigateTo("/User/Index", forceLoad: true);
         }
         else
         {

@@ -3,11 +3,12 @@
 @using Collector.Client.Dtos.Reports
 @using Collector.Client.Services
 @using Collector.Client.Services.Reports
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization;
 @using System.Security.Claims
 @inject ReportsService reportService;
 @inject NavigationManager navManager;
-@inject Collector.Client.SessionHelpers.SessionManager sesionManager
+@inject Collector.Client.SessionHelpers.SessionManager _sessionManager;
 
 @{
     <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>

@@ -5,20 +5,17 @@
 
 
 <MudNavMenu Class="heightFix d-flex flex-column">
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
-        Inicio
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Primary" Href="/User/Create/Reports" Match="NavLinkMatch.All">
+        <MudText Color="Color.Primary">Inicio</MudText>
     </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Filled.LibraryBooks" Href="/" Match="NavLinkMatch.All">
-        Reports
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Filled.LibraryBooks" IconColor="Color.Primary" Href="/" Match="NavLinkMatch.All">
+        <MudText Color="Color.Primary">Mis reportes</MudText>
     </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
-        Create 
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Primary" Href="/" Match="NavLinkMatch.All">
+        <MudText Color="Color.Primary">Crear reportes</MudText>
     </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
-        Inicio
-    </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" Href="/" Match="NavLinkMatch.All">
-        <MudButton Color="Color.Error" OnClick="LogOutMethod">LogOut</MudButton>
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Primary" OnClick="LogOutMethod" Match="NavLinkMatch.All">
+        <MudText Color="Color.Primary">Log out</MudText>
     </MudNavLink>
 </MudNavMenu>
 

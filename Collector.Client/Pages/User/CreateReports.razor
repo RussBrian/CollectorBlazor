@@ -1,78 +1,126 @@
 ﻿@page "/User/Create/Reports"
 @using Blazored.FluentValidation
 @using Collector.Client.Components.Shared;
+@using Collector.Client.Dtos.Login
+@using Collector.Client.Dtos.Reports;
+@using Collector.Client.Services.Reports;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ReportsService _reportService;
+@inject ProtectedSessionStorage _sessionStorage;
 
 <div class="primary-container">
     <main class="secondary-container">
+        <EditForm Model="@Report" OnSubmit="OnSubmitReport" class="edit-form-style">
 
-        <h3 class="title">Crea un reporte</h3>
-        <div class="card-body-container">
-            <div class="text-field-container">
+            <h3 class="title">Crea un reporte</h3>
+            <div class="card-body-container">
+                <!-- Aquí inicia el EditForm -->
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-                <div class="text-field-style">
-                    <div class="d-flex justify-content-between">
-                        <label class="custom-label">Título del reporte</label>
-                        <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
-                                       TooplTipDescription="Ayudame"
-                                       ToolTipStyle="color:#37490B" />
+                <div class="text-field-container align-content-center">
+
+                    <div class="text-field-style">
+                        <div class="d-flex justify-content-between">
+                            <label class="custom-label">Título del reporte</label>
+                            <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
+                                           TooplTipDescription="Ayudame"
+                                           ToolTipStyle="color:#37490B" />
+                        </div>
+                        <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield" />
+                        <p class="text-secondary">Coloque un título que identifique su reporte.</p>
                     </div>
-                    <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
-                    <p class="text-secondary">Coloque un título que identifique su reporte.</p>
+
+                    <div class="text-field-style" style="width: 30%;">
+                        <label class="custom-label">Fecha</label>
+                        <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
+                                      Variant="Variant.Outlined" Style="custom-textfield" />
+                    </div>
                 </div>
 
-                <div class="text-field-style" style="width: 30%;">
-                    <label class="custom-label">Fecha</label>
-                    <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
-                                  Variant="Variant.Outlined" Style="custom-textfield" />
-                </div>
-            </div>
-
-            <div class="description-container">
-                <label class="custom-label">Descripción</label>
-                <MudTextField @bind-Value="TValue2" Variant="Variant.Outlined" Style="custom-textfield" />
-                <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
-            </div>
-
-            <div class="map-container">
-                <div>
-                    <label class="custom-label">Ubicación</label>
-                    <LeafletMap Width="275px" Height="250px" Latitude="18.4885" Longitude="-69.8577" Zoom="15" />
-                    <MudButtonComponent Text="Confirmar ubicación"
-                                        Variant="Variant.Outlined" Style="background-color:transparent;
-                        width: 200px; border: 3px solid #767572; color:white;
-                        border-radius: 0.5rem;font-weight:bold; margin-top:15px ; margin-left:25px" />
+                <div class="description-container">
+                    <label class="custom-label">Descripción</label>
+                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield" />
+                    <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
                 </div>
 
+                <div class="map-container">
+                    <div>
+                        <label class="custom-label">Ubicación</label>
+                        <LeafletMap Width="275px" Height="250px" Zoom="15" OnLocationSelected="HandleLocationSelected" />
+                        <MudButtonComponent Text="Confirmar ubicación"
+                                            Variant="Variant.Outlined" Style="background-color:transparent;
+                            width: 200px; border: 3px solid #767572; color:white;
+                            border-radius: 0.5rem;font-weight:bold; margin-top:15px ; margin-left:25px" />
+                    </div>
 
-                <div>
-                    <label class="custom-label">Imágenes</label>
-                    <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
-                    <MudButtonComponent Text="Añadir imagen"
-                                        Variant="Variant.Outlined" Style="background-color:transparent;
-                                    width: 155px; border: 3px solid #767572; color: white;
-                                        border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px" />
+                    <div>
+                        <label class="custom-label">Imágenes</label>
+                        <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
+                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" AppendMultipleFiles="true" MaximumFileCount="4">
+                            <ActivatorContent>
+                                <MudButtonComponent Text="Añadir imagen"
+                                                    Variant="Variant.Outlined" Style="background-color:transparent;
+                                        width: 155px; border: 3px solid #767572; color: white;
+                                            border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px" />
+                            </ActivatorContent>
+                        </MudFileUpload>
+                    </div>
+                </div>
+
+                <div class="container-message d-flex">
+                    <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                             Size="Size.Small" Style="background-color:darkgray" />
+                    <p class="text-secondary">Dar click sobre el icono para ver mas detalles del campo a completar.</p>
                 </div>
             </div>
-
-            <div class="container-message d-flex">
-                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
-                         Size="Size.Small" Style="background-color:darkgray" />
-                <p class="text-secondary">Dar click sobre el icono para ver mas detalles del campo a completar.</p>
-            </div>
-        </div>
-        <div class="button-send-container">
-            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
-                       Style="background-color:#515B3B; margin-buttom:10px;
+            <div class="button-send-container">
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+                           Style="background-color:#515B3B;
                         color:white; width:400px;">
-                Crear reporte
-            </MudButton>
-        </div>
+                    Crear reporte
+                </MudButton>
+            </div>
+        </EditForm>
     </main>
 </div>
 
-
+<style>
+    .edit-form-style {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+</style>
 
 @code {
     public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
-    public string? TValue2 { get; set; }
+    public ReportDto Report { get; set; } = new();
+    IList<IBrowserFile> files = [];
+
+    private void HandleLocationSelected((double Latitude, double Longitude) location)
+    {
+        Report.Latitude = location.Latitude;
+        Report.Longitude = location.Longitude;
+    }
+
+    private void UploadFiles(IBrowserFile file)
+    {
+        files.Add(file);
+    }
+
+    private void UploadFiles(InputFileChangeEventArgs args)
+    {
+        files.Add(args.File);
+    }
+
+    public async Task OnSubmitReport()
+    {
+        var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
+        Report.FireBaseCode = user.Value.IdToken;
+        var response = await _reportService.CreateReport(Report, files);
+    }
 }
