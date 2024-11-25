@@ -2,7 +2,8 @@
 @using Blazored.FluentValidation
 @using Collector.Client.Components.Shared;
 @using Collector.Client.Dtos.Volunteer
-
+@using Collector.Client.Services.Volunteer
+@inject IVolunteerService _volunteerService;
 
 <div class="primary-container">
     <main class="secondary-container">
@@ -24,15 +25,9 @@
 
                 <div class="text-field-style" style="width: 30%;">
                     <label class="custom-label">Fecha</label>
-                    <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="ReqVolunteerDto.volunteerDate"
+                    <MudTextField InputType="InputType.Date" @bind-Value="ReqVolunteerDto.volunteerDate"
                                   Variant="Variant.Outlined" Style="custom-textfield" />
                 </div>
-            </div>
-
-            <div class="description-container">
-                <label class="custom-label">Descripción</label>
-                <MudTextField @bind-Value="ReqVolunteerDto.details" Variant="Variant.Outlined" Style="custom-textfield" />
-                <p class="text-secondary">Coloque una descripción que permita detallar las actividades a realizar o algunas indumentarias requeridas.</p>
             </div>
 
             <div class="map-container">
@@ -72,7 +67,17 @@
 </div>
 
 @code {
+
     [Parameter]
     public ReqVolunteerDto ReqVolunteerDto { get; set; } = new();
-    public string Date { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
+
+    protected override void OnInitialized()
+    {
+        ReqVolunteerDto.volunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
+    }
+
+    private async Task OnSubmit()
+    {
+        ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
+    }
 }
