@@ -3,8 +3,6 @@
 @inherits LayoutComponentBase
 @using Blazored.SessionStorage
 @using Microsoft.AspNetCore.Components.Authorization;
-@inject Collector.Client.SessionHelpers.SessionManager sesionManager
-
 
 <MudThemeProvider Theme="MyCustomTheme" IsDarkMode="_isDark" />
 <MudPopoverProvider />
@@ -62,5 +60,6 @@
                 DrawerWidthLeft = "260px",
                 DrawerWidthRight = "300px"
             }
+
         };
 }

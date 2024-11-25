@@ -1,0 +1,26 @@
+﻿@page "/Volunteer/MyVolunteers"
+@using Blazored.FluentValidation
+@using Collector.Client.Components.Shared;
+@using Collector.Client.Dtos
+@using Collector.Client.Dtos.Volunteer
+@using Collector.Client.Services.Volunteer
+@inject IVolunteerService _volunteerService;
+
+<div class="first-container">
+    <p>Home Volunteers</p>
+</div>
+
+
+@code {
+   
+    private List<ResVolunteerDto>? volunteers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var pagination = new PaginationDto { Page = 1, AmountofInfo = 10 };
+
+        volunteers = await _volunteerService.GetAllVolunteers(pagination);
+
+        Console.WriteLine($"Datos recibidos: {System.Text.Json.JsonSerializer.Serialize(volunteers)}");
+    }
+}

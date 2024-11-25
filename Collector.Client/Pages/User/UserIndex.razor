@@ -1,7 +1,9 @@
 ﻿@page "/User/Index"
 @using Collector.Client.Services.Login;
+@using Microsoft.AspNetCore.Authorization
 @inject ILoginService loginservice;
 @inject NavigationManager navigatorManager
+@attribute [Authorize(Roles = "Person")]
 
 <BaseScreen CustomStyles="background-color:#CED6C8">
     <h1>Welcome to collector</h1>
