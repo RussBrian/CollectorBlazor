@@ -25,39 +25,39 @@
                 <BackToLoginBtn ButtonText="Paso anterior" OnClick="PreviousStep" />
             }
 
-            </div>
+        </div>
 
-            @if (step == 1)
+        @if (step == 1)
+        {
+            <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution" />
+        }
+        @if (step == 2)
+        {
+            <Step2EmailVer />
+        }
+
+
+        <div class="buttons-container">
+            @if (step < 2)
             {
-            <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution"/>
+                <div>
+                    <MudButton OnClick="() => NextStep()" Color="Color.Primary"
+                               Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
+                </div>
             }
-            @if(step == 2)
+            else
             {
-                <Step2EmailVer/>
+                <MudButton Type="Submit" Color="Color.Primary"
+                           Variant="Variant.Filled" Style="width:230px">Registrarme</MudButton>
             }
 
-
-            <div class="buttons-container">
-                @if (step < 2)
-                {
-                    <div>
-                        <MudButton OnClick="() => NextStep()" Color="Color.Primary"
-                                   Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
-                    </div>
-                }
-                else
-                {
-                    <MudButton Type="Submit" Color="Color.Primary"
-                               Variant="Variant.Filled" Style="width:230px">Registrarme</MudButton>
-                }
-
-                @if (step > 1)
-                {
-                    <MudButton OnClick="PreviousStep" Variant="Variant.Outlined"
-                               Style="background-color:transparent; width: 155px; border: 3px solid #767572;
+            @if (step > 1)
+            {
+                <MudButton OnClick="PreviousStep" Variant="Variant.Outlined"
+                           Style="background-color:transparent; width: 155px; border: 3px solid #767572;
                 color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
-                }
-            </div>
+            }
+        </div>
     </div>
     <div class="aside-background"></div>
 </div>

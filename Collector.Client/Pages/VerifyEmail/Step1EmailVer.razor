@@ -20,10 +20,10 @@
             </div>
             <MudTextField @bind-Value="reqUserDto.Identification"
                           Required="true"
+                          AutoFocus="true"
                           Variant="Variant.Outlined"
                           Style="color:white;"
-                          OnBlur="ValidateIdentification"
-                          Immediate="true" />
+                           />
             @if (!string.IsNullOrEmpty(ValidationMessage))
             {
                 <MudText Style="color:red; font-size:small;">@ValidationMessage</MudText>
@@ -45,11 +45,10 @@
             </div>
             <MudTextField @bind-Value="reqUserDto.Identification"
                           Required="true"
+                          AutoFocus="true"
                           Variant="Variant.Outlined"
                           Style="color:white;"
-                          OnInput="() => FormatIdentification()"
-                          Immediate="true"
-                          OnBlur="ValidateIdentification" />
+                           />
             @if (!string.IsNullOrEmpty(ValidationMessage))
             {
                 <MudText Style="color:red; font-size:small;">@ValidationMessage</MudText>

@@ -5,7 +5,7 @@
 <div class="step1-container">
     <MudForm Model="reqUserDto">
         <label class="custom-label">Nombre</label>
-        <MudTextField @bind-Value="@reqUserDto.FirstName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+        <MudTextField @bind-Value="@reqUserDto.FirstName" AutoFocus="true" Required="true" Variant="Variant.Outlined" Style="color:white;" />
         <label class="custom-label mt-5">Apellido</label>
         <MudTextField @bind-Value="@reqUserDto.LastName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
         <div class="d-flex justify-content-between mt-5">

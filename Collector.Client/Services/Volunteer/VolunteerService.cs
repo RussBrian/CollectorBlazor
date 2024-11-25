@@ -1,5 +1,4 @@
-﻿using Collector.Client.Dtos.Response;
-using Collector.Client.Dtos.Volunteer;
+﻿using Collector.Client.Dtos.Volunteer;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
