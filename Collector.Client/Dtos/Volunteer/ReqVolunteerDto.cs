@@ -11,7 +11,7 @@ namespace Collector.Client.Dtos.Volunteer
         public string? longitude { get; set; }
         public string? latitude { get; set; }
         public string? isPrivate { get; set; }
-        public DateTime? volunteerDate { get; set; }
+        public string volunteerDate { get; set; } = DateTime.Now.ToString("dd/MM/yyyy");
         public string? images { get; set; }
     }
 }
