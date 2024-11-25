@@ -5,7 +5,6 @@ using Collector.Client.Helpers;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
-using static MudBlazor.CategoryTypes;
 
 namespace Collector.Client.Services.Volunteer
 {
