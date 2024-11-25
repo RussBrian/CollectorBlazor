@@ -111,6 +111,26 @@ namespace Collector.Client.Utilities.Extensions
             }
 
         }
+        public async Task<TResponse?> CustomPostFormAsync<TResponse, TRequest>(string uri, TRequest request)
+        {
+            Uri url = new(uri);
+
+            using MultipartFormDataContent content = [];
+
+            foreach (var property in typeof(TRequest).GetProperties())
+            {
+                string? value = property.GetValue(request)?.ToString();
+
+                if (value != null)
+                    content.Add(new StringContent(value), property.Name);
+            }
+
+            HttpResponseMessage response = await _httpClient.PostAsync(url, content);
+
+            string result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<TResponse>(result);
+        }
         #endregion
 
         #region Method for Put

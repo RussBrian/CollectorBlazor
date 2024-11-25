@@ -5,20 +5,20 @@ namespace Collector.Client.Dtos.Login
 {
     public class ReqUserDto
     {
-        public string Name { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string UserName { get; set; } = string.Empty;
+        public string? FirstName { get; set; } 
+        public string? LastName { get; set; } 
+        public string? UserName { get; set; }
 
         [EmailAddress]
-        public string Email { get; set; } = string.Empty;
-        public string Identification { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-
+        public string? Email { get; set; } 
+        public string? Identification { get; set; } 
+        public string? Phone { get; set; } 
         [MinLength(8)]
-        public string Password { get; set; } = string.Empty;
+        public string? Password { get; set; } 
 
         [Compare("Password")]
-        public string ConfirmPassword { get; set; } = string.Empty;
+        public string? ConfirmPassword { get; set; }
         public IBrowserFile? ProfileImage { get; set; }
-    }
+        public string? Image { get; set; }
+    } 
 }
