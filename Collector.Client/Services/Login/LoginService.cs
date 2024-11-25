@@ -24,7 +24,7 @@ namespace Collector.Client.Services.Login
         {
            var result = await _httpclientService.CustomPostAsync<Response<ResLoginDto>,
                 ReqLoginDto>(_options.UrlLoginService, loginVm);
-            if (result.IsSuccess) return result; 
+            if (!result.IsSuccess) return result; 
             await _sesionManager.UpdateAuthenticationState(result.Value);
             return result; 
         }

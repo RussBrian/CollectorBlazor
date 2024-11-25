@@ -18,17 +18,16 @@
                     </TooltipContent>
                 </MudTooltip>
             </div>
-            <MudTextField
-                @bind-Value="reqUserDto.Identification"
-                Required="true"
-                Variant="Variant.Outlined"
-                Style="color:white;"
-                OnBlur="ValidateIdentification"
-                Immediate="true" />
-        @if (!string.IsNullOrEmpty(ValidationMessage))
-        {
-            <MudText Style="color:red; font-size:small;">@ValidationMessage</MudText>
-        }
+            <MudTextField @bind-Value="reqUserDto.Identification"
+                          Required="true"
+                          AutoFocus="true"
+                          Variant="Variant.Outlined"
+                          Style="color:white;"
+                           />
+            @if (!string.IsNullOrEmpty(ValidationMessage))
+            {
+                <MudText Style="color:red; font-size:small;">@ValidationMessage</MudText>
+            }
         }
         else
         {
@@ -44,14 +43,12 @@
                     </TooltipContent>
                 </MudTooltip>
             </div>
-            <MudTextField 
-                @bind-Value="reqUserDto.Identification" 
-                Required="true" 
-                Variant="Variant.Outlined" 
-                Style="color:white;" 
-                OnInput="() => FormatIdentification()"
-                Immediate="true" 
-                OnBlur="ValidateIdentification" />
+            <MudTextField @bind-Value="reqUserDto.Identification"
+                          Required="true"
+                          AutoFocus="true"
+                          Variant="Variant.Outlined"
+                          Style="color:white;"
+                           />
             @if (!string.IsNullOrEmpty(ValidationMessage))
             {
                 <MudText Style="color:red; font-size:small;">@ValidationMessage</MudText>
@@ -80,70 +77,72 @@
         color: #BDBABA;
     }
 
-    .custom-label::before {
-        content: '*';
-        color: #ef4444;
-        margin-right: 0.25rem;
-    }
+        .custom-label::before {
+            content: '*';
+            color: #ef4444;
+            margin-right: 0.25rem;
+        }
 
 </style>
+
+
 @code {
-    
-[Parameter]
-public ReqUserDto reqUserDto { get; set; } = new ReqUserDto();
-[Parameter]
-public bool _IsInstitution { get; set; }
 
-private string ValidationMessage { get; set; } = string.Empty;
+    [Parameter]
+    public ReqUserDto reqUserDto { get; set; } = new ReqUserDto();
+    [Parameter]
+    public bool _IsInstitution { get; set; }
 
-private void ValidateIdentification()
-{
-    string identification = Regex.Replace(reqUserDto.Identification ?? string.Empty, @"-", "");
+    private string ValidationMessage { get; set; } = string.Empty;
 
-    if (_IsInstitution)
+    private void ValidateIdentification()
     {
-        if (!Regex.IsMatch(identification, @"^\d{9}$"))
+        string identification = Regex.Replace(reqUserDto.Identification ?? string.Empty, @"-", "");
+
+        if (_IsInstitution)
         {
-            ValidationMessage = "El RNC debe tener exactamente 9 dígitos. Ejemplo: 000-00000-0.";
+            if (!Regex.IsMatch(identification, @"^\d{9}$"))
+            {
+                ValidationMessage = "El RNC debe tener exactamente 9 dígitos. Ejemplo: 000-00000-0.";
+            }
+            else
+            {
+                ValidationMessage = string.Empty;
+            }
         }
         else
         {
-            ValidationMessage = string.Empty;
+            if (!Regex.IsMatch(identification, @"^\d{11}$"))
+            {
+                ValidationMessage = "La cédula debe tener exactamente 11 dígitos. Ejemplo: 000-0000000-0.";
+            }
+            else
+            {
+                ValidationMessage = string.Empty;
+            }
         }
     }
-    else
+    private void FormatIdentification(ChangeEventArgs e)
     {
-        if (!Regex.IsMatch(identification, @"^\d{11}$"))
+        string rawInput = Regex.Replace(e.Value?.ToString() ?? string.Empty, @"\D", "");
+
+        if (_IsInstitution)
         {
-            ValidationMessage = "La cédula debe tener exactamente 11 dígitos. Ejemplo: 000-0000000-0.";
+            reqUserDto.Identification = rawInput.Length switch
+            {
+                <= 3 => rawInput,
+                <= 8 => $"{rawInput[..3]}-{rawInput[3..]}",
+                _ => $"{rawInput[..3]}-{rawInput[3..8]}-{rawInput[8..]}"
+            };
         }
         else
         {
-            ValidationMessage = string.Empty;
+            reqUserDto.Identification = rawInput.Length switch
+            {
+                <= 3 => rawInput,
+                <= 10 => $"{rawInput[..3]}-{rawInput[3..]}",
+                _ => $"{rawInput[..3]}-{rawInput[3..10]}-{rawInput[10..]}"
+            };
         }
     }
-}
-private void FormatIdentification(ChangeEventArgs e)
-{
-    string rawInput = Regex.Replace(e.Value?.ToString() ?? string.Empty, @"\D", "");
-
-    if (_IsInstitution) 
-    {
-        reqUserDto.Identification = rawInput.Length switch
-        {
-            <= 3 => rawInput,
-            <= 8 => $"{rawInput[..3]}-{rawInput[3..]}",
-            _ => $"{rawInput[..3]}-{rawInput[3..8]}-{rawInput[8..]}" 
-        };
-    }
-    else 
-    {
-        reqUserDto.Identification = rawInput.Length switch
-        {
-            <= 3 => rawInput,
-            <= 10 => $"{rawInput[..3]}-{rawInput[3..]}",
-            _ => $"{rawInput[..3]}-{rawInput[3..10]}-{rawInput[10..]}"
-        };
-    }
-}
 }

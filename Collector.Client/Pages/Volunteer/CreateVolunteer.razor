@@ -1,0 +1,83 @@
+﻿@page "/Volunteer/Create"
+@using Blazored.FluentValidation
+@using Collector.Client.Components.Shared;
+@using Collector.Client.Dtos.Volunteer
+@using Collector.Client.Services.Volunteer
+@inject IVolunteerService _volunteerService;
+
+<div class="primary-container">
+    <main class="secondary-container">
+
+        <h3 class="title">Crea un voluntariado</h3>
+        <div class="card-body-container">
+            <div class="text-field-container">
+
+                <div class="text-field-style">
+                    <div class="d-flex justify-content-between">
+                        <label class="custom-label">Título del voluntariado</label>
+                        <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
+                                       TooplTipDescription="Ayudame"
+                                       ToolTipStyle="color:#37490B" />
+                    </div>
+                    <MudTextField @bind-Value="ReqVolunteerDto.name" Variant="Variant.Outlined" Style="custom-textfield" />
+                    <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
+                </div>
+
+                <div class="text-field-style" style="width: 30%;">
+                    <label class="custom-label">Fecha</label>
+                    <MudTextField InputType="InputType.Date" @bind-Value="ReqVolunteerDto.volunteerDate"
+                                  Variant="Variant.Outlined" Style="custom-textfield" />
+                </div>
+            </div>
+
+            <div class="map-container">
+                <div>
+                    <label class="custom-label">Ubicación</label>
+                    <Map width="275px" height="250px" />
+                    <MudButton Variant="Variant.Outlined" Style="background-color:transparent;
+                                    width: 200px; border: 3px solid #767572; color:white;
+                                    border-radius: 0.5rem;font-weight:bold; margin-top:15px ; margin-left:25px">Confirmar ubicación</MudButton>
+
+                </div>
+
+                <div>
+                    <label class="custom-label">Imágenes</label>
+                    <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
+                    <MudButton Variant="Variant.Outlined" Style="background-color:transparent;
+                                    width: 155px; border: 3px solid #767572; color: white;
+                                        border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px">Añadir imagen</MudButton>
+
+                </div>
+            </div>
+
+            <div class="container-message d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                         Size="Size.Small" Style="background-color:darkgray" />
+                <p class="text-secondary">Dar click sobre el icono para ver mas detalles del campo a completar.</p>
+            </div>
+        </div>
+        <div class="button-send-container">
+            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+                       Style="background-color:#515B3B; margin-buttom:10px;
+                        color:white; width:400px;">
+                Crear reporte
+            </MudButton>
+        </div>
+    </main>
+</div>
+
+@code {
+
+    [Parameter]
+    public ReqVolunteerDto ReqVolunteerDto { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        ReqVolunteerDto.volunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
+    }
+
+    private async Task OnSubmit()
+    {
+        ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
+    }
+}

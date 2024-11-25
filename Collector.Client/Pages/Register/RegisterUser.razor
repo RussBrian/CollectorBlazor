@@ -73,12 +73,6 @@
     private int step = 1;
     public double Value { get; set; }
     private ReqUserDto reqUserDto = new();
-    private MudTextField<string> nameField;
-    private MudTextField<string> lastNameField;
-    private MudTextField<string> userNameField;
-    private MudTextField<string> phoneField;
-    private MudTextField<string> passwordField;
-    private MudTextField<string> confirmPasswordField;
 
     public void AdvanceProgress()
     {
@@ -117,43 +111,6 @@
     }
     #endregion
 
-    #region OnFocus Methods
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (step == 1 && string.IsNullOrWhiteSpace(reqUserDto.Name) && nameField != null)
-        {
-            await nameField.FocusAsync();
-        }
-        else if (step == 1 && string.IsNullOrWhiteSpace(reqUserDto.LastName) && lastNameField != null)
-        {
-            await lastNameField.FocusAsync();
-        }
-        else if (step == 1 && string.IsNullOrWhiteSpace(reqUserDto.UserName) && userNameField != null)
-        {
-            await userNameField.FocusAsync();
-        }
-        else if (step == 2 && string.IsNullOrWhiteSpace(reqUserDto.Phone) && phoneField != null)
-        {
-            await phoneField.FocusAsync();
-        }
-        else if (step == 2 && string.IsNullOrWhiteSpace(reqUserDto.Password) && passwordField != null)
-        {
-            await passwordField.FocusAsync();
-        }
-        else if (step == 2 && string.IsNullOrWhiteSpace(reqUserDto.ConfirmPassword) && confirmPasswordField != null)
-        {
-            await confirmPasswordField.FocusAsync();
-        }
-    }
-
-    private async Task HandleKeyDown(KeyboardEventArgs e, MudTextField<string> nextField)
-    {
-        if (e.Key == "Tab")
-        {
-            await nextField.FocusAsync();
-        }
-    }
-    #endregion
 
     #region Navigate Methods
     private void NavigateToLogin()

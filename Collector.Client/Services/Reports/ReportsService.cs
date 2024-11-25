@@ -4,6 +4,7 @@ using Collector.Client.Dtos.Response;
 using Collector.Client.Helpers;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Options;
 
 namespace Collector.Client.Services.Reports
@@ -31,6 +32,28 @@ namespace Collector.Client.Services.Reports
             }
 
             return reportResult?.Value ?? [];
+        }
+
+
+        private IList<string> GetImagePreview(IList<IBrowserFile> files)
+        {
+            IList<string> images = [];
+
+            foreach (var file in files)
+            {
+                var buffer = new byte[file.Size];
+                file.OpenReadStream().ReadAsync(buffer);
+                images.Add($"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}");
+            }
+            return images;
+        }
+
+        public async Task<ReportDto> CreateReport(ReportDto Report, IList<IBrowserFile> files)
+        {
+            var images = GetImagePreview(files);
+            Report.Files = images;
+            var report = await _httpServiceExtensions.CustomPostFormAsync<Response<ReportDto>, ReportDto>(_options.UrlReportService, Report);
+            return report.Value;
         }
     }
 }
