@@ -41,7 +41,6 @@
             </MudButtonGroup>
         </div>
 
-        <!-- Columna derecha (Formulario de inicio de sesión) -->
         <div Class="right-container">
             <MudText Typo="Typo.h4" Class="login-text fw-bold ms-4 mb-2">Iniciar Sesión</MudText>
             <EditForm Model="@loginModel" OnValidSubmit="Onsubmit">
@@ -49,11 +48,11 @@
 
 
                 <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
-                Label="Correo electrónico" InputType="InputType.Email" Class="custom-label w-full mb-3" />
+                              Label="Correo electrónico" InputType="InputType.Email" Class="custom-label w-full mb-3" />
                 <ValidationMessage style="validation-message" For="(() => loginModel.Email)" />
 
                 <MudTextField @bind-Value="loginModel.Password" Variant="Variant.Outlined"
-                Label="Contraseña" InputType="InputType.Password" Class="custom-label w-full" />
+                              Label="Contraseña" InputType="InputType.Password" Class="custom-label w-full" />
                 <ValidationMessage class="validation-message" For="(() => loginModel.Password)" />
 
                 <MudText Class="ms-15 mt-3">
@@ -61,7 +60,7 @@
                 </MudText>
 
                 <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
-                Style="background-color:#7B885B; margin-top:10px;
+                           Style="background-color:#7B885B; margin-top:10px;
                         color:white; width:100%">
                     Iniciar Sesion
                 </MudButton>
@@ -73,47 +72,47 @@
 
 <style>
     .description-text {
-    color: #4a4a4a;
-    text-align: center;
-    margin-bottom: 24px;
+        color: #4a4a4a;
+        text-align: center;
+        margin-bottom: 24px;
     }
 
     login-input {
-    background-color: #FFFCFC91;
-    border-radius: 20px;
+        background-color: #FFFCFC91;
+        border-radius: 20px;
     }
 
     .register-text {
-    font-weight: bold;
-    color: #4a4a4a;
-    text-align: center;
-    margin-bottom: 19px;
+        font-weight: bold;
+        color: #4a4a4a;
+        text-align: center;
+        margin-bottom: 19px;
     }
 
     .mud-button.register-btn {
-    background-color: #7B885B;
-    color: black;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: 3px solid #767572;
-    cursor: pointer;
+        background-color: #7B885B;
+        color: black;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 3px solid #767572;
+        cursor: pointer;
     }
 
     .login-btn {
-    margin-top: 20px;
-    background-color: #7B885B;
-    font-weight: 600;
-    width: 100%;
-    padding: 12px 0;
-    color: white;
-    border-radius: 8px;
+        margin-top: 20px;
+        background-color: #7B885B;
+        font-weight: 600;
+        width: 100%;
+        padding: 12px 0;
+        color: white;
+        border-radius: 8px;
     }
 
     .custom-label .mud-input-label {
-    background-color: #D0D0CF;
-    padding: 0 4px;
-    font-weight: bold;
+        background-color: #D0D0CF;
+        padding: 0 4px;
+        font-weight: bold;
     }
 </style>
 
