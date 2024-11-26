@@ -17,7 +17,8 @@ builder.Services.AddTransient<HttpClientServiceExtensions>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<SweetAlert>();
 builder.Services.AddWebDependencies();
-
+builder.Services.AddServerSideBlazor()
+    .AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 var app = builder.Build();
 
@@ -38,6 +39,9 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+
+
 
 app.Run();
 

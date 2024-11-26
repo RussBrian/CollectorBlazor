@@ -1,6 +1,7 @@
 ﻿using Collector.Client.Services.Login;
 using Collector.Client.Services.Password;
 using Collector.Client.Services.Reports;
+using Collector.Client.Services.Volunteer;
 using Collector.Client.SessionHelpers;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -13,6 +14,7 @@ namespace Collector.Client
         {
             services.AddScoped<ProtectedSessionStorage>();
             services.AddScoped<AuthenticationStateProvider, SessionManager>();
+            services.AddScoped<IVolunteerService, VolunteerService>();
             services.AddScoped<SessionManager>();
             services.AddAuthentication();
             services.AddAuthorizationCore();

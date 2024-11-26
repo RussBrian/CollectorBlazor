@@ -49,7 +49,7 @@
 
                 <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
                               Label="Correo electrónico" InputType="InputType.Email" Class="custom-label w-full mb-3" />
-                <ValidationMessage style="validation-message" For="(() => loginModel.Email)" />
+                <ValidationMessage style="validation-message: 0 ;" For="(() => loginModel.Email)" />
 
                 <MudTextField @bind-Value="loginModel.Password" Variant="Variant.Outlined"
                               Label="Contraseña" InputType="InputType.Password" Class="custom-label w-full" />
