@@ -11,9 +11,6 @@ namespace Collector.Client.Utilities.Extensions
             _httpClient = clientFactory.CreateClient();
         }
 
-        //Paso a paso para llamar a estos metodos de forma correcta.
-        //Dirigirse a la carpeta service, al archivo "ExampleService", este permitira que puedan ver como crear los metodos para consumir estos servicios.
-
         #region Method for Get
         public async Task<object?> CustomGetAsync<TResponse>(string uri, object? identifier = null)
         {
@@ -56,11 +53,6 @@ namespace Collector.Client.Utilities.Extensions
             try
             {
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync(url, request);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
-                }
 
                 string result = await response.Content.ReadAsStringAsync();
 
@@ -111,30 +103,10 @@ namespace Collector.Client.Utilities.Extensions
             }
 
         }
-        public async Task<TResponse?> CustomPostFormAsync<TResponse, TRequest>(string uri, TRequest request)
-        {
-            Uri url = new(uri);
-
-            using MultipartFormDataContent content = [];
-
-            foreach (var property in typeof(TRequest).GetProperties())
-            {
-                string? value = property.GetValue(request)?.ToString();
-
-                if (value != null)
-                    content.Add(new StringContent(value), property.Name);
-            }
-
-            HttpResponseMessage response = await _httpClient.PostAsync(url, content);
-
-            string result = await response.Content.ReadAsStringAsync();
-
-            return JsonConvert.DeserializeObject<TResponse>(result);
-        }
         #endregion
 
         #region Method for Put
-        public async Task<TResponse?> CustomPutAsync<TResponse, TRequest>(string uri, TRequest request)
+        public async Task<TResponse?> CustomPutFormDataAsync<TResponse, TRequest>(string uri, TRequest request)
         {
             Uri url = new(uri);
 
@@ -154,11 +126,6 @@ namespace Collector.Client.Utilities.Extensions
             {
                 HttpResponseMessage response = await _httpClient.PutAsync(url, content);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
-                }
-
                 string result = await response.Content.ReadAsStringAsync();
 
                 return JsonConvert.DeserializeObject<TResponse>(result);
@@ -170,33 +137,6 @@ namespace Collector.Client.Utilities.Extensions
             catch (Exception ex)
             {
                 throw new AggregateException("Error general al procesar la solicitud - ",ex);
-            }
-        }
-        #endregion
-
-        #region Method for Delete
-        public async Task CustomDeleteAsync(string uri, object? identifier = null)
-        {
-            string fullUri = identifier != null ? $"{uri}/{identifier}" : uri;
-
-            Uri url = new(fullUri);
-
-            try
-            {
-                HttpResponseMessage response = await _httpClient.DeleteAsync(url);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Error al realizar la operación DELETE - StatusCode {response.StatusCode}");
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new AggregateException("Error al realizar la solicitud HTTP.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new AggregateException("Error general al procesar la solicitud.", ex);
             }
         }
         #endregion

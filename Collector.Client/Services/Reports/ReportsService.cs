@@ -52,7 +52,7 @@ namespace Collector.Client.Services.Reports
         {
             var images = GetImagePreview(files);
             Report.Files = images;
-            var report = await _httpServiceExtensions.CustomPostFormAsync<Response<ReportDto>, ReportDto>(_options.UrlReportService, Report);
+            var report = await _httpServiceExtensions.CustomFormDataAsync<Response<ReportDto>, ReportDto>(_options.UrlReportService, Report);
             return report.Value;
         }
     }
