@@ -18,7 +18,6 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<SweetAlert>();
 builder.Services.AddWebDependencies();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

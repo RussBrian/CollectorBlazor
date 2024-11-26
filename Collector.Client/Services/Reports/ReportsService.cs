@@ -34,7 +34,6 @@ namespace Collector.Client.Services.Reports
             return reportResult?.Value ?? [];
         }
 
-
         private IList<string> GetImagePreview(IList<IBrowserFile> files)
         {
             IList<string> images = [];

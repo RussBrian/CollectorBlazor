@@ -1,4 +1,6 @@
-﻿namespace Collector.Client.Dtos.Reports
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Collector.Client.Dtos.Reports
 {
     public class ReportDto
     {

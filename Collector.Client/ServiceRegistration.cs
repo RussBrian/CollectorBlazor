@@ -15,6 +15,7 @@ namespace Collector.Client
             services.AddScoped<AuthenticationStateProvider, SessionManager>();
             services.AddScoped<SessionManager>();
             services.AddAuthentication();
+            services.AddAuthorization();
             services.AddAuthorizationCore();
             
             services.AddScoped<IPasswordService,PasswordService>();
