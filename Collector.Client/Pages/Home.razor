@@ -50,7 +50,7 @@
 
                 <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined" 
                               Label="Correo electrónico" InputType="InputType.Email" Class="custom-label; w-full; mb-3;" />
-                <ValidationMessage style="validation-message" For="(() => loginModel.Email)" />
+                <ValidationMessage style="validation-message: 0 ;" For="(() => loginModel.Email)" />
 
                 <MudTextFieldComponent Password="@loginModel.Password" PasswordChanged="@((value) => loginModel.Password = value)" Label="Contraseña" 
                     Variant="Variant.Outlined" Adornment="Adornment.End"  Style="custom-label; w-full;" />

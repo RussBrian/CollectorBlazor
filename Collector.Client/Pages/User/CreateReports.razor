@@ -24,7 +24,7 @@
                         <div class="d-flex justify-content-between">
                             <label class="custom-label">Título del reporte</label>
                             <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
-                                           TooplTipDescription="Ayudame"
+                                           ToolTipDescription="Ayudame"
                                            ToolTipStyle="color:#37490B" />
                         </div>
                         <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield" />
@@ -119,8 +119,8 @@
 
     public async Task OnSubmitReport()
     {
-        var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
-        Report.FireBaseCode = user.Value.IdToken;
+       var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
+       Report.FireBaseCode = user.Value.IdToken;
         var response = await _reportService.CreateReport(Report, files);
     }
 }
