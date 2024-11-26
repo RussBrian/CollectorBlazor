@@ -2,6 +2,7 @@
 @using Collector.Client.Dtos.Login;
 @using Collector.Client.Dtos.Response
 @using Collector.Client.Services.Login;
+@using Collector.Client.Components.Shared
 @using System.Security.Claims;
 @using Microsoft.AspNetCore.Authentication;
 @using Microsoft.AspNetCore.Authentication.Cookies;
@@ -47,12 +48,12 @@
                 <FluentValidationValidator />
 
 
-                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
-                              Label="Correo electrónico" InputType="InputType.Email" Class="custom-label w-full mb-3" />
+                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined" 
+                              Label="Correo electrónico" InputType="InputType.Email" Class="custom-label; w-full; mb-3;" />
                 <ValidationMessage style="validation-message" For="(() => loginModel.Email)" />
 
-                <MudTextField @bind-Value="loginModel.Password" Variant="Variant.Outlined"
-                              Label="Contraseña" InputType="InputType.Password" Class="custom-label w-full" />
+                <MudTextFieldComponent Password="@loginModel.Password" PasswordChanged="@((value) => loginModel.Password = value)" Label="Contraseña" 
+                    Variant="Variant.Outlined" Adornment="Adornment.End"  Style="custom-label; w-full;" />
                 <ValidationMessage class="validation-message" For="(() => loginModel.Password)" />
 
                 <MudText Class="ms-15 mt-3">
@@ -113,6 +114,9 @@
         background-color: #D0D0CF;
         padding: 0 4px;
         font-weight: bold;
+    }
+    .mud-input-label{
+        background-color: #D0D0CF;
     }
 </style>
 
