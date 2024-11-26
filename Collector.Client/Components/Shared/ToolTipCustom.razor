@@ -7,12 +7,12 @@
                  Size="Size.Small" Style="@ToolTipStyle" />
     </ChildContent>
     <TooltipContent>
-        <MudText Style="@ToolTipTextStyle">@TooplTipDescription</MudText>
+        <MudText Style="@ToolTipTextStyle">@ToolTipDescription</MudText>
     </TooltipContent>
 </MudTooltip>
 
 @code {
-    [Parameter] public string? TooplTipDescription { get; set; }
+    [Parameter] public string? ToolTipDescription { get; set; }
     [Parameter] public string? ToolTipStyle { get; set; }
     [Parameter] public string? ToolTipTextStyle { get; set; }
 
