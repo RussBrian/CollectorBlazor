@@ -1,5 +1,50 @@
-﻿<h3>MudTextFieldComponent</h3>
+﻿@using MudBlazor
+@inherits ComponentBase
+
+
+<MudTextField @bind-Value="@Password"
+              Label="@Label"
+              Variant="Variant"
+              InputType="PasswordInput"
+              Adornment="Adornment"
+              AdornmentIcon="@PasswordInputIcon"
+              OnAdornmentClick="TogglePasswordVisibility"
+              AdornmentAriaLabel="@(isPasswordVisible ? "Hide Password" : "Show Password")"
+              Required="@Required"
+              Style="@Style" />
+
 
 @code {
+
+    [Parameter]
+    public string? Password { get; set; }
+
+    [Parameter]
+    public EventCallback<string> PasswordChanged { get; set; }
+
+    [Parameter]
+    public string? Label { get; set; }
+
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Outlined;
+
+    [Parameter]
+    public Adornment Adornment { get; set; } = Adornment.End;
+
+    [Parameter]
+    public bool Required { get; set; } = false;
+
+    [Parameter]
+    public string? Style { get; set; }
+
+    private bool isPasswordVisible = false;
+    private InputType PasswordInput => isPasswordVisible ? InputType.Text : InputType.Password;
+    private string PasswordInputIcon => isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+
+    private async Task TogglePasswordVisibility()
+    {
+        isPasswordVisible = !isPasswordVisible;
+        await PasswordChanged.InvokeAsync(Password);
+    }
 
 }

@@ -1,4 +1,5 @@
 ﻿@using Collector.Client.Dtos.Login
+@using Collector.Client.Components.Shared
 @using MudBlazor
 @inherits ComponentBase;
 
@@ -24,7 +25,8 @@
             </TooltipContent>
         </MudTooltip>
     </div>
-    <MudTextField @bind-Value="@reqUserDto.Password" Required="true" InputType="InputType.Password" Variant="Variant.Outlined" Style="color:white;" />
+    <MudTextFieldComponent Password="@reqUserDto.ConfirmPassword" PasswordChanged="@((value) => reqUserDto.ConfirmPassword = value)"
+                           Variant="Variant.Outlined" Adornment="Adornment.End" Style="color:white;" />
     <div class="d-flex justify-content-between mt-5">
         <label class="custom-label">Confirmar Contraseña</label>
         <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
@@ -36,7 +38,8 @@
             </TooltipContent>
         </MudTooltip>
     </div>
-    <MudTextField  @bind-Value="@reqUserDto.ConfirmPassword" Required="true" InputType="InputType.Password" Variant="Variant.Outlined" Style="color:white;" />
+    <MudTextFieldComponent Password="@reqUserDto.ConfirmPassword" PasswordChanged="@((value) => reqUserDto.ConfirmPassword = value)"
+                           Variant="Variant.Outlined" Adornment="Adornment.End" Style="color:white;" />
 </div>
 
 <style>
@@ -55,7 +58,7 @@
 @code {
     [Parameter]
     public ReqUserDto reqUserDto { get; set; }
-    
+
     [Parameter]
     public bool IsInstitution { get; set; }
 }
