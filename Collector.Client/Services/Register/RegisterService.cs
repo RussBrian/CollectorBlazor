@@ -23,11 +23,10 @@ namespace Collector.Client.Services.Register
         public async Task SendCodeToEmail(UserEmailDto email) 
             => await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
 
-        public async Task<bool> VerifyCode(VerifyCodeDto verifyCode)
+        public async Task<(string, bool)> VerifyCode(VerifyCodeDto verifyCode)
         {
             var result = await _httpExtension.CustomPostAsync<Response<VerifyCodeDto>, VerifyCodeDto>($"{_appOptions.UrlRegisterUserService}/verify-code", verifyCode);
-            //ojo con esta parte en la respuesta correcta no se esta devolviendo nada.
-            return !result.IsSuccess ? false : result == null;           
+            return (result.ErrorMessage, result.IsSuccess);
         }          
 
     }
