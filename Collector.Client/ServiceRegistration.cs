@@ -17,6 +17,7 @@ namespace Collector.Client
             services.AddScoped<IVolunteerService, VolunteerService>();
             services.AddScoped<SessionManager>();
             services.AddAuthentication();
+            services.AddAuthorization();
             services.AddAuthorizationCore();
             
             services.AddScoped<IPasswordService,PasswordService>();

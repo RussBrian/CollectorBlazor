@@ -25,8 +25,13 @@
             </TooltipContent>
         </MudTooltip>
     </div>
-    <MudPasswordFieldComponent Password="@reqUserDto.ConfirmPassword" PasswordChanged="@((value) => reqUserDto.ConfirmPassword = value)"
-                           Variant="Variant.Outlined" Adornment="Adornment.End" Style="color:white;" />
+    <MudTextField @bind-Value="reqUserDto.Password"
+                  Variant="Variant.Outlined"
+                  InputType="@PasswordInput"
+                  Adornment="Adornment.End"
+                  AdornmentIcon="@PasswordInputIcon"
+                  OnAdornmentClick="TogglePasswordVisibility"
+                  Style="color:white;" />
     <div class="d-flex justify-content-between mt-5">
         <label class="custom-label">Confirmar Contraseña</label>
         <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
@@ -38,8 +43,10 @@
             </TooltipContent>
         </MudTooltip>
     </div>
-    <MudPasswordFieldComponent Password="@reqUserDto.ConfirmPassword" PasswordChanged="@((value) => reqUserDto.ConfirmPassword = value)"
-                           Variant="Variant.Outlined" Adornment="Adornment.End" Style="color:white;" />
+    <MudTextField @bind-Value="reqUserDto.ConfirmPassword"
+                  Variant="Variant.Outlined"
+                  InputType="InputType.Password"
+                  Style="color:white;" />
 </div>
 
 <style>
@@ -56,6 +63,18 @@
 </style>
 
 @code {
+    #region
+    private InputType PasswordInput = InputType.Password;
+    private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private void TogglePasswordVisibility()
+    {
+        bool isPasswordVisible = PasswordInput == InputType.Password;
+        PasswordInput = isPasswordVisible ? InputType.Text : InputType.Password;
+        PasswordInputIcon = isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
+    #endregion
+
     [Parameter]
     public ReqUserDto reqUserDto { get; set; }
 
