@@ -5,14 +5,19 @@ namespace Collector.Client.Services.Volunteer
 {
     public interface IVolunteerService
     {
-        #region Voluunteer
+        #region Volunteer
         Task<ResVolunteerDto?> CreateVolunteer(ReqVolunteerDto request);
-        Task<ResVolunteerDto?> RegisterUserInVolunteer(ReqVolunteerDto request);
+        Task<ResVolunteerDto?> UpdateVolunteer(ReqVolunteerDto request); 
+        Task<ResVolunteerDto?> GetVolunteerById(int id);
         Task<List<ResVolunteerDto>> GetAllVolunteers(PaginationDto pagination);
+        Task<List<ResVolunteerDto>> GetAllVolunteersByUser(PaginationDto pagination);
+        Task DeleteVolunteer(int id);
         #endregion
 
         #region User/Volunteer
-
+        Task<ResUserVolunteerDto?> RegisterUserInVolunteer(ReqUserVolunteerDto request);
+        Task<List<ResUserVolunteerDto>> GetAllUserInVolunteer(int id, PaginationDto pagination);
+        Task DeleteUserInVolunteer(int id, string userId);
         #endregion
     }
 }

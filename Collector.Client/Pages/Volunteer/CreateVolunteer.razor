@@ -1,10 +1,13 @@
 ﻿@page "/Volunteer/Create"
 @using Collector.Client.Components.Shared
+@using Collector.Client.Dtos
 @using Collector.Client.Dtos.Volunteer
 @using Collector.Client.Services.Volunteer
 @inject IVolunteerService _volunteerService
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Components.Authorization;
+@using System.Text.Json
+@using System.Text.Encodings.Web
 
 
 @* <AuthorizeView Roles="Admin,Institution">
@@ -33,7 +36,8 @@
                     </div>
                 </div>
 
-                @*                     <div class="map-container">
+                @*                     
+                <div class="map-container">
                 <div>
                 <label class="custom-label">Ubicación</label>
                 <Map width="275px" height="250px" />
@@ -63,17 +67,19 @@
                         </div>
                         <MudSwitch @bind-Value="ReqVolunteerDto.IsPrivate" Color="Color.Primary" UncheckedColor="Color.Secondary">Privado</MudSwitch>
                     </div>
-
-                    <div class="text-field-style" style="width: 30%;">
-                        <label class="custom-label">Código</label>
-                        <MudTextField @bind-Value="ReqVolunteerDto.VolunteerCode" Variant="Variant.Outlined" />
-                    </div>
+                    @if (ReqVolunteerDto.IsPrivate)
+                    {
+                        <div class="text-field-style" style="width: 30%;">
+                            <label class="custom-label">Código</label>
+                            <MudTextField @bind-Value="ReqVolunteerDto.VolunteerCode" Variant="Variant.Outlined" />
+                        </div>
+                    }                   
                 </div>
 
                 <div class="container-message d-flex">
                     <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
                              Size="Size.Small"
-                             Style="background-color:darkgray;" />
+                             Style="background-color:darkgray; margin-left:15px;" />
                     <p class="text-secondary">Dar click sobre el icono para ver más detalles del campo a completar.</p>
                 </div>
             </div>
@@ -105,6 +111,23 @@
 
     private async Task OnSubmit()
     {
+        PaginationDto pagination = new()
+        {
+            Page = 1,
+            AmountofInfo = 4
+        };
+        var getall = await _volunteerService.GetAllVolunteers(pagination);
+
+        JsonSerializerOptions options = new()
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            WriteIndented = true
+        };
+
+        string json = JsonSerializer.Serialize(getall, options);
+
+        Console.WriteLine(json);
+
         ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
     }
 }
@@ -125,6 +148,15 @@
             border-color: #515B3B;
             box-shadow: 0 0 5px #515B3B;
         }
+
+    .edit-form-style {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
 
 </style>
 

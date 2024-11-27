@@ -1,9 +1,11 @@
 ﻿using Collector.Client.Dtos;
+using Collector.Client.Dtos.Login;
 using Collector.Client.Dtos.Response;
 using Collector.Client.Dtos.Volunteer;
 using Collector.Client.Helpers;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Options;
 
 namespace Collector.Client.Services.Volunteer
@@ -12,20 +14,56 @@ namespace Collector.Client.Services.Volunteer
     {
         private readonly AppOptions _appOptions;
         private readonly HttpClientServiceExtensions _httpExtension;
+        private readonly ProtectedSessionStorage _sessionStorage;
 
         public VolunteerService(
             IOptions<AppOptions> options, 
-            HttpClientServiceExtensions httpClient)
+            HttpClientServiceExtensions httpClient,
+            ProtectedSessionStorage storage)
         {
             _appOptions = options.Value;
             _httpExtension = httpClient;
+            _sessionStorage = storage;
         }
 
-        public async Task<ResVolunteerDto?> CreateVolunteer(ReqVolunteerDto request)
-            => await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService,request);
 
-        public async Task<ResVolunteerDto?> RegisterUserInVolunteer(ReqVolunteerDto request)
-            => await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
+        #region Controlador de Volunteer
+
+        #region Form
+        public async Task<ResVolunteerDto?> CreateVolunteer(ReqVolunteerDto request)
+        {
+            var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
+
+            string user = userInSession.Value?.UserId ?? string.Empty;
+
+            return await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
+        }
+
+        public async Task<ResVolunteerDto?> UpdateVolunteer(ReqVolunteerDto request)
+        {
+            var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
+
+            string user = userInSession.Value?.UserId ?? string.Empty;
+
+            return await _httpExtension.CustomPutFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
+        }
+
+        #endregion
+
+        #region Gets
+        public async Task<ResVolunteerDto?> GetVolunteerById(int id)
+        {
+            var volunteer = await _httpExtension.CustomGetAsync<Response<ResVolunteerDto>>(_appOptions.UrlVolunteerService, id);
+
+            var result = volunteer as Response<ResVolunteerDto>;
+
+            if (!string.IsNullOrEmpty(result?.Value?.ToString()))
+            {
+                return result.Value;
+            }
+
+            return null;
+        }
 
         public async Task<List<ResVolunteerDto>> GetAllVolunteers(PaginationDto pagination)
         {
@@ -41,5 +79,54 @@ namespace Collector.Client.Services.Volunteer
 
             return [];
         }
+
+        public async Task<List<ResVolunteerDto>> GetAllVolunteersByUser(PaginationDto pagination)
+        {
+            var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
+
+            string user = "ZxGcXj9TRTcEmvPKhwsTGLMz95l2";//userInSession.Value?.UserId ?? string.Empty;
+
+            var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>($"{_appOptions.UrlVolunteerService}/user/",user);
+
+            var result = volunteers as Response<List<ResVolunteerDto>>;
+
+            if (result?.Value?.Count != 0)
+            {
+                var queryableList = result?.Value?.AsQueryable();
+                return [.. queryableList?.Pagination(pagination)];
+            }
+
+            return [];
+        }
+        #endregion
+
+        public async Task DeleteVolunteer(int id)
+            => await _httpExtension.CustomDeleteAsync(_appOptions.UrlVolunteerService,id);
+
+        #endregion
+
+        #region Controlador de User/Volunteer
+        public async Task<ResUserVolunteerDto?> RegisterUserInVolunteer(ReqUserVolunteerDto request)
+          => await _httpExtension.CustomFormDataAsync<ResUserVolunteerDto, ReqUserVolunteerDto>(_appOptions.UrlUserVolunteerService, request);
+
+        public async Task<List<ResUserVolunteerDto>> GetAllUserInVolunteer(int id, PaginationDto pagination)
+        {
+            var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResUserVolunteerDto>>>(_appOptions.UrlUserVolunteerService, id);
+
+            var result = volunteers as Response<List<ResUserVolunteerDto>>;
+
+            if (result?.Value?.Count != 0)
+            {
+                var queryableList = result?.Value?.AsQueryable();
+                return [.. queryableList?.Pagination(pagination)];
+            }
+
+            return [];
+        }
+
+        public async Task DeleteUserInVolunteer(int id, string userId) 
+            => await _httpExtension.CustomDeleteAsync($"{_appOptions.UrlUserVolunteerService}?volunteerId={id}&fireBaseCode={userId}");
+
+        #endregion
     }
 }

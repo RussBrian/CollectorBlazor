@@ -131,5 +131,26 @@ namespace Collector.Client.Utilities.Extensions
         }
         #endregion
 
+        #region Method for Delete
+        public async Task CustomDeleteAsync(string uri, object? identifier = null)
+        {
+            string fullUri = identifier != null ? $"{uri}/{identifier}" : uri;
+
+            Uri url = new(fullUri);
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync(url);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new AggregateException("Error al realizar la solicitud HTTP.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new AggregateException("Error general al procesar la solicitud.", ex);
+            }
+        }
+        #endregion
     }
 }

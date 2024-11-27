@@ -43,7 +43,7 @@ namespace Collector.Client.Services.Reports
             var images = ImageConverter.ConvertImagesToString(files);
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
             
-            var report = await _httpServiceExtensions.CustomPostFormAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
+            var report = await _httpServiceExtensions.CustomFormDataAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
             return report;
         }
     }
