@@ -8,9 +8,13 @@ namespace Collector.Client.Validations
         public ReportDtoValidator()
         {
             RuleFor(t => t.Title)
-                .NotEmpty().WithMessage("El titulo es requerido");
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty().WithMessage("El titulo es requerido.");
+            
             RuleFor(d => d.Description)
-                .NotEmpty().WithMessage("La descripcion es requerida");
+                .Cascade(CascadeMode.Stop)
+                .MaximumLength(600).WithMessage("La descripcion no puede ser mas larga de 600 caracteres.")
+                .NotEmpty().WithMessage("La descripcion es requerida.");
         }
     }
 }

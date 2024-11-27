@@ -4,12 +4,11 @@
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Dtos.Reports;
 @using Collector.Client.Services.Reports;
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@inject ReportsService _reportService;
+@inject IReportsService _reportService;
 
 <div class="primary-container">
     <main class="secondary-container">
-        <EditForm Model="@Report" OnSubmit="OnSubmitReport" class="edit-form-style">
+        <EditForm Model="@Report" OnValidSubmit="OnSubmitReport" class="edit-form-style">
 
             <h3 class="title">Crea un reporte</h3>
             <div class="card-body-container">
@@ -46,29 +45,27 @@
                 </div>
 
                 <div class="map-container">
-                    <div>
-                        <label class="custom-label">Ubicación</label>
-                        <LeafletMap Width="275px" Height="250px" Zoom="15" OnLocationSelected="HandleLocationSelected" />
-                    </div>
 
                     <div>
                         <label class="custom-label">Imágenes</label>
-                        <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
+                        <img class="rounded-3" src="@(Report.Files.Any() ? Report.Files.FirstOrDefault() : "./BosqueLindo.png")" width="275px" height="250px" />
+
                         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" AppendMultipleFiles="true" MaximumFileCount="4">
                             <ActivatorContent>
                                 <MudButtonComponent Text="Añadir imagen"
-                                                    Variant="Variant.Outlined" Style="background-color:transparent;
-                                        width: 155px; border: 3px solid #767572; color: white;
-                                            border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px" />
+                                                    Variant="Variant.Outlined"
+                                                    Style="background-color:transparent;
+                            width: 155px; border: 3px solid #767572; color: white;
+                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px" />
                             </ActivatorContent>
                         </MudFileUpload>
                     </div>
                 </div>
 
-                <div class="container-message d-flex">
+                <div class="container-message">
                     <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
                              Size="Size.Small" Style="background-color:darkgray" />
-                    <p class="text-secondary">Dar click sobre el icono para ver mas detalles del campo a completar.</p>
+                    <p class="text-secondary ms-4">Dar click sobre el icono para ver mas detalles del campo a completar.</p>
                 </div>
             </div>
             <div class="button-send-container">
@@ -83,25 +80,34 @@
 </div>
 
 <style>
+    .img{
+       border-radius:10px;
+    }
+
+    .text-secondary{
+        margin:7px;
+    }
+
     .validation-message{
         color:red
     }
-</style>
 
-<style>
     .edit-form-style {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: auto;
+        margin-buttom:5px;
     }
 </style>
 
 @code {
     public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
-    public ReqReportDto Report { get; set; } = new();
+    public ReqReportDto Report { get; set; } = new ReqReportDto
+    {
+       Files = new List<string>()
+    };
     IList<IBrowserFile> files = [];
 
     private void HandleLocationSelected((double Latitude, double Longitude) location)
@@ -110,9 +116,15 @@
         Report.Longitude = location.Longitude;
     }
 
-    private void UploadFiles(IBrowserFile file)
+    private async void UploadFiles(IBrowserFile file)
     {
-        files.Add(file);
+        var stream = file.OpenReadStream();
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        var base64Image = Convert.ToBase64String(memoryStream.ToArray());
+
+        Report.Files.Add($"data:{file.ContentType};base64,{base64Image}");
+        StateHasChanged();
     }
 
     private void UploadFiles(InputFileChangeEventArgs args)

@@ -4,6 +4,7 @@ using Collector.Client.Utilities.Options;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Services.Login;
 using Collector.Client.Helpers;
+using Collector.Client.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddTransient<HttpClientServiceExtensions>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<SweetAlert>();
 builder.Services.AddWebDependencies();
+builder.Services.AddServicesRegistration();
 builder.Services.AddServerSideBlazor()
     .AddCircuitOptions(options => { options.DetailedErrors = true; });
 

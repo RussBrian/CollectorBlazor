@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization;
 @using System.Security.Claims
-@inject ReportsService reportService;
+@inject IReportsService reportService;
 @inject NavigationManager navManager;
 @inject Collector.Client.SessionHelpers.SessionManager _sessionManager;
 
@@ -30,14 +30,9 @@
             @foreach (var reports in reportDtos)
             {
                 <div class="card card-content">
-                    @if (reports.ImageUrls.Count() == 1)
-                    {
-                        <img class="card-img-top" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow"/>
-                    }
-                    else
-                    {
-                        <img class="card-img-top" src="@reports.ImageUrls[0]" />
-                    }
+
+                        <img class="card-img-top" style="width:100%; height:250px;"  src="@(reports.ImageUrls.Any() ? reports.ImageUrls[0] 
+                        : "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow")"/>
                     <div class="card-body">
                         <div class="card-body-container">
                             <h6>@reports.Title</h6>

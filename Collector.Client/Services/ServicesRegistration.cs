@@ -1,5 +1,6 @@
 ﻿using Collector.Client.Services.Login;
 using Collector.Client.Services.Register;
+using Collector.Client.Services.Reports;
 using Collector.Client.Services.Volunteer;
 
 namespace Collector.Client.Services;
@@ -10,6 +11,10 @@ public static class ServicesRegistration
     {
         services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5004") });
         services.AddScoped<ILoginService,LoginService>();
+
+        #region Misa
+        services.AddScoped<IReportsService, ReportsService>();
+        #endregion
 
         #region Russ
         services.AddScoped<IVolunteerService, VolunteerService>();

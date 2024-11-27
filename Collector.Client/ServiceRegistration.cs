@@ -22,10 +22,7 @@ namespace Collector.Client
             
             services.AddScoped<IPasswordService,PasswordService>();
 
-            services.AddHttpClient();
-
-            services.AddTransient<ReportsService>();
-            
+            services.AddHttpClient();            
             services.AddTransient<ILoginService, LoginService>();
             
             services.AddRazorComponents()

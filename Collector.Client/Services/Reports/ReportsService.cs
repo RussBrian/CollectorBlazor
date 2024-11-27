@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Collector.Client.Services.Reports
 {
-    public class ReportsService
+    public class ReportsService : IReportsService
     {
         private readonly HttpClientServiceExtensions _httpServiceExtensions;
         private readonly AppOptions _options;
@@ -43,7 +43,7 @@ namespace Collector.Client.Services.Reports
             var images = ImageConverter.ConvertImagesToString(files);
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
             
-            var report = await _httpServiceExtensions.CustomPostFormAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
+            var report = await _httpServiceExtensions.CustomFormDataAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
             return report;
         }
     }
