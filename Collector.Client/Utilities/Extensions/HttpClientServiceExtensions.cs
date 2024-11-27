@@ -21,11 +21,6 @@ namespace Collector.Client.Utilities.Extensions
             {
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
-                if (!response.IsSuccessStatusCode)
-                {  
-                    throw new Exception($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
-                }
-
                 string result = await response.Content.ReadAsStringAsync();
 
                 return result.TrimStart().StartsWith("[")
@@ -83,11 +78,6 @@ namespace Collector.Client.Utilities.Extensions
             try
             {
                 HttpResponseMessage response = await _httpClient.PostAsync(url, content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
-                }
 
                 string result = await response.Content.ReadAsStringAsync();
 
