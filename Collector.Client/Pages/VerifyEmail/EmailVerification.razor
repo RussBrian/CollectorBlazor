@@ -172,7 +172,7 @@
                 Email = reqUserDto.Email,
                 Code = Codigo
         };
-        var isVerified = await RegisterService.VerifyCode(verifyCodeDto);
+        var (message, isVerified) = await RegisterService.VerifyCode(verifyCodeDto);
 
         if (isVerified)
         {
