@@ -17,7 +17,6 @@ builder.Services.AddTransient<HttpClientServiceExtensions>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<SweetAlert>();
 builder.Services.AddWebDependencies();
-builder.Services.AddServicesRegistration();
 builder.Services.AddServerSideBlazor()
     .AddCircuitOptions(options => { options.DetailedErrors = true; });
 

@@ -38,10 +38,9 @@
                 break;
 
             case 2:
-                <Step2EmailVer Code="Codigo" />
+                <Step2EmailVer CodeChanged="(value) => Codigo = value" />
                 break;
         }
-
 
 
         <div class="buttons-container">
@@ -96,13 +95,10 @@
     [Parameter]
     public bool _IsInstitution { get; set; }
     private ReqUserDto reqUserDto = new();
-
+    public string Codigo { set; get; } 
     private MudForm form;
     private int step = 1;
     private double Value { get; set; }
-
-    [Parameter]
-    public int Codigo { get; set; }
 
 
     protected override void OnAfterRender(bool firstRender)
@@ -132,6 +128,12 @@
         }
     }
 
+    protected override void OnInitialized()
+    {
+        AdvanceProgress();
+        base.OnInitialized();
+    }
+
     private void PreviousStep()
     {
         if (step > 1)
@@ -147,7 +149,7 @@
         {
             var userEmail = new UserEmailDto()
             {
-                Email = reqUserDto.Email
+                Email = reqUserDto.Email,
             };
 
             await RegisterService.SendCodeToEmail(userEmail);
@@ -167,7 +169,8 @@
         var verifyCodeDto = new VerifyCodeDto
         {
                 Email = reqUserDto.Email,
-                Code = Codigo
+                Code = int.Parse(Codigo)
+
         };
         var isVerified = await RegisterService.VerifyCode(verifyCodeDto);
 

@@ -1,13 +1,11 @@
-﻿@inherits ComponentBase;
-
- <MudForm @ref="form">
+﻿<MudForm @ref="form">
     <p class="custom-message">
         Ingrese el código enviado a su correo electrónico.
     </p>
-    <MudTextField @bind-Value="Code" Variant="Variant.Outlined" Style="color:white;" />
-  </MudForm>
+    <MudTextField @bind-Value="LocalCode" Variant="Variant.Outlined" Style="color:white;" />
+</MudForm>
 
-  <style>
+<style>
     .custom-label {
         font-weight: 700;
         color: #BDBABA;
@@ -19,10 +17,16 @@
         font-size: 1rem;
         margin-top: 1rem;
     }
-  </style>
+</style>
 
 @code {
-    [Parameter]
-    public int Code { get; set; }
+    [Parameter] public EventCallback<string> CodeChanged { get; set; }
+    private string LocalCode;
     private MudForm form;
+
+    private async Task OnCodeChanged(string value)
+    {
+        LocalCode = value;
+        await CodeChanged.InvokeAsync(LocalCode);
+    }
 }

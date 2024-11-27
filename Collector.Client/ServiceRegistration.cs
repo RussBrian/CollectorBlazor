@@ -24,9 +24,8 @@ namespace Collector.Client
             
             services.AddScoped<IPasswordService,PasswordService>();
             services.AddScoped<IRegisterService, RegisterService>();
+            services.AddScoped<IReportsService, ReportsService>();
             services.AddHttpClient();
-
-            services.AddTransient<ReportsService>();
             
             services.AddTransient<ILoginService, LoginService>();
 
