@@ -38,6 +38,14 @@ namespace Collector.Client.Services.Reports
             return reportResult?.Value ?? [];
         }
 
+        public async Task<Response<List<ResReportsGetById>>> GetByIdReports(int Id)
+        {
+            var report = await _httpServiceExtensions.CustomGetAsync<Response<List<ResReportsGetById>>>
+            (_options.UrlReportService, $"?Id={Id}");
+            var reportResult = report as Response<List<ResReportsGetById>>;
+            return reportResult ?? new();
+        }
+
         public async Task<Response<ReqReportDto>> CreateReport(ReqReportDto Report, IList<IBrowserFile> files)
         {
             var images = ImageConverter.ConvertImagesToString(files);

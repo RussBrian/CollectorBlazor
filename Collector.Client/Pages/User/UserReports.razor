@@ -43,13 +43,13 @@
                             <p>@reports.Date</p>
                         </div>
                         <div class="btn-container">
-                            <a href="#" class="btn btn-details">
+                            <button @onclick="() => GetReportById(reports.Id)" class="btn btn-details">
                                 Ver más detalles
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                                     <path d="M0 0h24v24H0z" fill="none" />
                                     <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
                                 </svg>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -95,6 +95,9 @@
         await GetUserReports();
         await base.OnInitializedAsync();
     }
+
+    private void GetReportById(int Id) => navManager.NavigateTo($"/Reports/Details/{Id}");
+
     private async Task GetUserReports(string UserId = "9zeirWQJnldZ2qizLbalnxjxpQh2")
     {
         reportDtos = await reportService.GetAllReportsByUserId(UserId, pagination);

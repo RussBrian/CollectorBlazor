@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-
-namespace Collector.Client.Dtos.Response
+﻿namespace Collector.Client.Dtos.Response
 {
     public class Response<T> where T : class
     {
