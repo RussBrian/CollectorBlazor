@@ -6,9 +6,9 @@
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Components.Authorization;
 
-
-<AuthorizeView Roles="Admin,Institution">
-    <Authorized>
+@* *@
+@* <AuthorizeView Roles="Admin,Institution"> *@
+@*     <Authorized> *@
         <div class="primary-container">
             <main class="secondary-container">
                 <h3 class="title">Crea un voluntariado</h3>
@@ -78,11 +78,11 @@
                 </div>
             </main>
         </div>
-    </Authorized>
-    <NotAuthorized>
-        <NoAuthorization RedirectUrl="/"/>
-    </NotAuthorized>
-</AuthorizeView>
+    @* </Authorized> *@
+    @* <NotAuthorized> *@
+    @*     <NoAuthorization RedirectUrl="/"/> *@
+    @* </NotAuthorized> *@
+@* </AuthorizeView> *@
 
 @code {
     [Parameter]

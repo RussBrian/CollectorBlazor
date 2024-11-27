@@ -27,42 +27,51 @@
                                            ToolTipDescription="Ayudame"
                                            ToolTipStyle="color:#37490B" />
                         </div>
-                        <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield" />
+                        <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield: 0;" />
                         <p class="text-secondary">Coloque un título que identifique su reporte.</p>
                     </div>
 
                     <div class="text-field-style" style="width: 30%;">
                         <label class="custom-label">Fecha</label>
                         <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
-                                      Variant="Variant.Outlined" Style="custom-textfield" />
+                                      Variant="Variant.Outlined" Style="custom-textfield : 0;" />
                     </div>
                 </div>
 
                 <div class="description-container">
                     <label class="custom-label">Descripción</label>
-                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield" />
+                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield:0;" />
                     <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
                 </div>
 
                 <div class="map-container">
                     <div>
                         <label class="custom-label">Ubicación</label>
-                        <LeafletMap Width="275px" Height="250px" Zoom="15" OnLocationSelected="HandleLocationSelected" />
-                        <MudButtonComponent Text="Confirmar ubicación"
-                                            Variant="Variant.Outlined" Style="background-color:transparent;
-                            width: 200px; border: 3px solid #767572; color:white;
-                            border-radius: 0.5rem;font-weight:bold; margin-top:15px ; margin-left:25px" />
+                        <Map width="275px" height="250px"/>
+                        <MudButton
+                            Variant="Variant.Outlined"
+                            Style="background-color:transparent; 
+                                 width: 200px; 
+                                 border: 3px solid #767572; 
+                                 color: white; 
+                                 border-radius: 0.5rem; 
+                                 font-weight: bold; 
+                                 margin-top: 15px; 
+                                 margin-left: 25px;">
+                            Confirmar ubicación
+                        </MudButton>
                     </div>
+
 
                     <div>
                         <label class="custom-label">Imágenes</label>
-                        <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
+                        <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px"/>
                         <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" AppendMultipleFiles="true" MaximumFileCount="4">
                             <ActivatorContent>
                                 <MudButtonComponent Text="Añadir imagen"
                                                     Variant="Variant.Outlined" Style="background-color:transparent;
                                         width: 155px; border: 3px solid #767572; color: white;
-                                            border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px" />
+                                            border-radius: 0.5rem;font-weight: bold; margin-top:15px ; margin-left:50px"/>
                             </ActivatorContent>
                         </MudFileUpload>
                     </div>
