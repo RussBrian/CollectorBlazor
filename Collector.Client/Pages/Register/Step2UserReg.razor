@@ -27,7 +27,10 @@
     </div>
     <MudTextField @bind-Value="reqUserDto.Password"
                   Variant="Variant.Outlined"
-                  InputType="InputType.Password"
+                  InputType="@PasswordInput"
+                  Adornment="Adornment.End"
+                  AdornmentIcon="@PasswordInputIcon"
+                  OnAdornmentClick="TogglePasswordVisibility"
                   Style="color:white;" />
     <div class="d-flex justify-content-between mt-5">
         <label class="custom-label">Confirmar Contraseña</label>
@@ -60,6 +63,17 @@
 </style>
 
 @code {
+    #region
+    private InputType PasswordInput = InputType.Password;
+    private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private void TogglePasswordVisibility()
+    {
+        bool isPasswordVisible = PasswordInput == InputType.Password;
+        PasswordInput = isPasswordVisible ? InputType.Text : InputType.Password;
+        PasswordInputIcon = isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
+    #endregion
 
     [Parameter]
     public ReqUserDto reqUserDto { get; set; }
