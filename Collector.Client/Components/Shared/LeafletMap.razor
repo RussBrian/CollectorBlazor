@@ -29,6 +29,7 @@
     public async Task OnMapClick(double latitude, double longitude)
     {
         await OnLocationSelected.InvokeAsync((latitude, longitude));
+        Console.WriteLine($"{latitude}-{longitude}");
     }
 
 }

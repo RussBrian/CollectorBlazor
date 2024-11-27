@@ -57,10 +57,10 @@ namespace Collector.Client.Utilities.Extensions
             {
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync(url, request);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
-                }
+                //if (!response.IsSuccessStatusCode)
+                //{
+                //    throw new Exception($"Error al cargar la respuesta - StatusCode {response.StatusCode}");
+                //}
 
                 string result = await response.Content.ReadAsStringAsync();
 

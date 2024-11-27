@@ -6,7 +6,6 @@
 @using Collector.Client.Services.Reports;
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ReportsService _reportService;
-@inject ProtectedSessionStorage _sessionStorage;
 
 <div class="primary-container">
     <main class="secondary-container">
@@ -15,8 +14,7 @@
             <h3 class="title">Crea un reporte</h3>
             <div class="card-body-container">
                 <!-- Aquí inicia el EditForm -->
-                <DataAnnotationsValidator />
-                <ValidationSummary />
+                <FluentValidationValidator />
 
                 <div class="text-field-container align-content-center">
 
@@ -24,17 +22,19 @@
                         <div class="d-flex justify-content-between">
                             <label class="custom-label">Título del reporte</label>
                             <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
-                                           TooplTipDescription="Ayudame"
+                                           ToolTipDescription="Ayudame"
                                            ToolTipStyle="color:#37490B" />
                         </div>
                         <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield" />
                         <p class="text-secondary">Coloque un título que identifique su reporte.</p>
+                        <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Title)" />
                     </div>
 
                     <div class="text-field-style" style="width: 30%;">
                         <label class="custom-label">Fecha</label>
                         <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
                                       Variant="Variant.Outlined" Style="custom-textfield" />
+
                     </div>
                 </div>
 
@@ -42,6 +42,7 @@
                     <label class="custom-label">Descripción</label>
                     <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield" />
                     <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Description)" />
                 </div>
 
                 <div class="map-container">
@@ -82,6 +83,12 @@
 </div>
 
 <style>
+    .validation-message{
+        color:red
+    }
+</style>
+
+<style>
     .edit-form-style {
         width: 100%;
         display: flex;
@@ -94,7 +101,7 @@
 
 @code {
     public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
-    public ReportDto Report { get; set; } = new();
+    public ReqReportDto Report { get; set; } = new();
     IList<IBrowserFile> files = [];
 
     private void HandleLocationSelected((double Latitude, double Longitude) location)
@@ -115,8 +122,6 @@
 
     public async Task OnSubmitReport()
     {
-        var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
-        Report.FireBaseCode = user.Value.IdToken;
         var response = await _reportService.CreateReport(Report, files);
     }
 }

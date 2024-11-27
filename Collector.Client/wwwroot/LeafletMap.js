@@ -10,6 +10,11 @@
     // Agregar un marcador inicial
     let marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
 
+    // **Guardar valores iniciales**
+    if (dotNetRef) {
+        dotNetRef.invokeMethodAsync("OnMapClick", latitude, longitude);
+    }
+
     // Evento al hacer clic en el mapa
     map.on('click', function (e) {
         const { lat, lng } = e.latlng;

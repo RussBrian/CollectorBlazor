@@ -1,4 +1,6 @@
-﻿.first-container {
+﻿
+/*Main Container*/
+.first-container {
     width: 100vw;
     min-height: 100vh;
     background-color: #25251D;
@@ -11,22 +13,19 @@
     padding: 20px; 
 }
 
-.card-image-top{
-    width:100%;
-    height:75%;
+.secundary-container {
+    width: 70vw;
+    justify-content: center;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat( auto-fill, minmax(250px, 320px));
+    grid-template-rows: repeat(2,1fr);
+    grid-column-gap: 30px;
+    grid-row-gap: 15px;
 }
+/*Main Container*/
 
-.d-flex.flex-row {
-    display: flex;
-    width: 100%; 
-}
-
-.title {
-    flex: 1; /* Esto permite que el título use el espacio necesario */
-    text-align: center; /* Centra el título */
-    margin-left:310px;
-}
-
+/*OutSideCard-Elements*/
 .btn-new-report {
     background-color: #7B885B;
     height: 45px;
@@ -38,11 +37,25 @@
 }
 
 .title {
+    flex: 1;
+    text-align: center;
+    margin-left: 310px;
     font-weight: bold;
     justify-content: center;
     margin-top: 10px;
     margin-bottom: 40px;
     color: whitesmoke;
+}
+/*OutSideCard-Elements*/
+
+.card-image-top {
+    width: 100%;
+    height: 75%;
+}
+
+.d-flex.flex-row {
+    display: flex;
+    width: 100%; 
 }
 
 .card-body-container h6{
@@ -103,17 +116,6 @@
 
 .btn-new-report-container{
     justify-content:space-between
-}
-
-.secundary-container {
-    width: 70vw;
-    justify-content:center;
-    margin-bottom: 20px;
-    display: grid;
-    grid-template-columns: repeat( auto-fill, minmax(250px, 320px));
-    grid-template-rows: repeat(2,1fr);
-    grid-column-gap: 30px;
-    grid-row-gap: 15px;
 }
 
 .card {

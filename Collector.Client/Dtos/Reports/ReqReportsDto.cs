@@ -2,7 +2,7 @@
 
 namespace Collector.Client.Dtos.Reports
 {
-    public class ReportDto
+    public class ReqReportDto
     {
         public string Title { get; set; } = null!;
         public string? Description { get; set; }

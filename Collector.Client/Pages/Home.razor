@@ -145,7 +145,7 @@
     [CascadingParameter]
     private ReqLoginDto loginModel { set; get; } = new();
     public bool _IsInstitution { set; get; }
-    private Response<ResLoginDto> resModel { set; get; }
+    private Response<ResLoginDto> resModel { set; get; } = new();
 
     public async Task Onsubmit()
     {
