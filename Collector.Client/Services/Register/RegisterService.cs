@@ -4,9 +4,6 @@ using Collector.Client.Dtos.User;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
-
-
-
 namespace Collector.Client.Services.Register
 {
     public class RegisterService : IRegisterService
@@ -23,8 +20,8 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
              => await _httpExtension.CustomFormDataAsync<ReqUserDto, ReqUserDto>($"{_appOptions.UrlRegisterUserService}/register", request);
 
-        public async Task SendCodeToEmail(string email) 
-            => await _httpExtension.CustomPostAsync<nuint,string>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+        public async Task SendCodeToEmail(UserEmailDto email) 
+            => await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
 
         public async Task<bool> VerifyCode(VerifyCodeDto verifyCode)
         {
