@@ -1,7 +1,11 @@
 ﻿@page "/EmailVerification/{_IsInstitution:bool}"
 @using Collector.Client.Dtos.Login
+@using Collector.Client.Dtos.User
 @using Collector.Client.Pages.Register
 @using Collector.Client.Components.Shared
+@using Collector.Client.Services.Register
+@inject IJSRuntime JSRuntime
+@inject IRegisterService RegisterService
 @inject NavigationManager Navigation
 
 <div class="main-container">
@@ -27,40 +31,66 @@
 
         </div>
 
-        @if (step == 1)
+        @switch (step)
         {
-            <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution" />
+            case 1:
+                <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution" />
+                break;
+
+            case 2:
+                <Step2EmailVer Code="Codigo" />
+                break;
         }
-        @if (step == 2)
-        {
-            <Step2EmailVer />
-        }
+
 
 
         <div class="buttons-container">
             @if (step < 2)
             {
                 <div>
-                    <MudButton OnClick="() => NextStep()" Color="Color.Primary"
-                               Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
+                    <MudButton OnClick="NextStep" Color="Color.Primary"
+                    Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
                 </div>
             }
             else
             {
-                <MudButton Type="Submit" Color="Color.Primary"
-                           Variant="Variant.Filled" Style="width:230px">Registrarme</MudButton>
+                <MudButton OnClick="VerifyCode" Color="Color.Primary"
+                Variant="Variant.Filled" Style="width:230px">Registrarme</MudButton>
             }
 
             @if (step > 1)
             {
                 <MudButton OnClick="PreviousStep" Variant="Variant.Outlined"
-                           Style="background-color:transparent; width: 155px; border: 3px solid #767572;
+                Style="background-color:transparent; width: 155px; border: 3px solid #767572;
                 color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
             }
         </div>
     </div>
     <div class="aside-background"></div>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon){
+    const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+    }
+    });
+    Toast.fire({
+    icon: icon,
+    title: Message
+    });
+    };
+</script>
 
 @code {
     [Parameter]
@@ -71,17 +101,9 @@
     private int step = 1;
     private double Value { get; set; }
 
-    public void AdvanceProgress()
-    {
-        Value += 50;
-        StateHasChanged();
-    }
+    [Parameter]
+    public int Codigo { get; set; }
 
-    public void GoBackProgress()
-    {
-        Value -= 50;
-        StateHasChanged();
-    }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -93,11 +115,21 @@
     }
 
     #region Step Methods
+    public void AdvanceProgress() => Value += 50;
+    public void GoBackProgress() => Value -= 50;
+
     private void NextStep()
     {
-        if (step < 2)
+        if (step == 1)
+        {
+            SendVerificationEmail();
+        }
+        else if (step < 2)
+        {
             step++;
-        AdvanceProgress();
+            AdvanceProgress();
+            StateHasChanged();
+        }
     }
 
     private void PreviousStep()
@@ -108,6 +140,49 @@
     }
     #endregion
 
+    #region
+    private async void SendVerificationEmail()
+    {
+        try
+        {
+            var userEmail = new UserEmailDto()
+            {
+                Email = reqUserDto.Email
+            };
+
+            await RegisterService.SendCodeToEmail(userEmail);
+            step = 2;
+            AdvanceProgress();
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código enviado con éxito.", "success");
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", $"Error al enviar el código: {ex.Message}", "error");
+        }
+    }
+
+    private async Task VerifyCode()
+    {
+        var verifyCodeDto = new VerifyCodeDto
+        {
+                Email = reqUserDto.Email,
+                Code = Codigo
+        };
+        var isVerified = await RegisterService.VerifyCode(verifyCodeDto);
+
+        if (isVerified)
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "verificación exitosa.", "success");
+            Navigation.NavigateTo("/");
+        }
+        else 
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código incorrecto. Intente de nuevo.", "error");
+        }
+    }
+
+    #endregion
     private void NavigateToLogin()
     {
         Navigation.NavigateTo("/");

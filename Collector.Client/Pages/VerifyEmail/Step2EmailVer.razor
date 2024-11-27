@@ -4,7 +4,7 @@
     <p class="custom-message">
         Ingrese el código enviado a su correo electrónico.
     </p>
-    <MudTextField @bind-Value="Code" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+    <MudTextField @bind-Value="Code" Variant="Variant.Outlined" Style="color:white;" />
   </MudForm>
 
   <style>
@@ -13,7 +13,6 @@
         color: #BDBABA;
     }
 
-       
     .custom-message {
         color: #7B885B;
         font-weight: bold;
@@ -23,6 +22,7 @@
   </style>
 
 @code {
-    MudForm form;
-    private int Code { get; set; }
+    [Parameter]
+    public int Code { get; set; }
+    private MudForm form;
 }
