@@ -1,5 +1,6 @@
 ﻿using Collector.Client.Services.Login;
 using Collector.Client.Services.Password;
+using Collector.Client.Services.Register;
 using Collector.Client.Services.Reports;
 using Collector.Client.Services.Volunteer;
 using Collector.Client.SessionHelpers;
@@ -14,6 +15,7 @@ namespace Collector.Client
         {
             services.AddScoped<ProtectedSessionStorage>();
             services.AddScoped<AuthenticationStateProvider, SessionManager>();
+
             services.AddScoped<IVolunteerService, VolunteerService>();
             services.AddScoped<SessionManager>();
             services.AddAuthentication();
@@ -21,9 +23,13 @@ namespace Collector.Client
             services.AddAuthorizationCore();
             
             services.AddScoped<IPasswordService,PasswordService>();
+            services.AddScoped<IRegisterService, RegisterService>();
+            services.AddHttpClient();
 
-            services.AddHttpClient();            
+            services.AddTransient<ReportsService>();
+            
             services.AddTransient<ILoginService, LoginService>();
+
             
             services.AddRazorComponents()
                  .AddInteractiveServerComponents();
