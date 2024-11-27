@@ -27,7 +27,7 @@ namespace Collector.Client.Services.Register
         {
             var result = await _httpExtension.CustomPostAsync<Response<VerifyCodeDto>, VerifyCodeDto>($"{_appOptions.UrlRegisterUserService}/verify-code", verifyCode);
             //ojo con esta parte en la respuesta correcta no se esta devolviendo nada.
-            return result != null && result.IsSuccess;           
+            return !result.IsSuccess ? false : result == null;           
         }          
 
     }

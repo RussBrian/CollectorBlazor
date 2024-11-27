@@ -1,8 +1,10 @@
-﻿<MudForm @ref="form">
+﻿<MudForm>
     <p class="custom-message">
         Ingrese el código enviado a su correo electrónico.
     </p>
-    <MudTextField @bind-Value="LocalCode" Variant="Variant.Outlined" Style="color:white;" />
+    <MudTextField @bind-Value="LocalCode" Variant="Variant.Outlined"
+                  Style="color:white;"
+                  TextChanged="OnCodeChanged" />
 </MudForm>
 
 <style>
@@ -20,13 +22,15 @@
 </style>
 
 @code {
-    [Parameter] public EventCallback<string> CodeChanged { get; set; }
-    private string LocalCode;
-    private MudForm form;
+    [Parameter] public EventCallback<int> CodeChanged { get; set; }
+    public int LocalCode { get; set; }
 
     private async Task OnCodeChanged(string value)
     {
-        LocalCode = value;
-        await CodeChanged.InvokeAsync(LocalCode);
+        if (int.TryParse(value, out int code))
+        {
+            LocalCode = code;
+            await CodeChanged.InvokeAsync(LocalCode);
+        }
     }
 }

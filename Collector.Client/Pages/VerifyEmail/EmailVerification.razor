@@ -12,7 +12,7 @@
     <div class="form-container">
 
 
-        <ProgressBar Value="Value"></ProgressBar>
+        <ProgressBar Value="BarValue"></ProgressBar>
 
         <div class="step-header">
             <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-2</MudText>
@@ -41,6 +41,7 @@
                 <Step2EmailVer CodeChanged="(value) => Codigo = value" />
                 break;
         }
+
 
 
         <div class="buttons-container">
@@ -95,10 +96,10 @@
     [Parameter]
     public bool _IsInstitution { get; set; }
     private ReqUserDto reqUserDto = new();
-    public string Codigo { set; get; } 
+    public int Codigo { set; get; } 
     private MudForm form;
     private int step = 1;
-    private double Value { get; set; }
+    private double BarValue { get; set; }
 
 
     protected override void OnAfterRender(bool firstRender)
@@ -111,8 +112,8 @@
     }
 
     #region Step Methods
-    public void AdvanceProgress() => Value += 50;
-    public void GoBackProgress() => Value -= 50;
+    public void AdvanceProgress() => BarValue += 50;
+    public void GoBackProgress() => BarValue -= 50;
 
     private void NextStep()
     {
@@ -169,8 +170,7 @@
         var verifyCodeDto = new VerifyCodeDto
         {
                 Email = reqUserDto.Email,
-                Code = int.Parse(Codigo)
-
+                Code = Codigo
         };
         var isVerified = await RegisterService.VerifyCode(verifyCodeDto);
 
