@@ -48,12 +48,16 @@
                 <FluentValidationValidator />
 
 
-                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined" 
+                <MudTextField @bind-Value="loginModel.Email" Variant="Variant.Outlined"
                               Label="Correo electrónico" InputType="InputType.Email" Class="custom-label; w-full; mb-3;" />
                 <ValidationMessage style="validation-message: 0 ;" For="(() => loginModel.Email)" />
 
-                <MudPasswordFieldComponent Password="@loginModel.Password" PasswordChanged="@((value) => loginModel.Password = value)" Label="Contraseña" 
-                    Variant="Variant.Outlined" Adornment="Adornment.End"  Style="custom-label; w-full;" />
+                <MudTextField @bind-Value="loginModel.Password"
+                              Label="Contraseña"
+                              InputType="InputType.Password"
+                              Variant="Variant.Outlined"
+                              Style="custom-label; w-full;" />
+
                 <ValidationMessage class="validation-message" For="(() => loginModel.Password)" />
 
                 <MudText Class="ms-15 mt-3">
@@ -115,7 +119,8 @@
         padding: 0 4px;
         font-weight: bold;
     }
-    .mud-input-label{
+
+    .mud-input-label {
         background-color: #D0D0CF;
     }
 </style>
@@ -150,6 +155,7 @@
     private ReqLoginDto loginModel { set; get; } = new();
     public bool _IsInstitution { set; get; }
     private Response<ResLoginDto> resModel { set; get; }
+    private bool isPasswordVisible = false;
 
     public async Task Onsubmit()
     {
