@@ -5,7 +5,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="./LeafletMap.js"></script>
 
-<div id="map" style="width:@Width; height:@Height; border:10px;"></div>
+<div id="map" style="width:250px; height:250px; border-radius:10px;"></div>
 
 @code {
     [Parameter] public string Width { get; set; } = "100%";
@@ -14,7 +14,6 @@
     public double Longitude { get; set; } = -69.6633953;
     [Parameter] public int Zoom { get; set; } = 12;
     [Parameter] public EventCallback<(double Latitude, double Longitude)> OnLocationSelected { get; set; }
-
     private DotNetObjectReference<LeafletMap>? dotNetRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -30,6 +29,7 @@
     public async Task OnMapClick(double latitude, double longitude)
     {
         await OnLocationSelected.InvokeAsync((latitude, longitude));
+        Console.WriteLine($"{latitude}-{longitude}");
     }
 
 }

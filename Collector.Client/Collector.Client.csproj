@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\User\Components\**" />
     <Compile Remove="Utilities\NewFolder\**" />
+    <Content Remove="Pages\User\Components\**" />
     <Content Remove="Utilities\NewFolder\**" />
+    <EmbeddedResource Remove="Pages\User\Components\**" />
     <EmbeddedResource Remove="Utilities\NewFolder\**" />
+    <None Remove="Pages\User\Components\**" />
     <None Remove="Utilities\NewFolder\**" />
   </ItemGroup>
 
@@ -33,10 +37,6 @@
     <PackageReference Include="LeafletForBlazor" Version="2.2.2.2" />
     <PackageReference Include="MudBlazor" Version="7.15.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\User\Components\" />
   </ItemGroup>
 
 </Project>

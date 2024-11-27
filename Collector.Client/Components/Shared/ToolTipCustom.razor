@@ -15,4 +15,9 @@
     [Parameter] public string? ToolTipDescription { get; set; }
     [Parameter] public string? ToolTipStyle { get; set; }
     [Parameter] public string? ToolTipTextStyle { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
 }
