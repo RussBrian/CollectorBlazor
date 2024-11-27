@@ -1,17 +1,15 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Collector.Client.Dtos.Volunteer
+﻿namespace Collector.Client.Dtos.Volunteer
 {
     public class ReqVolunteerDto
-    {        
-        public string? fireBaseCode { get; set; }        
-        public string? name { get; set; }        
-        public int volunteerCode { get; set; }
-        public string? details { get; set; }       
-        public string? longitude { get; set; }
-        public string? latitude { get; set; }
-        public string? isPrivate { get; set; }
-        public string volunteerDate { get; set; } = DateTime.Now.ToString("dd/MM/yyyy");
-        public string? images { get; set; }
+    {
+        public string FireBaseCode { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string VolunteerCode { get; set; } = string.Empty;
+        public string Details { get; set; } = string.Empty;
+        public float Longitude { get; set; }
+        public float Latitude { get; set; }
+        public bool IsPrivate { get; set; }
+        public string VolunteerDate { get; set; } = DateTime.Now.ToString("dd/MM/yyyy");
+        public List<IFormFile>? Images { get; set; }
     }
 }
