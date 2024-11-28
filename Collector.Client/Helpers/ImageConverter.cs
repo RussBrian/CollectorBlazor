@@ -5,7 +5,7 @@ namespace Collector.Client.Helpers
 {
     public static class ImageConverter
     {
-        public static async Task<IList<string>> ConvertImagesToStringAsync(IList<IBrowserFile> files)
+        public static async Task<IList<string>> ConvertImagesListToStringAsync(IList<IBrowserFile> files)
         {
             var images = new List<string>();
 
