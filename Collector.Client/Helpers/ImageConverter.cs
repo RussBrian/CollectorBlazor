@@ -25,11 +25,13 @@ namespace Collector.Client.Helpers
 
         public static async Task<string> ConvertImageToStringAsync(IBrowserFile file)
         {
-            var buffer = new byte[file.Size];
-            await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); 
-            var base64String = Convert.ToBase64String(buffer);
-            var mimeType = file.ContentType; 
-            return ($"data:{mimeType};base64,{base64String}");
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 5); // Límite de 5 MB
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            return $"data:{file.ContentType};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
         }
 
     }
