@@ -19,20 +19,7 @@ namespace Collector.Client.Helpers
                 var mimeType = file.ContentType; 
                 images.Add($"data:{mimeType};base64,{base64String}");
             }
-
             return images;
         }
-
-        public static async Task<string> ConvertImageToStringAsync(IBrowserFile file)
-        {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
-
-            using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 5); // Límite de 5 MB
-            using var memoryStream = new MemoryStream();
-            await stream.CopyToAsync(memoryStream);
-            return $"data:{file.ContentType};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
-        }
-
     }
 }
