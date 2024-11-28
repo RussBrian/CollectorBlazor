@@ -148,7 +148,7 @@
     {
         try
         {
-            var userEmail = new UserEmailDto()
+            var userEmail = new UserEmailDto
             {
                 Email = reqUserDto.Email,
             };
@@ -177,7 +177,7 @@
         if (isVerified)
         {
             await JSRuntime.InvokeVoidAsync("showSweetAlert", "verificación exitosa.", "success");
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/RegisterUser");
         }
         else 
         {
