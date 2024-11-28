@@ -4,23 +4,104 @@
 @using Collector.Client.Dtos
 @using Collector.Client.Dtos.Volunteer
 @using Collector.Client.Services.Volunteer
+@inject NavigationManager navManager;
 @inject IVolunteerService _volunteerService;
 
+@{
+    <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+}
+
 <div class="first-container">
-    <p>Home Volunteers</p>
+
+    @if (isDataLoaded)
+    {
+        <div class="d-flex flex-row">
+            <h2 class="title">Voluntariados</h2>
+            <button @onclick="NavigateToCreateReports"
+                    class="btn-new-report btn mt-3">
+                Nuevo Voluntariado
+            </button>
+        </div>
+
+        <main class="secundary-container">
+            @foreach (var volunteer  in volunteers)
+            {
+                <div class="card card-content">
+
+                    <img class="card-img-top" style="width:100%; height:250px;" src="@(volunteer.ImageUrls.Any() ? volunteer.ImageUrls[0]
+                        : "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow")" />
+                    <div class="card-body">
+                        <div class="card-body-container">
+                            <h6>@volunteer.InstitutionName</h6>
+                            <p>@volunteer.Name</p>
+                        </div>
+                        <div class="date-container">
+                            <p>
+                                Privacidad:
+                                @if (!volunteer.IsPrivate)
+                                {
+                                    <p>Publico</p>
+                                }
+                                else
+                                {
+                                    <p>Privado</p>
+                                }
+                            </p>
+                            <p>@volunteer.VolunteerDate</p>
+                        </div>
+                        <div class="btn-container">
+                            <button @onclick="() => GetReportById(volunteer.Id)" class="btn btn-details">
+                                Ver más detalles
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </main>
+
+        <div class="pagination-container m-4">
+            <MudPagination Class="custom-pagination" Size="Size.Large" Rectangular="true" Variant="Variant.Filled" Count="6" />
+        </div>
+    }
+    else
+    {
+        <h2 class="title">Voluntariados</h2>
+        <div class="container-no-reports col-6 offset-12 mt-3">
+            <div class="text-center">
+                <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
+                <h5 class="card-title mt-2 text-secondary">No se han encontrado voluntariados registrados ¿desea crear uno?</h5>
+                <a href="/User/Create/Reports" class="btn-new-report btn mt-2">Nuevo Voluntariado</a>
+            </div>
+        </div>
+    }
 </div>
 
+<style>
+    .custom-pagination .mud-pagination-item {
+        color: white;
+    }
+</style>
 
 @code {
-   
-    private List<ResVolunteerDto>? volunteers;
+    private List<ResVolunteerDto> volunteers { get; set; } = new();
+    private PaginationDto pagination { set; get; } = new();
+    private bool isDataLoaded = false;
 
-    protected override async Task OnInitializedAsync()
+    public void NavigateToCreateReports()
     {
-        var pagination = new PaginationDto { Page = 1, AmountofInfo = 10 };
-
-        volunteers = await _volunteerService.GetAllVolunteers(pagination);
-
-        Console.WriteLine($"Datos recibidos: {System.Text.Json.JsonSerializer.Serialize(volunteers)}");
+        navManager.NavigateTo("/Volunteer/Create", forceLoad: true);
     }
+
+    protected async override Task OnInitializedAsync()
+    {
+        volunteers = await _volunteerService.GetAllVolunteers(pagination);
+        isDataLoaded = true;
+        await base.OnInitializedAsync();
+    }
+
+    private void GetReportById(int Id) => navManager.NavigateTo($"/Reports/Details/{Id}");
 }
