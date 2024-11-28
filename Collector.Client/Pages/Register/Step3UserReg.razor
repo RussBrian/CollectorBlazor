@@ -6,14 +6,31 @@
 
         <div class="custom-image-title">Foto de Perfil</div>
 
-        <InputFile OnChange="OnFileSelected"
-                   class="input-file-rounded"
-                   style="opacity:0; position:absolute; border-radius: 50%;" />
+        <div class="map-container">
+
+            <div>
+                <label class="custom-label">Imagen</label>
+                <img class="rounded-3" src="@(reqUserDto.File != null ? reqUserDto.File : "./BosqueLindo.png")" width="275px" height="250px" />
+
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" MaximumFileCount="1">
+                    <ActivatorContent>
+                        <MudButtonComponent Text="Añadir imagen"
+                                            Variant="Variant.Outlined"
+                                            Style="background-color:transparent;
+                            width: 155px; border: 3px solid #767572; color: white;
+                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px" />
+                    </ActivatorContent>
+                </MudFileUpload>
+            </div>
+        </div>
+        @* <InputFile OnChange="OnFileSelected"
+        class="input-file-rounded"
+        style="opacity:0; position:absolute; border-radius: 50%;" />
 
         <div>
             <MudPaper Height="300px"
-                      Outlined="true"
-                      Class="@_dragClass">
+            Outlined="true"
+            Class="@_dragClass">
                 @if (!string.IsNullOrEmpty(ImagePreview))
                 {
                     <div class="preview-container d-flex align-center justify-center" style="height: 100%; text-align: center;">
@@ -25,7 +42,7 @@
                     <MudText Typo="Typo.h6" Align="Align.Center">Arrastra y suelta tu imagen aquí o haz clic para seleccionarla</MudText>
                 }
             </MudPaper>
-        </div>
+        </div> *@
 
         <p class="custom-message-image">
             Puedes arrastrar tu imagen al área o seleccionarla haciendo clic.
@@ -40,21 +57,24 @@
     private string ImagePreview { get; set; } = string.Empty;
     private string _dragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
 
-    #region Métodos
-
-    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    #region Handle Image Methods
+    private async void UploadFiles(InputFileChangeEventArgs e)
     {
         var file = e.File;
         if (file != null)
         {
+            reqUserDto.File = file;
+
             using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 5);
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
             var base64 = Convert.ToBase64String(memoryStream.ToArray());
+
             ImagePreview = $"data:{file.ContentType};base64,{base64}";
-            reqUserDto.Image = ImagePreview;
+            StateHasChanged();
         }
     }
+
     #endregion
 }
 
