@@ -130,7 +130,7 @@
         }
 
         // Convierte las imágenes a base64
-        Report.Files = await ImageConverter.ConvertImagesToStringAsync(_selectedFiles);
+        Report.Files = await ImageConverter.ConvertImagesListToStringAsync(_selectedFiles);
 
         // Actualiza la imagen frontal con la primera imagen de la lista
         FrontImage = Report.Files.FirstOrDefault() ?? string.Empty;
