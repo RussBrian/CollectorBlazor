@@ -1,29 +1,60 @@
-﻿@using Collector.Client.Services.Login
-@inject ILoginService LoginService;
+﻿@using Collector.Client.Dtos.Login
+@using Collector.Client.Services.Login
 @using Microsoft.AspNetCore.Components.Authorization;
 @inject NavigationManager navigationManager;
+@inject ProtectedSessionStorage _sessionStorage;
+@inject ILoginService _loginService;
 
+<MudNavMenu Class="heightFix d-flex flex-column align-items-center">
+    <div style="display: flex; justify-content: center; align-items: center; margin: 20px;">
+        <img src="/ImagenCollector.jpg" style="border-radius: 20%; height: 50px; width: 50px; object-fit: cover;" />
+        
+    </div>
 
-<MudNavMenu Class="heightFix d-flex flex-column">
     <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Primary" Href="/User/Create/Reports" Match="NavLinkMatch.All">
         <MudText Color="Color.Primary">Inicio</MudText>
     </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Filled.LibraryBooks" IconColor="Color.Primary" Href="/" Match="NavLinkMatch.All">
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.LibraryBooks" IconColor="Color.Primary" Href="/" Match="NavLinkMatch.All">
         <MudText Color="Color.Primary">Mis reportes</MudText>
     </MudNavLink>
     <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Primary" Href="/" Match="NavLinkMatch.All">
         <MudText Color="Color.Primary">Crear reportes</MudText>
     </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Primary" OnClick="LogOutMethod" Match="NavLinkMatch.All">
+    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Logout" IconColor="Color.Primary" OnClick="LogOutMethod" Match="NavLinkMatch.All">
         <MudText Color="Color.Primary">Log out</MudText>
     </MudNavLink>
 </MudNavMenu>
 
+<style>
+    .heightFix {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    img {
+        transition: transform 0.3s ease;
+    }
+
+        img:hover {
+            transform: scale(1.1);
+        }
+
+</style>
+
 @code {
+
+    public ResLoginDto? resloginDto { get; set; }
+
+    private async Task GetLogUserInfo()
+    {
+        var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
+        resloginDto = user.Value;
+    }
 
     private async Task LogOutMethod()
     {
-        await LoginService.Logout(null);
+        await _loginService.Logout(null);
         navigationManager.NavigateTo("/",forceLoad:true);
     }
 }

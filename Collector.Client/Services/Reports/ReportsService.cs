@@ -48,7 +48,7 @@ namespace Collector.Client.Services.Reports
 
         public async Task<Response<ReqReportDto>> CreateReport(ReqReportDto Report, IList<IBrowserFile> files)
         {
-            var images = ImageConverter.ConvertImagesToString(files);
+            var images = ImageConverter.ConvertImagesToStringAsync(files);
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
             
             var report = await _httpServiceExtensions.CustomFormDataAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);

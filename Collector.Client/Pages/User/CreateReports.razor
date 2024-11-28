@@ -3,8 +3,10 @@
 @using Collector.Client.Components.Shared;
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Dtos.Reports;
+@using Collector.Client.Helpers
 @using Collector.Client.Services.Reports;
 @inject IReportsService _reportService;
+@inject IJSRuntime JS;
 
 <div class="primary-container">
     <main class="secondary-container">
@@ -22,7 +24,7 @@
                             <label class="custom-label">Título del reporte</label>
                             <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small"
                                            ToolTipDescription="Ayudame"
-                                         ToolTipStyle="color:#37490B" />
+                                           ToolTipStyle="color:#37490B" />
                         </div>
                         <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield" />
                         <p class="text-secondary">Coloque un título que identifique su reporte.</p>
@@ -33,7 +35,7 @@
                         <label class="custom-label">Fecha</label>
                         <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
                                       Variant="Variant.Outlined" Style="custom-textfield" />
-  
+
                     </div>
                 </div>
 
@@ -48,9 +50,9 @@
 
                     <div>
                         <label class="custom-label">Imágenes</label>
-                        <img class="rounded-3" src="@(Report.Files.Any() ? Report.Files.FirstOrDefault() : "./BosqueLindo.png")" width="275px" height="250px" />
+                        <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
 
-                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" AppendMultipleFiles="true" MaximumFileCount="4">
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" multiple FilesChanged="UploadFiles" AppendMultipleFiles="true" MaximumFileCount="4">
                             <ActivatorContent>
                                 <MudButtonComponent Text="Añadir imagen"
                                                     Variant="Variant.Outlined"
@@ -80,16 +82,16 @@
 </div>
 
 <style>
-    .img{
-       border-radius:10px;
+    .img {
+        border-radius: 10px;
     }
 
-    .text-secondary{
-        margin:7px;
+    .text-secondary {
+        margin: 7px;
     }
 
-    .validation-message{
-        color:red
+    .validation-message {
+        color: red
     }
 
     .edit-form-style {
@@ -98,16 +100,14 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-buttom:5px;
+        margin-buttom: 5px;
     }
 </style>
 
 @code {
     public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
-    public ReqReportDto Report { get; set; } = new ReqReportDto
-    {
-       Files = new List<string>()
-    };
+    public string FrontImage { get; set; } = string.Empty;
+    public ReqReportDto Report { get; set; } = new();
     IList<IBrowserFile> files = [];
 
     private void HandleLocationSelected((double Latitude, double Longitude) location)
@@ -116,21 +116,26 @@
         Report.Longitude = location.Longitude;
     }
 
-    private async void UploadFiles(IBrowserFile file)
-    {
-        var stream = file.OpenReadStream();
-        using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        var base64Image = Convert.ToBase64String(memoryStream.ToArray());
+    private List<IBrowserFile> _selectedFiles = new();
 
-        Report.Files.Add($"data:{file.ContentType};base64,{base64Image}");
-        StateHasChanged();
+    private async Task UploadFiles(IReadOnlyList<IBrowserFile> newFiles)
+    {
+        // Agrega los nuevos archivos a la lista existente
+        _selectedFiles.AddRange(newFiles);
+
+        // Asegúrate de no exceder el límite de archivos
+        if (_selectedFiles.Count > 4)
+        {
+            _selectedFiles = _selectedFiles.Take(4).ToList();
+        }
+
+        // Convierte las imágenes a base64
+        Report.Files = await ImageConverter.ConvertImagesToStringAsync(_selectedFiles);
+
+        // Actualiza la imagen frontal con la primera imagen de la lista
+        FrontImage = Report.Files.FirstOrDefault() ?? string.Empty;
     }
 
-    private void UploadFiles(InputFileChangeEventArgs args)
-    {
-        files.Add(args.File);
-    }
 
     public async Task OnSubmitReport()
     {
