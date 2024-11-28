@@ -17,7 +17,7 @@
         <EditForm Model="@ReqVolunteerDto" OnSubmit="OnSubmit" class="edit-form-style">
             <h3 class="title">Crea un voluntariado</h3>
             <div class="card-body-container">
-                
+
                 @* <DataAnnotationsValidator /> *@
 
                 <div class="text-field-container">
@@ -36,28 +36,25 @@
                     </div>
                 </div>
 
-                @*                     
                 <div class="map-container">
-                <div>
-                <label class="custom-label">Ubicación</label>
-                <Map width="275px" height="250px" />
-                <MudButton
-                Variant="Variant.Outlined"
-                Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
-                Confirmar ubicación
-                </MudButton>
-                </div>
+@*                     <div>
+                        <label class="custom-label">Ubicación</label>
+                        <Map width="275px" height="250px" />
+                        <MudButton Variant="Variant.Outlined"
+                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
+                            Confirmar ubicación
+                        </MudButton>
+                    </div> *@
 
-                <div>
-                <label class="custom-label">Imágenes</label>
-                <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
-                <MudButton
-                Variant="Variant.Outlined"
-                Style="background-color:transparent; width: 155px; border: 3px solid #767572; color: white; border-radius: 0.5rem; font-weight: bold; margin-top:15px; margin-left:50px;">
-                Añadir imagen
-                </MudButton>
+                    <div>
+                        <label class="custom-label">Imágenes</label>
+                        <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
+                        <MudButton Variant="Variant.Outlined"
+                                   Style="background-color:transparent; width: 155px; border: 3px solid #767572; color: white; border-radius: 0.5rem; font-weight: bold; margin-top:15px; margin-left:50px;">
+                            Añadir imagen
+                        </MudButton>
+                    </div>
                 </div>
-                </div> *@
 
                 <div class="text-field-container">
                     <div class="text-field-style">
@@ -73,7 +70,7 @@
                             <label class="custom-label">Código</label>
                             <MudTextField @bind-Value="ReqVolunteerDto.VolunteerCode" Variant="Variant.Outlined" />
                         </div>
-                    }                   
+                    }
                 </div>
 
                 <div class="container-message d-flex">
@@ -94,11 +91,6 @@
         </EditForm>
     </main>
 </div>
-@*     </Authorized>
-    <NotAuthorized>
-        <NoAuthorization RedirectUrl="/"/>
-    </NotAuthorized>
-</AuthorizeView> *@
 
 @code {
     [Parameter]
@@ -112,17 +104,17 @@
     private async Task OnSubmit()
     {
         PaginationDto pagination = new()
-        {
-            Page = 1,
-            AmountofInfo = 4
-        };
+            {
+                Page = 1,
+                AmountofInfo = 4
+            };
         var getall = await _volunteerService.GetAllVolunteers(pagination);
 
         JsonSerializerOptions options = new()
-        {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            WriteIndented = true
-        };
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                WriteIndented = true
+            };
 
         string json = JsonSerializer.Serialize(getall, options);
 
@@ -160,5 +152,5 @@
 
 </style>
 
-@code{
+@code {
 }
