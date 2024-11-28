@@ -4,6 +4,7 @@
 @using Collector.Client.Pages.Register
 @using Collector.Client.Components.Shared
 @using Collector.Client.Services.Register
+@using System.Text
 @inject IJSRuntime JSRuntime
 @inject IRegisterService RegisterService
 @inject NavigationManager Navigation
@@ -101,6 +102,59 @@
     private int step = 1;
     private double BarValue { get; set; }
 
+    #region Methods
+    private async void SendVerificationEmail()
+    {
+        try
+        {
+            var userEmail = new UserEmailDto
+            {
+                Email = reqUserDto.Email,
+            };
+
+            await RegisterService.SendCodeToEmail(userEmail);
+            step = 2;
+            AdvanceProgress();
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código enviado con éxito.", "success");
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", $"Error al enviar el código: {ex.Message}", "error");
+        }
+    }
+
+    private async Task VerifyCode()
+    {
+        var verifyCodeDto = new UserEmailDto
+            {
+                Email = reqUserDto.Email,
+                Code = Codigo
+            };
+        var (message, isVerified) = await RegisterService.VerifyCode(verifyCodeDto);
+
+
+        if (isVerified)
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "verificación exitosa.", "success");
+
+            var encodeIdentification = Encoding.UTF8.GetBytes(reqUserDto.Identification);
+            var encodeEmail = Encoding.UTF8.GetBytes(verifyCodeDto.Email);
+            var encodeCode = Encoding.UTF8.GetBytes(verifyCodeDto.Code.ToString());
+
+            string identification = Convert.ToBase64String(encodeIdentification);
+            string email = Convert.ToBase64String(encodeEmail);
+            string code = Convert.ToBase64String(encodeCode);
+
+            Navigation.NavigateTo($"/RegisterUser/{identification}/{email}/{code}");
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código incorrecto. Intente de nuevo.", "error");
+        }
+    }
+
+    #endregion
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -143,49 +197,7 @@
     }
     #endregion
 
-    #region
-    private async void SendVerificationEmail()
-    {
-        try
-        {
-            var userEmail = new UserEmailDto()
-            {
-                Email = reqUserDto.Email,
-            };
 
-            await RegisterService.SendCodeToEmail(userEmail);
-            step = 2;
-            AdvanceProgress();
-            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código enviado con éxito.", "success");
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await JSRuntime.InvokeVoidAsync("showSweetAlert", $"Error al enviar el código: {ex.Message}", "error");
-        }
-    }
-
-    private async Task VerifyCode()
-    {
-        var verifyCodeDto = new VerifyCodeDto
-        {
-                Email = reqUserDto.Email,
-                Code = Codigo
-        };
-        var (message, isVerified) = await RegisterService.VerifyCode(verifyCodeDto);
-
-        if (isVerified)
-        {
-            await JSRuntime.InvokeVoidAsync("showSweetAlert", "verificación exitosa.", "success");
-            Navigation.NavigateTo("/");
-        }
-        else 
-        {
-            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código incorrecto. Intente de nuevo.", "error");
-        }
-    }
-
-    #endregion
     private void NavigateToLogin()
     {
         Navigation.NavigateTo("/");

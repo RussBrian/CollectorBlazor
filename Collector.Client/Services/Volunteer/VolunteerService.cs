@@ -65,7 +65,7 @@ namespace Collector.Client.Services.Volunteer
             return null;
         }
 
-        public async Task<List<ResVolunteerDto>> GetAllVolunteers(PaginationDto pagination)
+     public async Task<List<ResVolunteerDto>> GetAllVolunteers(PaginationDto pagination)
         {
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>(_appOptions.UrlVolunteerService);
 

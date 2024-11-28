@@ -7,5 +7,7 @@ public interface IRegisterService
 {
     Task<ReqUserDto?> CreateUserAsync(ReqUserDto request);
     Task SendCodeToEmail(UserEmailDto email);
-    Task<(string, bool)> VerifyCode(VerifyCodeDto verifyCode);
+    Task<(string, bool)> VerifyCode(UserEmailDto verifyCode);
+
+    Task ConfirmEmail(string email, string code);
 }

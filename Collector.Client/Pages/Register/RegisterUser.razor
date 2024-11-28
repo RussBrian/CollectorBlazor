@@ -1,6 +1,9 @@
-﻿@page "/RegisterUser/{_IsInstitution:bool}"
+﻿@page "/RegisterUser/{identification}/{email}/{code}"
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Components.Shared
+@using Collector.Client.Dtos.User
+@using Collector.Client.Services.Register
+@inject IRegisterService _registerService
 @inject NavigationManager Navigation
 
 <div class="main-container">
@@ -49,6 +52,7 @@
             {
 
                 <MudButtonComponent Text="Registrar"
+                                    OnClick="RegisterUserAsync"
                                     Color="Color.Primary" Variant="Variant.Filled"
                                     Style="width:230px;" />
             }
@@ -74,6 +78,31 @@
     public double Value { get; set; }
     private ReqUserDto reqUserDto = new();
 
+    [Parameter]
+    public string identification { get; set; } = string.Empty;
+    [Parameter]
+    public string email { get; set; } = string.Empty;
+    [Parameter]
+    public string code { get; set; } = string.Empty;
+
+    private async Task RegisterUserAsync()
+    {
+        try
+        {           
+            var data = await _registerService.CreateUserAsync(reqUserDto);
+
+            
+
+            await _registerService.ConfirmEmail(email,code);
+          
+        }
+        catch (Exception ex)
+        {
+         
+        }
+    }
+
+    #region Utils
     public void AdvanceProgress()
     {
         Value += 33.3;
@@ -117,5 +146,6 @@
     {
         Navigation.NavigateTo("/");
     }
+    #endregion
     #endregion
 }

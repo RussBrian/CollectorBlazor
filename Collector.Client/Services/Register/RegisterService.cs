@@ -4,6 +4,7 @@ using Collector.Client.Dtos.User;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
+using System.Text;
 namespace Collector.Client.Services.Register
 {
     public class RegisterService : IRegisterService
@@ -20,14 +21,35 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
              => await _httpExtension.CustomFormDataAsync<ReqUserDto, ReqUserDto>($"{_appOptions.UrlRegisterUserService}/register", request);
 
-        public async Task SendCodeToEmail(UserEmailDto email) 
-            => await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+        public async Task SendCodeToEmail(UserEmailDto email)
+        { 
+            _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+        }
 
-        public async Task<(string, bool)> VerifyCode(VerifyCodeDto verifyCode)
+        public async Task<(string, bool)> VerifyCode(UserEmailDto verifyCode)
         {
-            var result = await _httpExtension.CustomPostAsync<Response<VerifyCodeDto>, VerifyCodeDto>($"{_appOptions.UrlRegisterUserService}/verify-code", verifyCode);
+            var result = await _httpExtension.CustomPostAsync<Response<UserEmailDto>, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/verify-code", verifyCode);
+
+            if(result == null)
+            {
+                return (string.Empty, true);
+            }
             return (result.ErrorMessage, result.IsSuccess);
-        }          
+        }
+        public async Task ConfirmEmail(string email, string code)
+        {
+            var decodeEmail = Convert.FromBase64String(email);
+            var decodeCode = Convert.FromBase64String(code);
+
+            UserEmailDto confirmEmail = new()
+            {
+                Email = Encoding.UTF8.GetString(decodeEmail),
+                Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
+            };
+            
+            _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/confirm-email", confirmEmail);
+        }
+
 
     }
 }
