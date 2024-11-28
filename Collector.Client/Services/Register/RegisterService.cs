@@ -26,9 +26,13 @@ namespace Collector.Client.Services.Register
         public async Task<(string, bool)> VerifyCode(VerifyCodeDto verifyCode)
         {
             var result = await _httpExtension.CustomPostAsync<Response<VerifyCodeDto>, VerifyCodeDto>($"{_appOptions.UrlRegisterUserService}/verify-code", verifyCode);
+
+            if(result == null)
+            {
+                return (string.Empty, true);
+            }
             return (result.ErrorMessage, result.IsSuccess);
         }          
 
     }
 }
-
