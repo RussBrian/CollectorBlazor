@@ -1,4 +1,4 @@
-﻿@page "/RegisterUser/{_IsInstitution:bool}"
+﻿@page "/RegisterUser"
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Components.Shared
 @inject NavigationManager Navigation
@@ -22,19 +22,19 @@
         {
             case 1:
                 <Step1UserReg reqUserDto="reqUserDto"
-                              IsInstitution="_IsInstitution" />
+                               />
                 break;
             case 2:
                 <Step2UserReg reqUserDto="reqUserDto"
-                              IsInstitution="_IsInstitution" />
+                               />
                 break;
             case 3:
                 <Step3UserReg reqUserDto="reqUserDto"
-                              IsInstitution="_IsInstitution" />
+                               />
                 break;
             default:
                 <Step1UserReg reqUserDto="reqUserDto"
-                              IsInstitution="_IsInstitution" />
+                               />
                 break;
         }
 
@@ -67,8 +67,6 @@
 
 @code {
 
-    [Parameter]
-    public bool _IsInstitution { get; set; }
     public Step1UserReg? _step1UserReg;
     private int step = 1;
     public double Value { get; set; }
