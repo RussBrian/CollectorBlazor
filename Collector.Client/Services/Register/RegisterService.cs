@@ -20,8 +20,11 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
              => await _httpExtension.CustomFormDataAsync<ReqUserDto, ReqUserDto>($"{_appOptions.UrlRegisterUserService}/register", request);
 
-        public async Task SendCodeToEmail(UserEmailDto email) 
-            => await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+        public async Task SendCodeToEmail(UserEmailDto email)
+        {
+              await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+
+        }
 
         public async Task<(string, bool)> VerifyCode(VerifyCodeDto verifyCode)
         {
