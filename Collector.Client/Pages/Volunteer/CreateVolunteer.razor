@@ -2,19 +2,19 @@
 @using Collector.Client.Components.Shared
 @using Collector.Client.Dtos
 @using Collector.Client.Dtos.Volunteer
+@using Collector.Client.Helpers
 @using Collector.Client.Services.Volunteer
-@inject IVolunteerService _volunteerService
-@inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Components.Authorization;
 @using System.Text.Json
 @using System.Text.Encodings.Web
-
+@inject IVolunteerService _volunteerService
+@inject NavigationManager Navigation;
 
 @* <AuthorizeView Roles="Admin,Institution">
     <Authorized> *@
 <div class="primary-container">
     <main class="secondary-container">
-        <EditForm Model="@ReqVolunteerDto" OnSubmit="OnSubmit" class="edit-form-style">
+        <EditForm Model="@ReqVolunteerDto" class="edit-form-style">
             <h3 class="title">Crea un voluntariado</h3>
             <div class="card-body-container">
 
@@ -37,22 +37,40 @@
                 </div>
 
                 <div class="map-container">
-@*                     <div>
-                        <label class="custom-label">Ubicación</label>
-                        <Map width="275px" height="250px" />
-                        <MudButton Variant="Variant.Outlined"
-                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
-                            Confirmar ubicación
-                        </MudButton>
+                    @*                     <div>
+                    <label class="custom-label">Ubicación</label>
+                    <Map width="275px" height="250px" />
+                    <MudButton Variant="Variant.Outlined"
+                    Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
+                    Confirmar ubicación
+                    </MudButton>
                     </div> *@
 
                     <div>
-                        <label class="custom-label">Imágenes</label>
-                        <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
-                        <MudButton Variant="Variant.Outlined"
-                                   Style="background-color:transparent; width: 155px; border: 3px solid #767572; color: white; border-radius: 0.5rem; font-weight: bold; margin-top:15px; margin-left:50px;">
-                            Añadir imagen
-                        </MudButton>
+                        <MudStack Row="true">
+                            <MudItem Class="m-0">
+                                <label class="custom-label">Imágenes</label>
+                            </MudItem>
+                            <MudItem>
+                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                               ToolTipDescription="Coloque una imagen de la zona afectada.
+                                               Puede colocar hasta cuatro imágenes si asi lo desea."
+                                               ToolTipStyle="color:#37490B" />
+                            </MudItem>
+                        </MudStack>
+                        <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
+
+                        <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
+
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                            <ActivatorContent>
+                                <MudButtonComponent Text="Añadir imagen"
+                                                    Variant="Variant.Outlined"
+                                                    Style="background-color:transparent;
+                            width: 155px; border: 3px solid #767572; color: white;
+                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px" />
+                            </ActivatorContent>
+                        </MudFileUpload>
                     </div>
                 </div>
 
@@ -85,44 +103,13 @@
                 <MudButton Variant="Variant.Filled"
                            ButtonType="ButtonType.Submit"
                            Style="background-color:#515B3B; margin-bottom:10px; color:white; width:400px;">
-                    Crear reporte
+                    Crear voluntariado
                 </MudButton>
             </div>
         </EditForm>
     </main>
 </div>
 
-@code {
-    [Parameter]
-    public ReqVolunteerDto ReqVolunteerDto { get; set; } = new();
-
-    protected override void OnInitialized()
-    {
-        ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
-    }
-
-    private async Task OnSubmit()
-    {
-        PaginationDto pagination = new()
-            {
-                Page = 1,
-                AmountofInfo = 4
-            };
-        var getall = await _volunteerService.GetAllVolunteers(pagination);
-
-        JsonSerializerOptions options = new()
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                WriteIndented = true
-            };
-
-        string json = JsonSerializer.Serialize(getall, options);
-
-        Console.WriteLine(json);
-
-        ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
-    }
-}
 <style>
     .custom-textfield {
         border: 2px solid #767572;
@@ -149,8 +136,72 @@
         justify-content: center;
         margin: auto;
     }
-
 </style>
 
 @code {
+    [Parameter]
+    public ReqVolunteerDto ReqVolunteerDto { get; set; } = new();
+    public string FrontImage { get; set; } = string.Empty;
+    public bool HasFrontImage { get; set; } = false;
+    public ReqVolunteerDto reqVolunteer { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
+    }
+
+    #region File Manager
+    private List<IBrowserFile> _selectedFiles = new();
+    private List<IBrowserFile> _processedFiles = new();
+
+
+    public async Task UploadFiles(IReadOnlyList<IBrowserFile> e)
+    {
+        var filesToProcess = e.Except(_processedFiles).ToList();
+
+        if (filesToProcess.Any())
+        {
+            if (reqVolunteer.Images.Count() >= 4 && e.Count() > 4)
+            {
+                return;
+            }
+
+            _selectedFiles.AddRange(filesToProcess);
+            _processedFiles.AddRange(filesToProcess);
+
+            var result = await ImageConverter.ConvertImagesListToStringAsync(_selectedFiles);
+
+            _selectedFiles.Clear();
+
+            if (!HasFrontImage)
+            {
+                FrontImage = result[0];
+                HasFrontImage = true;
+                StateHasChanged();
+            }
+        }
+    }
+    #endregion
+
+    private async Task OnSubmit()
+    {
+        PaginationDto pagination = new()
+            {
+                Page = 1,
+                AmountofInfo = 4
+            };
+        var getall = await _volunteerService.GetAllVolunteers(pagination);
+
+        JsonSerializerOptions options = new()
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                WriteIndented = true
+            };
+
+        string json = JsonSerializer.Serialize(getall, options);
+
+        Console.WriteLine(json);
+
+        ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
+    }
 }

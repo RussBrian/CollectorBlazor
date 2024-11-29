@@ -72,6 +72,7 @@
     public double Value { get; set; }
     private ReqUserDto reqUserDto = new();
 
+    #region Pregression bar Methods
     public void AdvanceProgress()
     {
         Value += 33.3;
@@ -83,6 +84,7 @@
         Value -= 33.3;
         StateHasChanged();
     }
+    #endregion
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -108,7 +110,6 @@
         GoBackProgress();
     }
     #endregion
-
 
     #region Navigate Methods
     private void NavigateToLogin()
