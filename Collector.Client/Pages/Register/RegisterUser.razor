@@ -101,7 +101,6 @@
                 Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
             };
 
-            reqUserDto.File = string.Empty;
             reqUserDto.Email = resultEmail;
             reqUserDto.Identification = Encoding.UTF8.GetString(decodeIdentify);
 
@@ -162,6 +161,5 @@
     {
         Navigation.NavigateTo("/");
     }
-    #endregion
     #endregion
 }
