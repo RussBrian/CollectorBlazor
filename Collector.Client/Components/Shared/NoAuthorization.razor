@@ -1,19 +1,61 @@
 ﻿@inject NavigationManager Navigation
-<MudText Typo="Typo.h1">
-    You Are Not Authorized
-</MudText>
 
-<MudButton OnClick="() => GoToPage(RedirectUrl)">Go back</MudButton>
+<main class="centered-container">
+    <div class="secundary-container">
+        <img class="img-collector" src="/ImagenCollector.jpg"/>
+        <h5 class="title">
+            No estas autorizado para acceder a esta pagina.
+        </h5>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => GoToPage(RedirectUrl)">Volver al inicio </MudButton>
+    </div>
+</main>
+
+<style>
+    .centered-container {
+        display: flex;
+        background-color: #25251D;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+    }
+
+    .title{
+        color:gra
+    }
+
+    .secundary-container{
+        width:48%;
+        padding:10px;
+        background-color: #BDBABAF2;
+        border-radius:10px;
+        transition: 0.3s;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .img-collector {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 20px 0;
+        object-fit: cover;
+    }
+
+    main {
+        margin: 0;
+    }
+</style>
 
 @code {
-    [Parameter] public string RedirectUrl { get; set; } 
+    [Parameter] public string RedirectUrl { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         if (string.IsNullOrEmpty(RedirectUrl))
         {
-            RedirectUrl = "/";  
+            RedirectUrl = "/";
         }
     }
 

@@ -1,14 +1,19 @@
 ﻿@page "/EmailVerification/{_IsInstitution:bool}"
 @using Collector.Client.Dtos.Login
+@using Collector.Client.Dtos.User
 @using Collector.Client.Pages.Register
 @using Collector.Client.Components.Shared
+@using Collector.Client.Services.Register
+@using System.Text
+@inject IJSRuntime JSRuntime
+@inject IRegisterService RegisterService
 @inject NavigationManager Navigation
 
 <div class="main-container">
     <div class="form-container">
 
 
-        <ProgressBar Value="Value"></ProgressBar>
+        <ProgressBar Value="BarValue"></ProgressBar>
 
         <div class="step-header">
             <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-2</MudText>
@@ -24,37 +29,39 @@
             {
                 <BackToLoginBtn ButtonText="Paso anterior" OnClick="PreviousStep" />
             }
-
         </div>
 
-        @if (step == 1)
+        @switch (step)
         {
-            <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution" />
+            case 1:
+                <Step1EmailVer reqUserDto="reqUserDto" _IsInstitution="_IsInstitution" />
+                break;
+
+            case 2:
+                <Step2EmailVer CodeChanged="(value) => Codigo = value" />
+                break;
         }
-        @if (step == 2)
-        {
-            <Step2EmailVer />
-        }
+
 
 
         <div class="buttons-container">
             @if (step < 2)
             {
                 <div>
-                    <MudButton OnClick="() => NextStep()" Color="Color.Primary"
-                               Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
+                    <MudButton OnClick="NextStep" Color="Color.Primary"
+                    Variant="Variant.Filled" Style="width:230px">Siguiente</MudButton>
                 </div>
             }
             else
             {
-                <MudButton Type="Submit" Color="Color.Primary"
-                           Variant="Variant.Filled" Style="width:230px">Registrarme</MudButton>
+                <MudButton OnClick="VerifyCode" Color="Color.Primary"
+                Variant="Variant.Filled" Style="width:230px">Registrarme</MudButton>
             }
 
             @if (step > 1)
             {
                 <MudButton OnClick="PreviousStep" Variant="Variant.Outlined"
-                           Style="background-color:transparent; width: 155px; border: 3px solid #767572;
+                Style="background-color:transparent; width: 155px; border: 3px solid #767572;
                 color: #D1D5DB; border-radius: 0.5rem;font-weight: bold;">Paso anterior</MudButton>
             }
         </div>
@@ -62,26 +69,91 @@
     <div class="aside-background"></div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon){
+    const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+    }
+    });
+    Toast.fire({
+    icon: icon,
+    title: Message
+    });
+    };
+</script>
+
 @code {
     [Parameter]
     public bool _IsInstitution { get; set; }
     private ReqUserDto reqUserDto = new();
-
+    public int Codigo { set; get; } 
     private MudForm form;
     private int step = 1;
-    private double Value { get; set; }
+    private double BarValue { get; set; }
 
-    public void AdvanceProgress()
+    #region Methods
+    private async void SendVerificationEmail()
     {
-        Value += 50;
-        StateHasChanged();
+        try
+        {
+            var userEmail = new UserEmailDto
+            {
+                Email = reqUserDto.Email,
+            };
+
+            await RegisterService.SendCodeToEmail(userEmail);
+            step = 2;
+            AdvanceProgress();
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código enviado con éxito.", "success");
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", $"Error al enviar el código: {ex.Message}", "error");
+        }
     }
 
-    public void GoBackProgress()
+    private async Task VerifyCode()
     {
-        Value -= 50;
-        StateHasChanged();
+        var verifyCodeDto = new UserEmailDto
+            {
+                Email = reqUserDto.Email,
+                Code = Codigo
+            };
+        var (message, isVerified) = await RegisterService.VerifyCode(verifyCodeDto);
+
+
+        if (isVerified)
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "verificación exitosa.", "success");
+
+            var encodeIdentification = Encoding.UTF8.GetBytes(reqUserDto.Identification);
+            var encodeEmail = Encoding.UTF8.GetBytes(verifyCodeDto.Email);
+            var encodeCode = Encoding.UTF8.GetBytes(verifyCodeDto.Code.ToString());
+
+            string identification = Convert.ToBase64String(encodeIdentification);
+            string email = Convert.ToBase64String(encodeEmail);
+            string code = Convert.ToBase64String(encodeCode);
+
+            Navigation.NavigateTo($"/RegisterUser/{identification}/{email}/{code}");
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("showSweetAlert", "Código incorrecto. Intente de nuevo.", "error");
+        }
     }
+
+    #endregion
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -93,11 +165,27 @@
     }
 
     #region Step Methods
+    public void AdvanceProgress() => BarValue += 50;
+    public void GoBackProgress() => BarValue -= 50;
+
     private void NextStep()
     {
-        if (step < 2)
+        if (step == 1)
+        {
+            SendVerificationEmail();
+        }
+        else if (step < 2)
+        {
             step++;
+            AdvanceProgress();
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
         AdvanceProgress();
+        base.OnInitialized();
     }
 
     private void PreviousStep()
@@ -107,6 +195,7 @@
         GoBackProgress();
     }
     #endregion
+
 
     private void NavigateToLogin()
     {

@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization;
 @using System.Security.Claims
-@inject ReportsService reportService;
+@inject IReportsService reportService;
 @inject NavigationManager navManager;
 @inject Collector.Client.SessionHelpers.SessionManager _sessionManager;
 
@@ -20,33 +20,36 @@
     {
         <div class="d-flex flex-row">
             <h2 class="title">REPORTES</h2>
-            <button @onclick="NavigateToCreateReports" 
-                class="btn-new-report btn mt-3">Nuevo Reporte</button>
+            <button @onclick="NavigateToCreateReports"
+                    class="btn-new-report btn mt-3">
+                Nuevo Reporte
+            </button>
         </div>
 
         <main class="secundary-container">
-            @for (int i = 0; i < 9; i++)
+            @foreach (var reports in reportDtos)
             {
                 <div class="card card-content">
-                    <img class="card-img-top" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow"
-                         alt="Avatar">
+
+                        <img class="card-img-top" style="width:100%; height:250px;"  src="@(reports.ImageUrls.Any() ? reports.ImageUrls[0] 
+                        : "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow")"/>
                     <div class="card-body">
                         <div class="card-body-container">
-                            <h6>Reporte de Ventas</h6>
-                            <p>John Doe</p>
+                            <h6>@reports.Title</h6>
+                            <p>@reports.Description</p>
                         </div>
                         <div class="date-container">
-                            <p>En Proceso</p>
-                            <p>15-11-2024</p>
+                            <p>@reports.Status</p>
+                            <p>@reports.Date</p>
                         </div>
                         <div class="btn-container">
-                            <a href="#" class="btn btn-details">
+                            <button @onclick="() => GetReportById(reports.Id)" class="btn btn-details">
                                 Ver más detalles
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                                     <path d="M0 0h24v24H0z" fill="none" />
                                     <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
                                 </svg>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -78,15 +81,26 @@
 </style>
 
 @code {
-    private List<ReportDto>? reportDtos { get; set; }
+    private List<ResReportsDto> reportDtos { get; set; } = new();
     private PaginationDto pagination { set; get; } = new();
-    private bool isDataLoaded = true;
+    private bool isDataLoaded = false;
 
     public void NavigateToCreateReports()
     {
-        navManager.NavigateTo("/User/Create/Reports", forceLoad:true);
+        navManager.NavigateTo("/User/Create/Reports", forceLoad: true);
     }
 
-    private async Task<List<ReportDto>> GetUserReports(string UserId = "9zeirWQJnldZ2qizLbalnxjxpQh2")
-    => await reportService.GetAllReportsByUserId(UserId, pagination);
+    protected async override Task OnInitializedAsync()
+    {
+        await GetUserReports();
+        await base.OnInitializedAsync();
+    }
+
+    private void GetReportById(int Id) => navManager.NavigateTo($"/Reports/Details/{Id}");
+
+    private async Task GetUserReports(string UserId = "9zeirWQJnldZ2qizLbalnxjxpQh2")
+    {
+        reportDtos = await reportService.GetAllReportsByUserId(UserId, pagination);
+        isDataLoaded = true;
+    }
 }

@@ -1,67 +1,96 @@
-﻿@using Microsoft.AspNetCore.Components.Forms
+﻿@using Collector.Client.Dtos.Login
+@using Collector.Client.Helpers
+@using Microsoft.AspNetCore.Components.Forms
 @using Collector.Client.Dtos.Login
+@inject IJSRuntime JS;
 
 <div class="step3-container">
-    <div class="custom-image-title">Foto de Perfil</div>
+    <MudForm Model="reqUserDto">
 
-    <InputFile OnChange="OnFileSelected"
-               class="input-file-rounded"
-               style="opacity:0; position:absolute; border-radius: 50%;" />
+        <div class="custom-image-title">Foto de Perfil</div>
 
-    <div>
-        <MudPaper Height="300px"
-                  Outlined="true"
-                  Class="@_dragClass">
-            @if (!string.IsNullOrEmpty(ImagePreview))
-            {
-            <div class="preview-container d-flex align-center justify-center" style="height: 100%; text-align: center;">
-                <img src="@ImagePreview" alt="Vista previa" style="max-width: 100%; max-height: 100%; border-radius: 10px;" />
-            </div>
-            }
-            else
-            {
-            <MudText Typo="Typo.h6" Align="Align.Center">Arrastra y suelta tu imagen aquí o haz clic para seleccionarla</MudText>
-            }
-        </MudPaper>
-    </div>
+        <div class="img-container">
+            <button type="button" class="rounded-button" @onclick="TriggerFileInput">
+                <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" alt="Select an Image" />
+            </button>
 
-    <p class="custom-message-image">
-        Puedes arrastrar tu imagen al área o seleccionarla haciendo clic.
-    </p>
+            <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />
+        </div>
+
+        <p class="custom-message-image">
+            Seleccione una imagen haciendo click en la imagen.
+        </p>
+    </MudForm>
 </div>
 
-@code {
-[Parameter]
-public ReqUserDto reqUserDto { get; set; }
-
-[Parameter]
-public bool IsInstitution { get; set; }
-
-private string ImagePreview { get; set; } = string.Empty;
-private string _dragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
-
-#region Métodos
-
-private async Task OnFileSelected(InputFileChangeEventArgs e)
-{
-    var file = e.File;
-    if (file != null)
-    {
-        using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 5);
-        using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        var base64 = Convert.ToBase64String(memoryStream.ToArray());
-        ImagePreview = $"data:{file.ContentType};base64,{base64}";
-        reqUserDto.Image = ImagePreview;
-    }
-}
-
-#endregion
-}
-
 <style>
+
+    .img-container{
+        margin-top:20px;
+        display:flex;
+        align-content:center;
+        justify-content:center;
+    }
+
+    .rounded-button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    .rounded-button-img {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ccc;
+    }
+
     .input-file-rounded {
         border-radius: 50%;
         overflow: hidden;
     }
+
+    .custom-message-image{
+        margin-top:8px;
+        margin-bottom:5px;
+        color:white;
+        align-content:center;
+    }
+
+    .custom-image-title{
+        color:white;
+        font-weight:bold;
+        margin-bottom:5px;
+    }
 </style>
+
+@code {
+    [Parameter]
+    public ReqUserDto reqUserDto { get; set; }
+    private ElementReference fileInput;
+    private string ImagePreview { get; set; } = string.Empty;
+    private IList<IBrowserFile> File = [];
+
+    #region Handle Image Methods
+    private async Task TriggerFileInput()
+    {
+        await JS.InvokeVoidAsync("eval", "document.getElementById('fileInput').click()");
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        reqUserDto.File = file;
+        if (file != null)
+        {
+            // Generate preview URL
+            var buffer = new byte[file.Size];
+            using var stream = file.OpenReadStream(4 * 1024 * 1024);
+            await stream.ReadAsync(buffer);
+            ImagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+        }
+    }
+    #endregion
+}
+

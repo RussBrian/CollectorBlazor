@@ -4,9 +4,7 @@ using Collector.Client.Dtos.User;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
-
-
-
+using System.Text;
 namespace Collector.Client.Services.Register
 {
     public class RegisterService : IRegisterService
@@ -23,16 +21,26 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
              => await _httpExtension.CustomFormDataAsync<ReqUserDto, ReqUserDto>($"{_appOptions.UrlRegisterUserService}/register", request);
 
-        public async Task SendCodeToEmail(string email) 
-            => await _httpExtension.CustomPostAsync<nuint,string>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+        public async Task SendCodeToEmail(UserEmailDto email)
+        { 
+            _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+        }
 
-        public async Task<bool> VerifyCode(VerifyCodeDto verifyCode)
+        public async Task<(string, bool)> VerifyCode(UserEmailDto verifyCode)
         {
-            var result = await _httpExtension.CustomPostAsync<Response<VerifyCodeDto>, VerifyCodeDto>($"{_appOptions.UrlRegisterUserService}/verify-code", verifyCode);
-            //ojo con esta parte en la respuesta correcta no se esta devolviendo nada.
-            return result != null && result.IsSuccess;           
-        }          
+            var result = await _httpExtension.CustomPostAsync<Response<UserEmailDto>, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/verify-code", verifyCode);
+
+            if(result == null)
+            {
+                return (string.Empty, true);
+            }
+            return (result.ErrorMessage, result.IsSuccess);
+        }
+        public async Task ConfirmEmail(UserEmailDto confirmEmail)
+        {
+            _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/confirm-email", confirmEmail);
+        }
+
 
     }
 }
-

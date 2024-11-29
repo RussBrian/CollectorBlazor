@@ -2,8 +2,8 @@ using Collector.Client;
 using MudBlazor.Services;
 using Collector.Client.Utilities.Options;
 using Collector.Client.Utilities.Extensions;
-using Collector.Client.Services.Login;
 using Collector.Client.Helpers;
+using Collector.Client.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,9 +39,6 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
-
-
 
 app.Run();
 

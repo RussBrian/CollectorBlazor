@@ -4,49 +4,51 @@
 @inherits ComponentBase;
 
 <div class="step2-container">
-    <label class="custom-label">Teléfono</label>
-    <MudTextField @bind-Value="@reqUserDto.Phone" Required="true" AutoFocus="true" Variant="Variant.Outlined" Style="color:white;" />
+    <MudForm Model="reqUserDto">
+        <label class="custom-label">Teléfono</label>
+        <MudTextField @bind-Value="@reqUserDto.Phone" Required="true" AutoFocus="true" Variant="Variant.Outlined" Style="color:white;" />
 
-    <div class="d-flex justify-content-between mt-5">
-        <label class="custom-label">Contraseña</label>
-        <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
-            <ChildContent>
-                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
-            </ChildContent>
-            <TooltipContent>
-                <MudText Style="font-weight:normal; font-size:small;">La <strong>contraseña</strong> debe contener al menos:</MudText>
-                <MudText Style="font-weight:normal; font-size:small;">
-                    1 letra, 8 caracteres, 1 número y
-                </MudText>
-                <MudText Style="font-weight:normal; font-size:small;">
-                    1 carácter
-                    especial (“@@”,”!”,”#”,”.”)
-                </MudText>
-            </TooltipContent>
-        </MudTooltip>
-    </div>
-    <MudTextField @bind-Value="reqUserDto.Password"
-                  Variant="Variant.Outlined"
-                  InputType="@PasswordInput"
-                  Adornment="Adornment.End"
-                  AdornmentIcon="@PasswordInputIcon"
-                  OnAdornmentClick="TogglePasswordVisibility"
-                  Style="color:white;" />
-    <div class="d-flex justify-content-between mt-5">
-        <label class="custom-label">Confirmar Contraseña</label>
-        <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
-            <ChildContent>
-                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
-            </ChildContent>
-            <TooltipContent>
-                <MudText Style="font-weight:bold; font-size:small">Las contraseñas deben coincidir.</MudText>
-            </TooltipContent>
-        </MudTooltip>
-    </div>
-    <MudTextField @bind-Value="reqUserDto.ConfirmPassword"
-                  Variant="Variant.Outlined"
-                  InputType="InputType.Password"
-                  Style="color:white;" />
+        <div class="d-flex justify-content-between mt-5">
+            <label class="custom-label">Contraseña</label>
+            <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
+                <ChildContent>
+                    <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
+                </ChildContent>
+                <TooltipContent>
+                    <MudText Style="font-weight:normal; font-size:small;">La <strong>contraseña</strong> debe contener al menos:</MudText>
+                    <MudText Style="font-weight:normal; font-size:small;">
+                        1 letra, 8 caracteres, 1 número y
+                    </MudText>
+                    <MudText Style="font-weight:normal; font-size:small;">
+                        1 carácter
+                        especial (“@@”,”!”,”#”,”.”)
+                    </MudText>
+                </TooltipContent>
+            </MudTooltip>
+        </div>
+        <MudTextField @bind-Value="reqUserDto.Password"
+                      Variant="Variant.Outlined"
+                      InputType="@PasswordInput"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@PasswordInputIcon"
+                      OnAdornmentClick="TogglePasswordVisibility"
+                      Style="color:white;" />
+        <div class="d-flex justify-content-between mt-5">
+            <label class="custom-label">Confirmar Contraseña</label>
+            <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
+                <ChildContent>
+                    <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
+                </ChildContent>
+                <TooltipContent>
+                    <MudText Style="font-weight:bold; font-size:small">Las contraseñas deben coincidir.</MudText>
+                </TooltipContent>
+            </MudTooltip>
+        </div>
+        <MudTextField @bind-Value="reqUserDto.ConfirmPassword"
+                      Variant="Variant.Outlined"
+                      InputType="InputType.Password"
+                      Style="color:white;" />
+    </MudForm>
 </div>
 
 <style>
@@ -78,6 +80,4 @@
     [Parameter]
     public ReqUserDto reqUserDto { get; set; }
 
-    [Parameter]
-    public bool IsInstitution { get; set; }
 }
