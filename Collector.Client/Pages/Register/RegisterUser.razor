@@ -1,6 +1,10 @@
-﻿@page "/RegisterUser"
+﻿@page "/RegisterUser/{identification}/{email}/{code}"
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Components.Shared
+@using Collector.Client.Dtos.User
+@using Collector.Client.Services.Register
+@using System.Text
+@inject IRegisterService _registerService
 @inject NavigationManager Navigation
 
 <div class="main-container">
@@ -49,6 +53,7 @@
             {
 
                 <MudButtonComponent Text="Registrar"
+                                    OnClick="RegisterUserAsync"
                                     Color="Color.Primary" Variant="Variant.Filled"
                                     Style="width:230px;" />
             }
@@ -72,7 +77,48 @@
     public double Value { get; set; }
     private ReqUserDto reqUserDto = new();
 
-    #region Pregression bar Methods
+    [Parameter]
+    public string identification { get; set; } = string.Empty;
+    [Parameter]
+    public string email { get; set; } = string.Empty;
+    [Parameter]
+    public string code { get; set; } = string.Empty;
+
+    private async Task RegisterUserAsync()
+    {
+        try
+        {        
+
+            var decodeIdentify = Convert.FromBase64String(identification);
+            var decodeEmail = Convert.FromBase64String(email);
+            var decodeCode = Convert.FromBase64String(code);
+
+            string resultEmail = Encoding.UTF8.GetString(decodeEmail);
+
+            UserEmailDto confirmEmail = new()
+            {
+                Email = resultEmail,
+                Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
+            };
+
+            reqUserDto.File = string.Empty;
+            reqUserDto.Email = resultEmail;
+            reqUserDto.Identification = Encoding.UTF8.GetString(decodeIdentify);
+
+            var data = await _registerService.CreateUserAsync(reqUserDto);
+
+            
+
+            await _registerService.ConfirmEmail(confirmEmail);
+          
+        }
+        catch (Exception ex)
+        {
+         
+        }
+    }
+
+    #region Utils
     public void AdvanceProgress()
     {
         Value += 33.3;
@@ -116,5 +162,6 @@
     {
         Navigation.NavigateTo("/");
     }
+    #endregion
     #endregion
 }

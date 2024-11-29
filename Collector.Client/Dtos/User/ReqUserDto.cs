@@ -24,7 +24,7 @@ namespace Collector.Client.Dtos.Login
         [Compare("Password")]
         public string? ConfirmPassword { get; set; }
 
-        public int RolId { get; set; }
+        public int RolId { get; set; } = 8;
         public bool IsMobileRegister { get; set; } = false;
         public string AddedBy { get; set; } = "ADMIN";
     } 
