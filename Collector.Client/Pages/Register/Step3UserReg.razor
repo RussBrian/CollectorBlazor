@@ -8,20 +8,16 @@
         <div class="custom-image-title">Foto de Perfil</div>
 
         <div class="img-container">
+            <img class="rounded-3" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" width="275px" height="250px" />
 
-            <div>
-                <label class="custom-label">Imagen</label>
-                <img class="rounded-3" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" width="275px" height="250px" />
-
-                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
-                    <ActivatorContent>
-                        <MudButton Variant="Variant.Outlined"
-                                   Style="background-color:#7B885B;
+            <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Outlined"
+                               Style="background-color:#7B885B;
                             width: 155px; border: 3px solid #767572; color: white;
                             border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px">Añadir imagen</MudButton>
-                    </ActivatorContent>
-                </MudFileUpload>
-            </div>
+                </ActivatorContent>
+            </MudFileUpload>
         </div>
 
         <p class="custom-message-image">
@@ -34,6 +30,12 @@
     .input-file-rounded {
         border-radius: 50%;
         overflow: hidden;
+    }
+
+    .custom-image-title{
+        color:white;
+        font-weight:bold;
+        margin-bottom:5px;
     }
 </style>
 

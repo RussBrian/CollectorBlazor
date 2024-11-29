@@ -79,7 +79,7 @@ namespace Collector.Client.Services.Password
         {
             try
             {
-                string url = @"http://localhost:5004/api/Authentication/verify-code";
+                string url = @"https://collectord-001-site2.ktempurl.com/api/Authentication/reset-password";
 
                 using HttpClient client = new();
 
