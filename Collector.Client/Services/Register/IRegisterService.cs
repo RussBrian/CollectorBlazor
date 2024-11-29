@@ -9,5 +9,5 @@ public interface IRegisterService
     Task SendCodeToEmail(UserEmailDto email);
     Task<(string, bool)> VerifyCode(UserEmailDto verifyCode);
 
-    Task ConfirmEmail(string email, string code);
+    Task ConfirmEmail(UserEmailDto confirmEmail);
 }

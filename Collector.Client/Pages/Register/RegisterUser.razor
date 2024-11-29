@@ -3,6 +3,7 @@
 @using Collector.Client.Components.Shared
 @using Collector.Client.Dtos.User
 @using Collector.Client.Services.Register
+@using System.Text
 @inject IRegisterService _registerService
 @inject NavigationManager Navigation
 
@@ -86,12 +87,29 @@
     private async Task RegisterUserAsync()
     {
         try
-        {           
+        {        
+
+            var decodeIdentify = Convert.FromBase64String(identification);
+            var decodeEmail = Convert.FromBase64String(email);
+            var decodeCode = Convert.FromBase64String(code);
+
+            string resultEmail = Encoding.UTF8.GetString(decodeEmail);
+
+            UserEmailDto confirmEmail = new()
+            {
+                Email = resultEmail,
+                Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
+            };
+
+            reqUserDto.File = string.Empty;
+            reqUserDto.Email = resultEmail;
+            reqUserDto.Identification = Encoding.UTF8.GetString(decodeIdentify);
+
             var data = await _registerService.CreateUserAsync(reqUserDto);
 
             
 
-            await _registerService.ConfirmEmail(email,code);
+            await _registerService.ConfirmEmail(confirmEmail);
           
         }
         catch (Exception ex)

@@ -36,17 +36,8 @@ namespace Collector.Client.Services.Register
             }
             return (result.ErrorMessage, result.IsSuccess);
         }
-        public async Task ConfirmEmail(string email, string code)
+        public async Task ConfirmEmail(UserEmailDto confirmEmail)
         {
-            var decodeEmail = Convert.FromBase64String(email);
-            var decodeCode = Convert.FromBase64String(code);
-
-            UserEmailDto confirmEmail = new()
-            {
-                Email = Encoding.UTF8.GetString(decodeEmail),
-                Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
-            };
-            
             _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/confirm-email", confirmEmail);
         }
 
