@@ -1,13 +1,14 @@
 @inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
 
 <div id="custom-map" style="width:@Width; height:@Height;"></div>
 
 @code {
     [Parameter]
-    public string Width { get; set; } = "100%";
+    public string Width { get; set; } = "275px";
 
     [Parameter]
-    public string Height { get; set; } = "500px";
+    public string Height { get; set; } = "250px";
 
    
     [Parameter]

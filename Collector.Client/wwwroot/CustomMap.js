@@ -7,19 +7,17 @@ function initializeCustomMap(dotNetRef) {
         return;
     }
 
-    // Initialize the map
     map = new google.maps.Map(mapElement, {
-        center: { lat: 18.4861, lng: -69.9312 }, // Default to Santo Domingo, DR
-        zoom: 12,
+        center: { lat:18.4506168, lng: -69.6633953 },
+        zoom: 13,
     });
 
-    // Add a click event listener to place a marker and report the location
     map.addListener("click", (event) => {
         const latitude = event.latLng.lat();
         const longitude = event.latLng.lng();
 
         if (marker) {
-            marker.setMap(null); // Remove existing marker
+            marker.setMap(null); 
         }
 
         marker = new google.maps.Marker({
@@ -27,7 +25,6 @@ function initializeCustomMap(dotNetRef) {
             map: map,
         });
 
-        // Notify Blazor of the selected location
         dotNetRef.invokeMethodAsync("ReportLocation", latitude, longitude);
     });
 }

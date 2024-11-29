@@ -1,5 +1,4 @@
 ﻿@page "/Volunteer/Create"
-@using Collector.Client.Components.Shared
 @using Collector.Client.Dtos.Volunteer
 @using Collector.Client.Services.Volunteer
 @inject IVolunteerService _volunteerService
@@ -46,8 +45,8 @@
                 <div>
                     <label class="custom-label">Ubicación</label>
                     <CustomMap
-                        Width="100%"
-                        Height="400px"
+                        Width="275px"
+                        Height="250px"
                         OnLocationSelected="HandleLocationSelected" />
                     <MudButton
                         Variant="Variant.Outlined"
