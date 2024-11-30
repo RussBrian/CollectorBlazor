@@ -32,10 +32,10 @@
         overflow: hidden;
     }
 
-    .custom-image-title{
-        color:white;
-        font-weight:bold;
-        margin-bottom:5px;
+    .custom-image-title {
+        color: white;
+        font-weight: bold;
+        margin-bottom: 5px;
     }
 </style>
 
@@ -53,13 +53,12 @@
         {
             Console.WriteLine("El archivo excede el tamaño máximo permitido (5 MB).");
             return;
-        }        
+        }
         reqUserDto.Image = await ConverImageToString(image);
         ImagePreview = reqUserDto.Image;
         StateHasChanged();
 
     }
-
     #endregion
 
     #region Image Converter
