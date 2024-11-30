@@ -1,4 +1,6 @@
-﻿namespace Collector.Client.Dtos.Login
+﻿using Microsoft.AspNetCore.Components.Forms;
+
+namespace Collector.Client.Dtos.Login
 {
     public class ReqUserDto
     {
