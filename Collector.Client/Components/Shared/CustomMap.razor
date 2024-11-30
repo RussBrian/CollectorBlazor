@@ -1,15 +1,13 @@
 @inject IJSRuntime JSRuntime
-@rendermode InteractiveServer
 
 <div id="custom-map" style="width:@Width; height:@Height;"></div>
 
 @code {
     [Parameter]
-    public string Width { get; set; } = "275px";
+    public string Width { get; set; } = "100%";
 
     [Parameter]
-    public string Height { get; set; } = "250px";
-
+    public string Height { get; set; } = "500px";
    
     [Parameter]
     public EventCallback<(double Latitude, double Longitude)> OnLocationSelected { get; set; }
@@ -26,12 +24,10 @@
         }
     }
 
-
     private async Task InitializeMapAsync()
     {
         await JSRuntime.InvokeVoidAsync("initializeCustomMap", _dotNetRef);
     }
-
 
     [JSInvokable("ReportLocation")]
     public async Task ReportLocation(double latitude, double longitude)
@@ -41,7 +37,6 @@
             await OnLocationSelected.InvokeAsync((latitude, longitude));
         }
     }
-
  
     public async ValueTask DisposeAsync()
     {

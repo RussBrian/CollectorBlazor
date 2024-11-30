@@ -1,147 +1,219 @@
 ﻿@page "/Volunteer/Create"
+@using Collector.Client.Components.Shared
+@using Collector.Client.Dtos
 @using Collector.Client.Dtos.Volunteer
+@using Collector.Client.Helpers
 @using Collector.Client.Services.Volunteer
-@inject IVolunteerService _volunteerService
-@inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Components.Authorization;
+@using System.Text.Json
+@using System.Text.Encodings.Web
+@inject IVolunteerService _volunteerService
+@inject NavigationManager Navigation;
 
-@* La vista está protegida mediante roles *@
-@* <AuthorizeView Roles="Admin,Institution"> *@
-@*     <Authorized> *@
+@* <AuthorizeView Roles="Admin,Institution">
+    <Authorized> *@
 <div class="primary-container">
     <main class="secondary-container">
-        <!-- Título principal de la página -->
-        <h3 class="title">Crea un voluntariado</h3>
+        <EditForm Model="@ReqVolunteerDto" class="edit-form-style">
+            <h3 class="title">Crea un voluntariado</h3>
+            <div class="card-body-container">
 
-        <div class="card-body-container">
-            <!-- Campo para el título del voluntariado -->
-            <div class="text-field-container">
-                <div class="text-field-style">
-                    <div class="d-flex justify-content-between">
-                        <label class="custom-label">Título del voluntariado</label>
-                        <ToolTipCustom
-                            ToolTipTextStyle="font-weight:bold; font-size:small;"
-                            ToolTipDescription="Proporcione un título descriptivo para su voluntariado"
-                            ToolTipStyle="color:#37490B;" />
+                @* <DataAnnotationsValidator /> *@
+
+                <div class="text-field-container">
+                    <div class="text-field-style">
+                        <div class="d-flex justify-content-between">
+                            <label class="custom-label">Título del voluntariado</label>
+                            <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small;" ToolTipDescription="Ayudame" ToolTipStyle="color:#37490B;" />
+                        </div>
+                        <MudTextField @bind-Value="ReqVolunteerDto.Name" Variant="Variant.Outlined" />
+                        <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
                     </div>
-                    <MudTextField
-                        @bind-Value="ReqVolunteerDto.Name"
-                        Variant="Variant.Outlined" />
-                    <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
+
+                    <div class="text-field-style" style="width: 30%;">
+                        <label class="custom-label">Fecha</label>
+                        <MudTextField InputType="InputType.Date" @bind-Value="ReqVolunteerDto.VolunteerDate" Variant="Variant.Outlined" />
+                    </div>
                 </div>
 
-                <!-- Campo para la fecha del voluntariado -->
-                <div class="text-field-style" style="width: 30%;">
-                    <label class="custom-label">Fecha</label>
-                    <MudTextField
-                        InputType="InputType.Date"
-                        @bind-Value="ReqVolunteerDto.VolunteerDate"
-                        Variant="Variant.Outlined" />
+                <div class="map-container">
+                    <div>
+                        <label class="custom-label">Ubicación</label>
+                        <CustomMap Width="275px"
+                                   Height="250px"
+                                   OnLocationSelected="HandleLocationSelected" />
+                        <MudButton Variant="Variant.Outlined"
+                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
+                            Confirmar ubicación
+                        </MudButton>
+                    </div>
+
+                    <div>
+                        <MudStack Row="true">
+                            <MudItem Class="m-0">
+                                <label class="custom-label">Imágenes</label>
+                            </MudItem>
+                            <MudItem>
+                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                               ToolTipDescription="Coloque una imagen de la zona afectada.
+                                               Puede colocar hasta cuatro imágenes si asi lo desea."
+                                               ToolTipStyle="color:#37490B" />
+                            </MudItem>
+                        </MudStack>
+                        <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
+
+                        <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
+
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                            <ActivatorContent>
+                                <MudButtonComponent Text="Añadir imagen"
+                                                    Variant="Variant.Outlined"
+                                                    Style="background-color:transparent;
+                            width: 155px; border: 3px solid #767572; color: white;
+                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px" />
+                            </ActivatorContent>
+                        </MudFileUpload>
+                    </div>
+                </div>
+
+                <div class="text-field-container">
+                    <div class="text-field-style">
+                        <div class="d-flex justify-content-between">
+                            <label class="custom-label">Tipo de voluntariado</label>
+                            <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small;" ToolTipDescription="Ayudame" ToolTipStyle="color:#37490B;" />
+                        </div>
+                        <MudSwitch @bind-Value="ReqVolunteerDto.IsPrivate" Color="Color.Primary" UncheckedColor="Color.Secondary">Privado</MudSwitch>
+                    </div>
+                    @if (ReqVolunteerDto.IsPrivate)
+                    {
+                        <div class="text-field-style" style="width: 30%;">
+                            <label class="custom-label">Código</label>
+                            <MudTextField @bind-Value="ReqVolunteerDto.VolunteerCode" Variant="Variant.Outlined" />
+                        </div>
+                    }
+                </div>
+
+                <div class="container-message d-flex">
+                    <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                             Size="Size.Small"
+                             Style="background-color:darkgray; margin-left:15px;" />
+                    <p class="text-secondary">Dar click sobre el icono para ver más detalles del campo a completar.</p>
                 </div>
             </div>
 
-            <!-- Mapa interactivo para seleccionar la ubicación -->
-            <div class="map-container">
-                <div>
-                    <label class="custom-label">Ubicación</label>
-                    <CustomMap
-                        Width="275px"
-                        Height="250px"
-                        OnLocationSelected="HandleLocationSelected" />
-                    <MudButton
-                        Variant="Variant.Outlined"
-                        Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
-                        Confirmar ubicación
-                    </MudButton>
-                </div>
-
-                <!-- Sección para añadir imágenes -->
-                <div>
-                    <label class="custom-label">Imágenes</label>
-                    <img class="rounded-3" src="./BosqueLindo.png" width="275px" height="250px" />
-                    <MudButton
-                        Variant="Variant.Outlined"
-                        Style="background-color:transparent; width: 155px; border: 3px solid #767572; color: white; border-radius: 0.5rem; font-weight: bold; margin-top:15px; margin-left:50px;">
-                        Añadir imagen
-                    </MudButton>
-                </div>
+            <div class="button-send-container">
+                <MudButton Variant="Variant.Filled"
+                           ButtonType="ButtonType.Submit"
+                           Style="background-color:#515B3B; margin-bottom:10px; color:white; width:400px;">
+                    Crear voluntariado
+                </MudButton>
             </div>
-
-            <!-- Mensaje informativo -->
-            <div class="container-message d-flex">
-                <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
-                         Size="Size.Small"
-                         Style="background-color:darkgray;" />
-                <p class="text-secondary">Dar clic sobre el icono para ver más detalles del campo a completar.</p>
-            </div>
-        </div>
-
-        <!-- Botón para enviar el formulario -->
-        <div class="button-send-container">
-            <MudButton
-                Variant="Variant.Filled"
-                ButtonType="ButtonType.Submit"
-                Style="background-color:#515B3B; margin-bottom:10px; color:white; width:400px;"
-                OnClick="OnSubmit">
-                Crear reporte
-            </MudButton>
-        </div>
+        </EditForm>
     </main>
 </div>
-    @* </Authorized> *@
-    @* <NotAuthorized> *@
-    @*     <NoAuthorization RedirectUrl="/"/> *@
-    @* </NotAuthorized> *@
-@* </AuthorizeView> *@
+
+<style>
+    .custom-textfield {
+        border: 2px solid #767572;
+        border-radius: 0.5rem;
+        padding: 8px;
+        font-size: 14px;
+        color: #37490B;
+        background-color: #f9f9f9;
+        width: 100%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .custom-textfield:focus {
+            outline: none;
+            border-color: #515B3B;
+            box-shadow: 0 0 5px #515B3B;
+        }
+
+    .edit-form-style {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+</style>
 
 @code {
     [Parameter]
     public ReqVolunteerDto ReqVolunteerDto { get; set; } = new();
+    public string FrontImage { get; set; } = string.Empty;
+    public bool HasFrontImage { get; set; } = false;
 
     protected override void OnInitialized()
     {
-        ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("dd/MM/yyyy");
+        ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
     }
 
-  
+    #region SetMapPorperites
     private void HandleLocationSelected((double Latitude, double Longitude) location)
     {
-        ReqVolunteerDto.Longitude =(float) location.Longitude;
+        ReqVolunteerDto.Longitude = (float)location.Longitude;
         ReqVolunteerDto.Latitude = (float)location.Latitude;
         Console.WriteLine($"Ubicación seleccionada: Longitud={location.Longitude}, Latitud={location.Latitude}");
     }
+    #endregion
 
+    #region File Manager
+    private List<IBrowserFile> _selectedFiles = new();
+    private List<IBrowserFile> _processedFiles = new();
+
+
+    public async Task UploadFiles(IReadOnlyList<IBrowserFile> e)
+    {
+        var filesToProcess = e.Except(_processedFiles).ToList();
+
+        if (filesToProcess.Any())
+        {
+            if (ReqVolunteerDto.Images.Count() >= 4 && e.Count() > 4)
+            {
+                return;
+            }
+
+            _selectedFiles.AddRange(filesToProcess);
+            _processedFiles.AddRange(filesToProcess);
+
+            var result = await ImageConverter.ConvertImagesListToStringAsync(_selectedFiles);
+
+            _selectedFiles.Clear();
+
+            if (!HasFrontImage)
+            {
+                FrontImage = result[0];
+                HasFrontImage = true;
+                StateHasChanged();
+            }
+        }
+    }
+    #endregion
+
+    #region OnSubmit method
     private async Task OnSubmit()
     {
-        if (string.IsNullOrWhiteSpace(ReqVolunteerDto.Longitude.ToString()) || string.IsNullOrWhiteSpace(ReqVolunteerDto.Latitude.ToString()))
-        {
-            Console.WriteLine("Por favor, seleccione una ubicación.");
-            return;
-        }
+        PaginationDto pagination = new()
+            {
+                Page = 1,
+                AmountofInfo = 4
+            };
+        var getall = await _volunteerService.GetAllVolunteers(pagination);
+
+        JsonSerializerOptions options = new()
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                WriteIndented = true
+            };
+
+        string json = JsonSerializer.Serialize(getall, options);
+
+        Console.WriteLine(json);
 
         ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
-
-        if (data != null)
-        {
-            Navigation.NavigateTo("/Volunteer/MyVolunteers");
-        }
     }
+    #endregion
 }
-<style>
-    .custom-textfield {
-        border: 2px solid #767572; /* Borde personalizado */
-        border-radius: 0.5rem;    /* Bordes redondeados */
-        padding: 8px;            /* Espaciado interno */
-        font-size: 14px;         /* Tamaño de fuente */
-        color: #37490B;          /* Color del texto */
-        background-color: #f9f9f9; /* Fondo */
-        width: 100%;             /* Ocupa todo el ancho disponible */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para mayor profundidad */
-    }
-
-    .custom-textfield:focus {
-        outline: none; /* Quitar borde por defecto */
-        border-color: #515B3B; /* Cambiar color del borde al hacer foco */
-        box-shadow: 0 0 5px #515B3B; /* Efecto de brillo */
-    }
-</style>

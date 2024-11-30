@@ -1,0 +1,219 @@
+﻿@page "/Create/Reports"
+@using Blazored.FluentValidation
+@using Collector.Client.Components.Shared;
+@using Collector.Client.Dtos.Login
+@using Collector.Client.Dtos.Reports;
+@using Collector.Client.Helpers
+@using Collector.Client.Services.Reports;
+@inject IReportsService _reportService;
+@inject IJSRuntime JS;
+
+<div class="primary-container">
+    <main class="secondary-container">
+        <EditForm Model="@Report" OnValidSubmit="OnSubmitReport" class="edit-form-style">
+
+            <h3 class="title">Crea un reporte</h3>
+            <div class="card-body-container">
+                <!-- Aquí inicia el EditForm -->
+                <FluentValidationValidator />
+
+                <div class="text-field-container align-content-center">
+
+                    <div class="text-field-style">
+                        <div class="d-flex justify-content-between">
+                            <label class="custom-label">Título del reporte</label>
+                            <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                           ToolTipDescription="Coloque un titulo que permita identificar su reporte.
+                                            Ej: Gran cantidad de basura en Sabana Perdida"
+                                           ToolTipStyle="color:#37490B" />
+                        </div>
+                        <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield: 0;" />
+                        <p class="text-secondary">Coloque un título que identifique su reporte.</p>
+                        <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Title)" />
+                    </div>
+
+                    <div class="text-field-style" style="width: 30%;">
+                        <label class="custom-label">Fecha</label>
+                        <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
+                                      Variant="Variant.Outlined" Style="custom-textfield" />
+
+                    </div>
+                </div>
+
+                <div class="description-container">
+                    <label class="custom-label">Descripción</label>
+                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield:0;" />
+                    <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Description)" />
+                </div>
+
+                <div class="map-container">
+                    <div>
+                        <label class="custom-label">Ubicación</label>
+                        <CustomMap Width="275px"
+                                   Height="250px"
+                                   OnLocationSelected="HandleLocationSelected" />
+                        <MudButton Variant="Variant.Outlined"
+                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
+                            Confirmar ubicación
+                        </MudButton>
+                    </div>
+
+                    <div>
+                        <MudStack Row="true">
+                            <MudItem Class="m-0">
+                                <label class="custom-label">Imágenes</label>
+                            </MudItem>
+                            <MudItem>
+                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                               ToolTipDescription="Coloque una imagen de la zona afectada.
+                                               Puede colocar hasta cuatro imágenes si asi lo desea."
+                                               ToolTipStyle="color:#37490B" />
+                            </MudItem>
+                        </MudStack>
+                        <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
+
+                        <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
+
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                            <ActivatorContent>
+                                <MudButtonComponent Text="Añadir imagen"
+                                                    Variant="Variant.Outlined"
+                                                    Style="background-color:transparent;
+                            width: 155px; border: 3px solid #767572; color: white;
+                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px" />
+                            </ActivatorContent>
+                        </MudFileUpload>
+                    </div>
+                </div>
+
+                <div class="m-4 d-flex">
+
+                    <MudTooltip Style="background-color:darkgray; color:black;"
+                                Arrow="true" Placement="Placement.Right" Delay="400">
+                        <ChildContent>
+                            <MudIcon Style="color:#37490B;" Icon="@Icons.Material.Filled.ErrorOutline"
+                                     Size="Size.Small" />
+                        </ChildContent>
+                    </MudTooltip>
+
+                    <p class="text-secondary">Dar click sobre el icono para ver más detalles del campo a completar.</p>
+                </div>
+
+            </div>
+            <div class="button-send-container">
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+                           Style="background-color:#515B3B;
+                        color:white; width:400px;">
+                    Crear reporte
+                </MudButton>
+            </div>
+        </EditForm>
+    </main>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: icon,
+            title: Message
+        });
+    };
+</script>
+
+<style>
+    .img {
+        border-radius: 10px;
+    }
+
+    .text-secondary {
+        margin: 7px;
+    }
+
+    .validation-message {
+        color: red
+    }
+
+    .edit-form-style {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-buttom: 5px;
+    }
+</style>
+
+@code {
+    public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
+    public string FrontImage { get; set; } = string.Empty;
+    public bool HasFrontImage { get; set; } = false;
+    public ReqReportDto Report { get; set; } = new();
+
+    #region Selected location
+    private void HandleLocationSelected((double Latitude, double Longitude) location)
+    {
+        Report.Latitude = location.Latitude;
+        Report.Longitude = location.Longitude;
+    }
+    #endregion
+
+    #region File Manager
+    private List<IBrowserFile> _selectedFiles = new();
+    private List<IBrowserFile> _processedFiles = new();
+
+    public async Task UploadFiles(IReadOnlyList<IBrowserFile> newFiles)
+    {
+        var filesToProcess = newFiles.Except(_processedFiles).ToList();
+
+        if (filesToProcess.Any())
+        {
+            if (Report.Files.Count() == 4 || newFiles.Count() > 4)
+            {
+                await JS.InvokeVoidAsync("showSweetAlert", "Solo se permiten 4 imagenes", "error");
+                return;
+            }
+
+            _selectedFiles.AddRange(filesToProcess);
+            _processedFiles.AddRange(filesToProcess);
+
+            var result = await ImageConverter.ConvertImagesListToStringAsync(_selectedFiles);
+
+            foreach (var image in result)
+            {
+                Report.Files.Add(image);
+            }
+
+            _selectedFiles.Clear();
+
+            if (!HasFrontImage)
+            {
+                FrontImage = Report.Files.FirstOrDefault() ?? string.Empty;
+                HasFrontImage = true;
+                StateHasChanged();
+            }
+        }
+    }
+    #endregion
+
+    #region On submitReport
+    public async Task OnSubmitReport()
+    {
+        var response = await _reportService.CreateReport(Report);
+    }
+    #endregion
+}
