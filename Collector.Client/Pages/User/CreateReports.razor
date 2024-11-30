@@ -107,7 +107,7 @@
 
 @code {
     public string TValue { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
-    public ReportDto Report { get; set; } = new();
+    public ReqReportDto Report { get; set; } = new();
     IList<IBrowserFile> files = [];
 
     private void HandleLocationSelected((double Latitude, double Longitude) location)
@@ -130,6 +130,6 @@
     {
        var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
        Report.FireBaseCode = user.Value.IdToken;
-        var response = await _reportService.CreateReport(Report, files);
+        var response = await _reportService.CreateReport(Report);
     }
 }

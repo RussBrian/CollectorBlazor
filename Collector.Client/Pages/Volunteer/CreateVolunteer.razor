@@ -25,7 +25,7 @@
                             ToolTipStyle="color:#37490B;" />
                     </div>
                     <MudTextField
-                        @bind-Value="ReqVolunteerDto.name"
+                        @bind-Value="ReqVolunteerDto.Name"
                         Variant="Variant.Outlined" />
                     <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
                 </div>
@@ -35,7 +35,7 @@
                     <label class="custom-label">Fecha</label>
                     <MudTextField
                         InputType="InputType.Date"
-                        @bind-Value="ReqVolunteerDto.volunteerDate"
+                        @bind-Value="ReqVolunteerDto.VolunteerDate"
                         Variant="Variant.Outlined" />
                 </div>
             </div>
@@ -100,20 +100,20 @@
 
     protected override void OnInitialized()
     {
-        ReqVolunteerDto.volunteerDate = DateTime.Now.ToString("dd/MM/yyyy");
+        ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("dd/MM/yyyy");
     }
 
   
     private void HandleLocationSelected((double Latitude, double Longitude) location)
     {
-        ReqVolunteerDto.longitude = location.Longitude.ToString();
-        ReqVolunteerDto.latitude = location.Latitude.ToString();
+        ReqVolunteerDto.Longitude =(float) location.Longitude;
+        ReqVolunteerDto.Latitude = (float)location.Latitude;
         Console.WriteLine($"Ubicación seleccionada: Longitud={location.Longitude}, Latitud={location.Latitude}");
     }
 
     private async Task OnSubmit()
     {
-        if (string.IsNullOrWhiteSpace(ReqVolunteerDto.longitude) || string.IsNullOrWhiteSpace(ReqVolunteerDto.latitude))
+        if (string.IsNullOrWhiteSpace(ReqVolunteerDto.Longitude.ToString()) || string.IsNullOrWhiteSpace(ReqVolunteerDto.Latitude.ToString()))
         {
             Console.WriteLine("Por favor, seleccione una ubicación.");
             return;
