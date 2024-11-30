@@ -1,4 +1,4 @@
-﻿@page "/User/Create/Reports"
+﻿@page "/Create/Reports"
 @using Blazored.FluentValidation
 @using Collector.Client.Components.Shared;
 @using Collector.Client.Dtos.Login
@@ -48,6 +48,17 @@
                 </div>
 
                 <div class="map-container">
+                    <div>
+                        <label class="custom-label">Ubicación</label>
+                        <CustomMap Width="275px"
+                                   Height="250px"
+                                   OnLocationSelected="HandleLocationSelected" />
+                        <MudButton Variant="Variant.Outlined"
+                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
+                            Confirmar ubicación
+                        </MudButton>
+                    </div>
+
                     <div>
                         <MudStack Row="true">
                             <MudItem Class="m-0">
