@@ -100,12 +100,10 @@
                     Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
                 };
 
-            reqUserDto.File = string.Empty;
             reqUserDto.Email = resultEmail;
             reqUserDto.Identification = Encoding.UTF8.GetString(decodeIdentify);
             bool parsedIsInstitution = bool.TryParse(Encoding.UTF8.GetString(decodeIsInstitution), out bool result) && result;
 
-            Console.WriteLine($"Valor de IsInstitution: {parsedIsInstitution}");
 
             reqUserDto.RolId = parsedIsInstitution ? 7 : 8;
 
