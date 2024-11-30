@@ -8,7 +8,7 @@
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public string? Identification { get; set; }
-        public string? File { get; set; }
+        public IBrowserFile? File { get; set; }
         public string? Image { get; set; } = "DEFAULT";
         public string Gender { get; set; } = "M";
         public string Address { get; set; } = "DEFAULT";

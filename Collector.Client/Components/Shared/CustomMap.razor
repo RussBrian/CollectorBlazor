@@ -1,0 +1,48 @@
+@inject IJSRuntime JSRuntime
+
+<div id="custom-map" style="width:@Width; height:@Height;"></div>
+
+@code {
+    [Parameter]
+    public string Width { get; set; } = "100%";
+
+    [Parameter]
+    public string Height { get; set; } = "500px";
+   
+    [Parameter]
+    public EventCallback<(double Latitude, double Longitude)> OnLocationSelected { get; set; }
+
+    private DotNetObjectReference<CustomMap>? _dotNetRef;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await InitializeMapAsync();
+        }
+    }
+
+    private async Task InitializeMapAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("initializeCustomMap", _dotNetRef);
+    }
+
+    [JSInvokable("ReportLocation")]
+    public async Task ReportLocation(double latitude, double longitude)
+    {
+        if (OnLocationSelected.HasDelegate)
+        {
+            await OnLocationSelected.InvokeAsync((latitude, longitude));
+        }
+    }
+ 
+    public async ValueTask DisposeAsync()
+    {
+        if (_dotNetRef != null)
+        {
+            _dotNetRef.Dispose();
+        }
+    }
+}

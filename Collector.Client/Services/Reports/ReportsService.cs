@@ -5,7 +5,6 @@ using Collector.Client.Dtos.Response;
 using Collector.Client.Helpers;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Options;
 
@@ -46,11 +45,13 @@ namespace Collector.Client.Services.Reports
             return reportResult ?? new();
         }
 
-        public async Task<Response<ReqReportDto>> CreateReport(ReqReportDto Report, IList<IBrowserFile> files)
+        public async Task<Response<ReqReportDto>> CreateReport(ReqReportDto Report)
         {
-            var images = ImageConverter.ConvertImagesListToStringAsync(files);
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
-            
+            if (!user.Success)
+            {
+                Report.FireBaseCode = "9zeirWQJnldZ2qizLbalnxjxpQh2";
+            }
             var report = await _httpServiceExtensions.CustomFormDataAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
             return report;
         }

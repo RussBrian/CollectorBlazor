@@ -18,6 +18,7 @@
 
     <div Class="secondary-container">
         <!-- Columna izquierda (Bienvenida) -->
+        <!--Left Column-->
         <div Class="left-container">
             <h4 class="welcome-text">
                 BIENVENIDO <br />A<br /> COLLECTORD
@@ -59,7 +60,7 @@
                               Adornment="Adornment.End"
                               AdornmentIcon="@PasswordInputIcon"
                               OnAdornmentClick="TogglePasswordVisibility"
-                              Style="custom-label; w-full;" />
+                              Class="custom-input" />
 
                 <ValidationMessage class="validation-message" For="(() => loginModel.Password)" />
 
@@ -79,6 +80,12 @@
 </BaseScreen>
 
 <style>
+
+    .custom-input {
+        border-width: 4px;
+        border-radius:10px;
+    }
+
     .description-text {
         color: #4a4a4a;
         text-align: center;
@@ -130,27 +137,6 @@
 
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    function showSweetAlert(Message, icon){
-    const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer;
-    toast.onmouseleave = Swal.resumeTimer;
-    }
-    });
-    Toast.fire({
-    icon: icon,
-    title: Message
-    });
-    };
-</script>
-
 
 @code {
 

@@ -1,6 +1,7 @@
 ﻿@using Collector.Client.Dtos.Login
 @using Collector.Client.Helpers
 @using Microsoft.AspNetCore.Components.Forms
+@inject IJSRuntime JS;
 
 <div class="step3-container">
     <MudForm Model="reqUserDto">
@@ -8,69 +9,85 @@
         <div class="custom-image-title">Foto de Perfil</div>
 
         <div class="img-container">
-            <img class="rounded-3" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" width="275px" height="250px" />
+            <button type="button" class="rounded-button" @onclick="TriggerFileInput">
+                <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" alt="Select an Image" />
+            </button>
 
-            <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
-                <ActivatorContent>
-                    <MudButton Variant="Variant.Outlined"
-                               Style="background-color:#7B885B;
-                            width: 155px; border: 3px solid #767572; color: white;
-                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px">Añadir imagen</MudButton>
-                </ActivatorContent>
-            </MudFileUpload>
+            <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />
         </div>
 
         <p class="custom-message-image">
-            Puedes arrastrar tu imagen al área o seleccionarla haciendo clic.
+            Seleccione una imagen haciendo click en la imagen.
         </p>
     </MudForm>
 </div>
 
 <style>
+
+    .img-container{
+        margin-top:20px;
+        display:flex;
+        align-content:center;
+        justify-content:center;
+    }
+
+    .rounded-button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    .rounded-button-img {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ccc;
+    }
+
     .input-file-rounded {
         border-radius: 50%;
         overflow: hidden;
     }
 
-    .custom-image-title {
-        color: white;
-        font-weight: bold;
-        margin-bottom: 5px;
+    .custom-message-image{
+        margin-top:8px;
+        margin-bottom:5px;
+        color:white;
+        align-content:center;
+    }
+
+    .custom-image-title{
+        color:white;
+        font-weight:bold;
+        margin-bottom:5px;
     }
 </style>
 
 @code {
     [Parameter]
     public ReqUserDto reqUserDto { get; set; }
-
+    private ElementReference fileInput;
     private string ImagePreview { get; set; } = string.Empty;
-    private IList<IBrowserFile> File = [];
 
     #region Handle Image Methods
-    private async Task UploadFiles(IBrowserFile image)
+    private async Task TriggerFileInput()
     {
-        if (image.Size > 1024 * 1024 * 5)
-        {
-            Console.WriteLine("El archivo excede el tamaño máximo permitido (5 MB).");
-            return;
-        }
-        reqUserDto.Image = await ConverImageToString(image);
-        ImagePreview = reqUserDto.Image;
-        StateHasChanged();
-
+        await JS.InvokeVoidAsync("eval", "document.getElementById('fileInput').click()");
     }
-    #endregion
 
-    #region Image Converter
-    private async Task<string> ConverImageToString(IBrowserFile file)
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
-        if (file == null)
-            throw new ArgumentNullException(nameof(file));
-
-        using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 5); // Límite de 5 MB
-        using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        return $"data:{file.ContentType};base64,{Convert.ToBase64String(memoryStream.ToArray())}";
+        var file = e.File;
+        reqUserDto.File = file;
+        if (file != null)
+        {
+            // Generate preview URL
+            var buffer = new byte[file.Size];
+            using var stream = file.OpenReadStream(4 * 1024 * 1024);
+            await stream.ReadAsync(buffer);
+            ImagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+        }
     }
     #endregion
 }

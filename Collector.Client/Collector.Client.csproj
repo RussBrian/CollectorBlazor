@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Pages\User\Components\**" />
+    <Compile Remove="Pages\Reports\Components\**" />
     <Compile Remove="Utilities\NewFolder\**" />
-    <Content Remove="Pages\User\Components\**" />
+    <Content Remove="Pages\Reports\Components\**" />
     <Content Remove="Utilities\NewFolder\**" />
-    <EmbeddedResource Remove="Pages\User\Components\**" />
+    <EmbeddedResource Remove="Pages\Reports\Components\**" />
     <EmbeddedResource Remove="Utilities\NewFolder\**" />
-    <None Remove="Pages\User\Components\**" />
+    <None Remove="Pages\Reports\Components\**" />
     <None Remove="Utilities\NewFolder\**" />
   </ItemGroup>
 
@@ -22,11 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Pages\User\UserReports.razor.css" />
+    <None Remove="Pages\Reports\UserReports.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Pages\User\UserReports.razor.css" />
+    <Content Include="Pages\Reports\UserReports.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
