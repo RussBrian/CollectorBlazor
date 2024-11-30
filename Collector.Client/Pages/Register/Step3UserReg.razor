@@ -1,7 +1,6 @@
 ﻿@using Collector.Client.Dtos.Login
 @using Collector.Client.Helpers
 @using Microsoft.AspNetCore.Components.Forms
-@using Collector.Client.Dtos.Login
 @inject IJSRuntime JS;
 
 <div class="step3-container">
@@ -26,42 +25,42 @@
 <style>
 
     .img-container{
-        margin-top:20px;
-        display:flex;
-        align-content:center;
-        justify-content:center;
+    margin-top:20px;
+    display:flex;
+    align-content:center;
+    justify-content:center;
     }
 
     .rounded-button {
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
     }
 
     .rounded-button-img {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #ccc;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
     }
 
     .input-file-rounded {
-        border-radius: 50%;
-        overflow: hidden;
+    border-radius: 50%;
+    overflow: hidden;
     }
 
     .custom-message-image{
-        margin-top:8px;
-        margin-bottom:5px;
-        color:white;
-        align-content:center;
+    margin-top:8px;
+    margin-bottom:5px;
+    color:white;
+    align-content:center;
     }
 
     .custom-image-title{
-        color:white;
-        font-weight:bold;
-        margin-bottom:5px;
+    color:white;
+    font-weight:bold;
+    margin-bottom:5px;
     }
 </style>
 
@@ -79,15 +78,23 @@
 
     private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
+
         var file = e.File;
-        reqUserDto.File = file;
         if (file != null)
         {
-            // Generate preview URL
+   
             var buffer = new byte[file.Size];
             using var stream = file.OpenReadStream(4 * 1024 * 1024);
             await stream.ReadAsync(buffer);
-            ImagePreview = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+         
+            string base64String = Convert.ToBase64String(buffer);
+
+         
+            reqUserDto.Image = base64String;
+
+         
+            ImagePreview = $"data:{file.ContentType};base64,{base64String}";
         }
     }
     #endregion

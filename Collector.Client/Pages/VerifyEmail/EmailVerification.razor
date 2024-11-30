@@ -140,12 +140,14 @@
             var encodeIdentification = Encoding.UTF8.GetBytes(reqUserDto.Identification);
             var encodeEmail = Encoding.UTF8.GetBytes(verifyCodeDto.Email);
             var encodeCode = Encoding.UTF8.GetBytes(verifyCodeDto.Code.ToString());
+            var encodeIsInstitution = Encoding.UTF8.GetBytes(_IsInstitution.ToString());
 
             string identification = Convert.ToBase64String(encodeIdentification);
             string email = Convert.ToBase64String(encodeEmail);
             string code = Convert.ToBase64String(encodeCode);
+            string isInstitution = Convert.ToBase64String(encodeIsInstitution);
 
-            Navigation.NavigateTo($"/RegisterUser/{identification}/{email}/{code}");
+            Navigation.NavigateTo($"/RegisterUser/{identification}/{email}/{code}/{isInstitution}");
         }
         else
         {

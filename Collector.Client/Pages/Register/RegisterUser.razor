@@ -1,4 +1,4 @@
-﻿@page "/RegisterUser/"
+﻿@page "/RegisterUser/{identification}/{email}/{code}/{isInstitution}"
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Components.Shared
 @using Collector.Client.Dtos.User
@@ -9,8 +9,8 @@
 
 <div class="main-container">
     <div class="form-container">
-        
-        
+
+
         <ProgressBar Value="Value" />
 
         <div class="step-header">
@@ -19,35 +19,31 @@
         </div>
 
         <div>
-            <BackToLoginBtn ButtonText="Login" OnClick="NavigateToLogin"/>
+            <BackToLoginBtn ButtonText="Login" OnClick="NavigateToLogin" />
         </div>
 
         @switch (step)
         {
             case 1:
-                <Step1UserReg reqUserDto="reqUserDto"
-                               />
+                <Step1UserReg reqUserDto="reqUserDto" />
                 break;
             case 2:
-                <Step2UserReg reqUserDto="reqUserDto"
-                               />
+                <Step2UserReg reqUserDto="reqUserDto" />
                 break;
             case 3:
-                <Step3UserReg reqUserDto="reqUserDto"
-                               />
+                <Step3UserReg reqUserDto="reqUserDto" />
                 break;
             default:
-                <Step1UserReg reqUserDto="reqUserDto"
-                               />
+                <Step1UserReg reqUserDto="reqUserDto" />
                 break;
         }
 
         <div class="buttons-container">
             @if (step < 3)
             {
-                    <MudButtonComponent Text="Siguiente" OnClick="NextStep"
-                                        Color="Color.Primary" Variant="Variant.Filled"
-                                        Style="width:230px;" />
+                <MudButtonComponent Text="Siguiente" OnClick="NextStep"
+                                    Color="Color.Primary" Variant="Variant.Filled"
+                                    Style="width:230px;" />
             }
             else
             {
@@ -60,8 +56,8 @@
             @if (step > 1)
             {
                 <MudButtonComponent Text="Paso anterior" OnClick="PreviousStep"
-                                    Variant="Variant.Outlined" Style="background-color:transparent; 
-                                    width: 155px; border: 3px solid #767572; color: #D1D5DB; 
+                                    Variant="Variant.Outlined" Style="background-color:transparent;
+                                    width: 155px; border: 3px solid #767572; color: #D1D5DB;
                                     border-radius: 0.5rem;font-weight: bold;" />
             }
         </div>
@@ -83,37 +79,42 @@
     public string email { get; set; } = string.Empty;
     [Parameter]
     public string code { get; set; } = string.Empty;
+    [Parameter]
+    public string isInstitution { get; set; } = string.Empty;
 
     private async Task RegisterUserAsync()
     {
         try
-        {        
+        {
 
             var decodeIdentify = Convert.FromBase64String(identification);
             var decodeEmail = Convert.FromBase64String(email);
             var decodeCode = Convert.FromBase64String(code);
+            var decodeIsInstitution = Convert.FromBase64String(isInstitution);
 
             string resultEmail = Encoding.UTF8.GetString(decodeEmail);
 
             UserEmailDto confirmEmail = new()
-            {
-                Email = resultEmail,
-                Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
-            };
+                {
+                    Email = resultEmail,
+                    Code = int.Parse(Encoding.UTF8.GetString(decodeCode))
+                };
 
             reqUserDto.Email = resultEmail;
             reqUserDto.Identification = Encoding.UTF8.GetString(decodeIdentify);
+            bool parsedIsInstitution = bool.TryParse(Encoding.UTF8.GetString(decodeIsInstitution), out bool result) && result;
+
+
+            reqUserDto.RolId = parsedIsInstitution ? 7 : 8;
 
             var data = await _registerService.CreateUserAsync(reqUserDto);
 
-            
-
             await _registerService.ConfirmEmail(confirmEmail);
-          
+
         }
         catch (Exception ex)
         {
-         
+
         }
     }
 
@@ -129,8 +130,6 @@
         Value -= 33.3;
         StateHasChanged();
     }
-    #endregion
-
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
@@ -140,7 +139,6 @@
         base.OnAfterRender(firstRender);
     }
 
-    #region Step Methods
     private void NextStep()
     {
         if (step < 3)
