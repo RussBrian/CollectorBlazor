@@ -37,14 +37,16 @@
                 </div>
 
                 <div class="map-container">
-                    @*                     <div>
-                    <label class="custom-label">Ubicación</label>
-                    <Map width="275px" height="250px" />
-                    <MudButton Variant="Variant.Outlined"
-                    Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
-                    Confirmar ubicación
-                    </MudButton>
-                    </div> *@
+                    <div>
+                        <label class="custom-label">Ubicación</label>
+                        <CustomMap Width="275px"
+                                   Height="250px"
+                                   OnLocationSelected="HandleLocationSelected" />
+                        <MudButton Variant="Variant.Outlined"
+                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
+                            Confirmar ubicación
+                        </MudButton>
+                    </div>
 
                     <div>
                         <MudStack Row="true">
@@ -143,12 +145,20 @@
     public ReqVolunteerDto ReqVolunteerDto { get; set; } = new();
     public string FrontImage { get; set; } = string.Empty;
     public bool HasFrontImage { get; set; } = false;
-    public ReqVolunteerDto reqVolunteer { get; set; } = new();
 
     protected override void OnInitialized()
     {
         ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
     }
+
+    #region SetMapPorperites
+    private void HandleLocationSelected((double Latitude, double Longitude) location)
+    {
+        ReqVolunteerDto.Longitude = (float)location.Longitude;
+        ReqVolunteerDto.Latitude = (float)location.Latitude;
+        Console.WriteLine($"Ubicación seleccionada: Longitud={location.Longitude}, Latitud={location.Latitude}");
+    }
+    #endregion
 
     #region File Manager
     private List<IBrowserFile> _selectedFiles = new();
@@ -161,7 +171,7 @@
 
         if (filesToProcess.Any())
         {
-            if (reqVolunteer.Images.Count() >= 4 && e.Count() > 4)
+            if (ReqVolunteerDto.Images.Count() >= 4 && e.Count() > 4)
             {
                 return;
             }
@@ -183,6 +193,7 @@
     }
     #endregion
 
+    #region OnSubmit method
     private async Task OnSubmit()
     {
         PaginationDto pagination = new()
@@ -204,4 +215,5 @@
 
         ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
     }
+    #endregion
 }

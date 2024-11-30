@@ -27,7 +27,7 @@
                                             Ej: Gran cantidad de basura en Sabana Perdida"
                                            ToolTipStyle="color:#37490B" />
                         </div>
-                        <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield" />
+                        <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield: 0;" />
                         <p class="text-secondary">Coloque un título que identifique su reporte.</p>
                         <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Title)" />
                     </div>
@@ -42,7 +42,7 @@
 
                 <div class="description-container">
                     <label class="custom-label">Descripción</label>
-                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield" />
+                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield:0;" />
                     <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
                     <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Description)" />
                 </div>
