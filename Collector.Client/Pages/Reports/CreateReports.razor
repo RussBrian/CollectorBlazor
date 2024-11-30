@@ -53,10 +53,6 @@
                         <CustomMap Width="275px"
                                    Height="250px"
                                    OnLocationSelected="HandleLocationSelected" />
-                        <MudButton Variant="Variant.Outlined"
-                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
-                            Confirmar ubicación
-                        </MudButton>
                     </div>
 
                     <div>
@@ -81,7 +77,7 @@
                                                     Variant="Variant.Outlined"
                                                     Style="background-color:transparent;
                             width: 155px; border: 3px solid #767572; color: white;
-                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px" />
+                            border-radius: 0.5rem;font-weight: bold; margin-left:60px" />
                             </ActivatorContent>
                         </MudFileUpload>
                     </div>
@@ -214,6 +210,7 @@
     public async Task OnSubmitReport()
     {
         var response = await _reportService.CreateReport(Report);
+        await JS.InvokeVoidAsync("showSweetAlert", "Reporte creado existosamente!", "success");
     }
     #endregion
 }

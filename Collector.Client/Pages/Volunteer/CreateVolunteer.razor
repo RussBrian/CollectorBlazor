@@ -42,10 +42,6 @@
                         <CustomMap Width="275px"
                                    Height="250px"
                                    OnLocationSelected="HandleLocationSelected" />
-                        <MudButton Variant="Variant.Outlined"
-                                   Style="background-color:transparent; width: 200px; border: 3px solid #767572; color:white; border-radius: 0.5rem; font-weight:bold; margin-top:15px; margin-left:25px;">
-                            Confirmar ubicación
-                        </MudButton>
                     </div>
 
                     <div>
@@ -60,7 +56,7 @@
                                                ToolTipStyle="color:#37490B" />
                             </MudItem>
                         </MudStack>
-                        <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
+                        <img class="rounded-3" src="@(FrontImage != string.Empty ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
 
                         <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
 
@@ -70,7 +66,7 @@
                                                     Variant="Variant.Outlined"
                                                     Style="background-color:transparent;
                             width: 155px; border: 3px solid #767572; color: white;
-                            border-radius: 0.5rem;font-weight: bold; margin-top:15px; margin-left:60px" />
+                            border-radius: 0.5rem;font-weight: bold; margin-left:60px" />
                             </ActivatorContent>
                         </MudFileUpload>
                     </div>
@@ -171,11 +167,6 @@
 
         if (filesToProcess.Any())
         {
-            if (ReqVolunteerDto.Images.Count() >= 4 && e.Count() > 4)
-            {
-                return;
-            }
-
             _selectedFiles.AddRange(filesToProcess);
             _processedFiles.AddRange(filesToProcess);
 
