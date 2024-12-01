@@ -70,9 +70,25 @@ namespace Collector.Client.Utilities.Extensions
 
             foreach(var property in typeof(TRequest).GetProperties())
             {
-                string? value = property.GetValue(request)?.ToString();
+                var value = property.GetValue(request);
 
-                content.Add(new StringContent(value), property.Name);
+                // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
+                if (value is IEnumerable<IFormFile> files)
+                {
+                    int index = 0;
+                    foreach (var file in files)
+                    {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, $"{property.Name}[{index}]", file.FileName);
+                        index++;
+                    }
+                }
+                else if (value != null)
+                {
+                    // Para propiedades simples, convertir a texto
+                    content.Add(new StringContent(value.ToString()!), property.Name);
+                }
             }
 
             try
