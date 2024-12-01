@@ -10,7 +10,7 @@ namespace Collector.Client.Dtos.Login
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public string? Identification { get; set; }
-        public string File { get; set; } = string.Empty;
+        public IFormFile? File { get; set; }
         public string? Image { get; set; }
         public string Gender { get; set; } = "M";
         public string Address { get; set; } = "DEFAULT";
