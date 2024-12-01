@@ -14,7 +14,7 @@ namespace Collector.Client.Utilities.Extensions
         #region Method for Get
         public async Task<object?> CustomGetAsync<TResponse>(string uri, object? identifier = null)
         {
-            string fullUri = $"{uri}{identifier}";
+            string fullUri = $"{uri}/{identifier}";
 
             Uri url = new(fullUri);
             try

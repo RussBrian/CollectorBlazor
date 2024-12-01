@@ -12,6 +12,12 @@
 
 @* <AuthorizeView Roles="Admin,Institution">
     <Authorized> *@
+@if (_isLoading)
+{
+    <p>Cargando...</p>
+}
+else
+{
 @if (!_isEditMode)
 {
     <div class="primary-container">
@@ -215,6 +221,7 @@ else
         </main>
     </div>
 }
+}
 
 <style>
     .custom-textfield {
@@ -252,10 +259,13 @@ else
     public bool HasFrontImage { get; set; } = false;
     public bool _isEditMode { get; set; } = false;
     public string Title => _isEditMode ? "Crea un voluntariado" : "Editar un voluntariado";
+    private bool _isLoading = true;
+
 
     #region OnInitialize
     protected async override Task OnInitializedAsync()
     {
+        _isLoading = true; 
         if (VolunteerId != 0)
         {
             ResVolunteerDto = await _volunteerService.GetVolunteerById(VolunteerId);
@@ -266,8 +276,9 @@ else
             ReqVolunteerDto ??= new();
             ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
         }
-        await base.OnInitializedAsync();
+        _isLoading = false; 
     }
+
     #endregion
 
     #region SetMapPorperites
