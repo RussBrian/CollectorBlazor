@@ -36,6 +36,7 @@ namespace Collector.Client.Helpers
 
         public static async Task<List<IFormFile>> ConvertBrowserFilesToFormFilesAsync(IEnumerable<IBrowserFile> browserFiles)
         {
+            int count = 0;
             var formFiles = new List<IFormFile>();
 
             foreach (var file in browserFiles)
@@ -44,12 +45,12 @@ namespace Collector.Client.Helpers
                 await file.OpenReadStream().CopyToAsync(memoryStream);
                 memoryStream.Position = 0;
 
-                var formFile = new FormFile(memoryStream, 0, memoryStream.Length, "file", file.Name)
+                var formFile = new FormFile(memoryStream, 0, memoryStream.Length, $"images[{count}]", file.Name)
                 {
                     Headers = new HeaderDictionary(),
                     ContentType = file.ContentType
                 };
-
+                count++;
                 formFiles.Add(formFile);
             }
             return formFiles;
