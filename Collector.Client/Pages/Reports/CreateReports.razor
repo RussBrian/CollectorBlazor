@@ -178,32 +178,33 @@
 
         if (filesToProcess.Any())
         {
-            if (Report.Files.Count() == 4 || newFiles.Count() > 4)
+            if (Report.Files.Count == 4 || newFiles.Count > 4)
             {
-                await JS.InvokeVoidAsync("showSweetAlert", "Solo se permiten 4 imagenes", "error");
+                await JS.InvokeVoidAsync("showSweetAlert", "Solo se permiten 4 imágenes", "error");
                 return;
             }
 
             _selectedFiles.AddRange(filesToProcess);
             _processedFiles.AddRange(filesToProcess);
 
-            var result = await ImageConverter.ConvertImagesListToStringAsync(_selectedFiles);
-
-            foreach (var image in result)
+            // Convertimos las imágenes a IFormFile para enviar a la API
+            var formFiles = await ImageConverter.ConvertBrowserFilesToFormFilesAsync(_selectedFiles);
+            foreach (var image in formFiles)
             {
                 Report.Files.Add(image);
             }
-
             _selectedFiles.Clear();
 
             if (!HasFrontImage)
             {
-                FrontImage = Report.Files.FirstOrDefault() ?? string.Empty;
+                var result = await ImageConverter.ConvertSingleImageToStringAsync(_selectedFiles[0]);
+                FrontImage = result;
                 HasFrontImage = true;
                 StateHasChanged();
             }
         }
     }
+
     #endregion
 
     #region On submitReport

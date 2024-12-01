@@ -12,14 +12,47 @@ namespace Collector.Client.Helpers
             foreach (var file in files)
             {
                 var buffer = new byte[file.Size];
-                await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); 
+                await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
                 await stream.ReadAsync(buffer.AsMemory(0, buffer.Length));
 
                 var base64String = Convert.ToBase64String(buffer);
-                var mimeType = file.ContentType; 
+                var mimeType = file.ContentType;
                 images.Add($"data:{mimeType};base64,{base64String}");
             }
             return images;
+        }
+
+        public static async Task<string> ConvertSingleImageToStringAsync(IBrowserFile files)
+        {
+            var buffer = new byte[files.Size];
+            await using var stream = files.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+            await stream.ReadAsync(buffer.AsMemory(0, buffer.Length));
+
+            var base64String = Convert.ToBase64String(buffer);
+            var mimeType = files.ContentType;
+            var image = ($"data:{mimeType};base64,{base64String}");
+            return image;
+        }
+
+        public static async Task<List<IFormFile>> ConvertBrowserFilesToFormFilesAsync(IEnumerable<IBrowserFile> browserFiles)
+        {
+            var formFiles = new List<IFormFile>();
+
+            foreach (var file in browserFiles)
+            {
+                var memoryStream = new MemoryStream();
+                await file.OpenReadStream().CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+
+                var formFile = new FormFile(memoryStream, 0, memoryStream.Length, "file", file.Name)
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = file.ContentType
+                };
+
+                formFiles.Add(formFile);
+            }
+            return formFiles;
         }
     }
 }
