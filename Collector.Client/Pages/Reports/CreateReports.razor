@@ -219,6 +219,13 @@
     #region On submitReport
     public async Task OnSubmitReport()
     {
+        var reportJson = System.Text.Json.JsonSerializer.Serialize(Report, new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true 
+            });
+
+        await JS.InvokeVoidAsync("console.log", reportJson);
+
         var response = await _reportService.CreateReport(Report);
         await JS.InvokeVoidAsync("showSweetAlert", "Reporte creado existosamente!", "success");
     }
