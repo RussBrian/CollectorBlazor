@@ -309,13 +309,15 @@ else
             _selectedFiles.AddRange(filesToProcess);
             _processedFiles.AddRange(filesToProcess);
 
-            var result = await ImageConverter.ConvertImagesListToStringAsync(_selectedFiles);
-
+            var formFiles = await ImageConverter.ConvertBrowserFilesToFormFilesAsync(_selectedFiles);
+            foreach (var image in formFiles)
+            {
+                ResVolunteerDto.Images.Add(image);
+            }
             _selectedFiles.Clear();
 
             if (!HasFrontImage)
             {
-                FrontImage = result[0];
                 HasFrontImage = true;
                 StateHasChanged();
             }

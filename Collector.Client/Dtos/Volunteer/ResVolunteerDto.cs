@@ -42,6 +42,6 @@ namespace Collector.Client.Dtos.Volunteer
 
         [JsonPropertyName("imageUrls")]
         public List<string> ImageUrls { get; set; } = new List<string>();
-        public List<IFormFile>? Images { get; set; }
+        public List<IFormFile>? Images { get; set; } = [];
     }
 }
