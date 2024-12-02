@@ -6,7 +6,7 @@ namespace Collector.Client.Services.Volunteer
     public interface IVolunteerService
     {
         #region Volunteer
-        Task<ResVolunteerDto?> CreateVolunteer(ReqVolunteerDto request);
+        Task<ResVolunteerDto?> CreateVolunteer(ResVolunteerDto request);
         Task<ResVolunteerDto?> UpdateVolunteer(ReqVolunteerDto request); 
         Task<ResVolunteerDto?> GetVolunteerById(int id);
         Task<List<ResVolunteerDto>> GetAllVolunteers(PaginationDto pagination);
