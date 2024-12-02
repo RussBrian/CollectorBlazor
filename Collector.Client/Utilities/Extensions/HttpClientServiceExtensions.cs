@@ -127,7 +127,7 @@ namespace Collector.Client.Utilities.Extensions
                     {
                         var fileContent = new StreamContent(file.OpenReadStream());
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-                        content.Add(fileContent, $"{property.Name}{index}", file.FileName);
+                        content.Add(fileContent, $"{property.Name}[{index}]", file.FileName);
                         index++;
                     }
                 }
@@ -222,7 +222,7 @@ namespace Collector.Client.Utilities.Extensions
                     {
                         var fileContent = new StreamContent(file.OpenReadStream());
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-                        content.Add(fileContent, $"{property.Name}{index}", file.FileName);
+                        content.Add(fileContent, $"{property.Name}[{index}]", file.FileName);
                         index++;
                     }
                 }
