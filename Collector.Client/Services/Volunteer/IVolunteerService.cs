@@ -7,7 +7,7 @@ namespace Collector.Client.Services.Volunteer
     {
         #region Volunteer
         Task<ResVolunteerDto?> CreateVolunteer(ResVolunteerDto request);
-        Task<ResVolunteerDto?> UpdateVolunteer(ReqVolunteerDto request); 
+        Task<ResVolunteerDto?> UpdateVolunteer(ResVolunteerDto request); 
         Task<ResVolunteerDto?> GetVolunteerById(int id);
         Task<List<ResVolunteerDto>> GetAllVolunteers(PaginationDto pagination);
         Task<List<ResVolunteerDto>> GetAllVolunteersByUser(PaginationDto pagination);

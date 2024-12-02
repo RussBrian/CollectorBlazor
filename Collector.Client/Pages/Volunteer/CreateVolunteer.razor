@@ -326,24 +326,18 @@ else
     #region OnSubmit method
     private async Task OnSubmit()
     {
-        PaginationDto pagination = new()
-            {
-                Page = 1,
-                AmountofInfo = 4
-            };
-        var getall = await _volunteerService.GetAllVolunteers(pagination);
+        if (_isEditMode)
+        {
+            ResVolunteerDto? data = await _volunteerService.UpdateVolunteer(ResVolunteerDto);
+            Navigation.NavigateTo($"/Volunteer/MyVolunteers");
+        }
+        else
+        {
+            ResVolunteerDto.FireBaseCode = "9zeirWQJnldZ2qizLbalnxjxpQh2";
+            ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ResVolunteerDto); 
+            Navigation.NavigateTo($"/Volunteer/MyVolunteers");
+        }
 
-        JsonSerializerOptions options = new()
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                WriteIndented = true
-            };
-
-        string json = JsonSerializer.Serialize(getall, options);
-
-        Console.WriteLine(json);
-
-        ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ResVolunteerDto);
     }
     #endregion
 }

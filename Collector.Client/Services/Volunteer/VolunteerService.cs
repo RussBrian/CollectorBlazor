@@ -39,13 +39,13 @@ namespace Collector.Client.Services.Volunteer
             return await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
         }
 
-        public async Task<ResVolunteerDto?> UpdateVolunteer(ReqVolunteerDto request)
+        public async Task<ResVolunteerDto?> UpdateVolunteer(ResVolunteerDto request)
         {
             var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
             string user = userInSession.Value?.UserId ?? string.Empty;
 
-            return await _httpExtension.CustomPutFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
+            return await _httpExtension.CustomPutFormDataAsync<ResVolunteerDto, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
         }
 
         #endregion
