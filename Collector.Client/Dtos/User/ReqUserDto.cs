@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
+using System.Text.Json.Serialization;
 
 namespace Collector.Client.Dtos.Login
 {
@@ -18,5 +19,17 @@ namespace Collector.Client.Dtos.Login
         public int RolId { get; set; }
         public bool IsMobileRegister { get; set; } = false;
         public string AddedBy { get; set; } = "ADMIN";
+
+        [JsonIgnore]
+        public string? ConfirmPassword { get; set; }
+
+        [JsonIgnore]
+        public string? ErrorMesagge { get; set; }
+
+        [JsonIgnore]
+        public bool IsSuccess { get; set; }
+
+        [JsonIgnore]
+        public bool isError { get; set; }
     } 
 }

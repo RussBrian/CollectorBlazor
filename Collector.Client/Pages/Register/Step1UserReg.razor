@@ -1,13 +1,26 @@
 ﻿@using Collector.Client.Dtos.Login
+@using Collector.Client.Helpers
+@using Collector.Client.Validations
 @using MudBlazor
 @inherits ComponentBase;
 
 <div class="step1-container">
     <MudForm Model="reqUserDto">
         <label class="custom-label">Nombre</label>
-        <MudTextField @bind-Value="@reqUserDto.FirstName" AutoFocus="true" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+        <MudTextField @bind-Value="@reqUserDto.FirstName"
+                      AutoFocus="true"
+                      Immediate="true"
+                      For="@(() => reqUserDto.FirstName)"
+                      Variant="Variant.Outlined"
+                      Style="color:white;" />
+
         <label class="custom-label mt-5">Apellido</label>
-        <MudTextField @bind-Value="@reqUserDto.LastName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+        <MudTextField @bind-Value="@reqUserDto.LastName"
+                      Immediate="true"
+                      For="@(() => reqUserDto.LastName)"
+                      Variant="Variant.Outlined"
+                      Style="color:white;" />
+
         <div class="d-flex justify-content-between mt-5">
             <label class="custom-label">Nombre de Usuario</label>
             <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
@@ -20,7 +33,11 @@
                 </TooltipContent>
             </MudTooltip>
         </div>
-        <MudTextField @bind-Value="@reqUserDto.UserName" Required="true" Variant="Variant.Outlined" Style="color:white;" />
+        <MudTextField @bind-Value="@reqUserDto.UserName"
+                      Immediate="true"
+                      For="@(() => reqUserDto.UserName)"
+                      Variant="Variant.Outlined"
+                      Style="color:white;" />
         <p class="custom-message-required">El campo es requerido.</p>
     </MudForm>
 </div>
@@ -55,5 +72,4 @@
 @code {
     [Parameter]
     public ReqUserDto reqUserDto { get; set; }
-  
 }

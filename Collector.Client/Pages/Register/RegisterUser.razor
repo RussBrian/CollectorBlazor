@@ -1,16 +1,18 @@
 ﻿@page "/RegisterUser/{identification}/{email}/{code}/{isInstitution}"
-@using Collector.Client.Dtos.Login
 @using Collector.Client.Components.Shared
+@using Collector.Client.Dtos.Login
 @using Collector.Client.Dtos.User
+@using Collector.Client.Helpers
 @using Collector.Client.Services.Register
+@using Collector.Client.Validations
 @using System.Text
+@using FluentValidation
 @inject IRegisterService _registerService
+@inject IJSRuntime JS
 @inject NavigationManager Navigation
 
 <div class="main-container">
     <div class="form-container">
-
-
         <ProgressBar Value="Value" />
 
         <div class="step-header">
@@ -25,7 +27,7 @@
         @switch (step)
         {
             case 1:
-                <Step1UserReg reqUserDto="reqUserDto" />
+                <Step1UserReg reqUserDto="reqUserDto"  />
                 break;
             case 2:
                 <Step2UserReg reqUserDto="reqUserDto" />
@@ -42,21 +44,21 @@
             @if (step < 3)
             {
                 <MudButtonComponent Text="Siguiente" OnClick="NextStep"
-                                    Color="Color.Primary" Variant="Variant.Filled"
-                                    Style="width:230px;" />
+                Color="Color.Primary" Variant="Variant.Filled"
+                Style="width:230px;" />
             }
             else
             {
-
                 <MudButtonComponent Text="Registrar"
-                                    OnClick="RegisterUserAsync"
-                                    Color="Color.Primary" Variant="Variant.Filled"
-                                    Style="width:230px;" />
+                OnClick="RegisterUserAsync"
+                Color="Color.Primary" Variant="Variant.Filled"
+                Style="width:230px;" />
             }
+
             @if (step > 1)
             {
                 <MudButtonComponent Text="Paso anterior" OnClick="PreviousStep"
-                                    Variant="Variant.Outlined" Style="background-color:transparent;
+                Variant="Variant.Outlined" Style="background-color:transparent;
                                     width: 155px; border: 3px solid #767572; color: #D1D5DB;
                                     border-radius: 0.5rem;font-weight: bold;" />
             }
@@ -65,12 +67,10 @@
     <div class="aside-background"></div>
 </div>
 
-
 @code {
-
-    public Step1UserReg? _step1UserReg;
     private int step = 1;
     public double Value { get; set; }
+    private readonly ReqUserDtoValidator validator = new();
     private ReqUserDto reqUserDto = new();
 
     [Parameter]
@@ -82,11 +82,11 @@
     [Parameter]
     public string isInstitution { get; set; } = string.Empty;
 
+    #region Register Method
     private async Task RegisterUserAsync()
     {
         try
         {
-
             var decodeIdentify = Convert.FromBase64String(identification);
             var decodeEmail = Convert.FromBase64String(email);
             var decodeCode = Convert.FromBase64String(code);
@@ -107,18 +107,58 @@
 
             reqUserDto.RolId = parsedIsInstitution ? 7 : 8;
 
-            var data = await _registerService.CreateUserAsync(reqUserDto);
-
-            await _registerService.ConfirmEmail(confirmEmail);
-
+            var response = await _registerService.CreateUserAsync(reqUserDto);
+            if (response.IsSuccess)
+            {
+                await ShowAlert("Registro exitoso", "El usuario se registró correctamente.", "success");
+                await _registerService.ConfirmEmail(confirmEmail);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                await ShowAlert("Error", "Hubo un problema al registrar el usuario. Inténtelo de nuevo.", "error");
+            }
         }
         catch (Exception ex)
         {
+            await ShowAlert("Error", "Ocurrió un error inesperado.", "error");
+        }
+    }
+    #endregion
 
+    #region Utils
+    private async Task NextStep()
+    {
+        var validationResult = step switch
+        {
+            1 => validator.Validate(reqUserDto, options => options.IncludeRuleSets("Step1")),
+            2 => validator.Validate(reqUserDto, options => options.IncludeRuleSets("Step2")),
+            _ => null
+        };
+
+        if (validationResult != null && !validationResult.IsValid)
+        {
+            var errorMessage = "Debe completar el formulario correctamente.";
+            await ShowAlert("Error de validación", errorMessage, "error");
+            return;
+        }
+
+        if (step < 3)
+        {
+            step++;
+            AdvanceProgress();
         }
     }
 
-    #region Utils
+    private void PreviousStep()
+    {
+        if (step > 1)
+        {
+            step--;
+            GoBackProgress();
+        }
+    }
+
     public void AdvanceProgress()
     {
         Value += 33.3;
@@ -130,6 +170,7 @@
         Value -= 33.3;
         StateHasChanged();
     }
+
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
@@ -138,19 +179,12 @@
         }
         base.OnAfterRender(firstRender);
     }
+    #endregion
 
-    private void NextStep()
+    #region Alert
+    private async Task ShowAlert(string title, string message, string? icon = "success")
     {
-        if (step < 3)
-            step++;
-        AdvanceProgress();
-    }
-
-    private void PreviousStep()
-    {
-        if (step > 1)
-            step--;
-        GoBackProgress();
+        await JS.InvokeVoidAsync("showSweetAlert", title, message, icon);
     }
     #endregion
 
@@ -161,3 +195,15 @@
     }
     #endregion
 }
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function showSweetAlert(title, message, icon) {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: icon
+        });
+    }
+</script>
