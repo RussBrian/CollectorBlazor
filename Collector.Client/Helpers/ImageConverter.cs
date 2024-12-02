@@ -59,13 +59,12 @@ namespace Collector.Client.Helpers
 
         public static async Task<IFormFile> ConvertToIFormFile(IBrowserFile file)
         {
-            var formFiles = new List<IFormFile>();
 
             var memoryStream = new MemoryStream();
             await file.OpenReadStream().CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
-            return  new FormFile(memoryStream, 0, memoryStream.Length, $"images[{0}]", file.Name)
+            return  new FormFile(memoryStream, 0, memoryStream.Length, $"file[{0}]", file.Name)
             {
                 Headers = new HeaderDictionary(),
                 ContentType = file.ContentType
