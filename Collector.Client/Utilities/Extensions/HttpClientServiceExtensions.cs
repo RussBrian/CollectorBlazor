@@ -76,13 +76,11 @@ namespace Collector.Client.Utilities.Extensions
                 // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
                 if (value is IEnumerable<IFormFile> files)
                 {
-                    int index = 0;
                     foreach (var file in files)
                     {
                         var fileContent = new StreamContent(file.OpenReadStream());
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
                         content.Add(fileContent, $"{property.Name}", file.FileName);
-                        index++;
                     }
                 }
                 else if (value != null)
@@ -129,7 +127,7 @@ namespace Collector.Client.Utilities.Extensions
                     {
                         var fileContent = new StreamContent(file.OpenReadStream());
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-                        content.Add(fileContent, $"{property.Name}", file.FileName);
+                        content.Add(fileContent, $"{property.Name}{index}", file.FileName);
                         index++;
                     }
                 }
@@ -174,13 +172,11 @@ namespace Collector.Client.Utilities.Extensions
                 // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
                 if (value is IEnumerable<IFormFile> files)
                 {
-                    int index = 0;
                     foreach (var file in files)
                     {
                         var fileContent = new StreamContent(file.OpenReadStream());
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
                         content.Add(fileContent, $"{property.Name}", file.FileName);
-                        index++;
                     }
                 }
                 else if (value != null)
@@ -226,7 +222,7 @@ namespace Collector.Client.Utilities.Extensions
                     {
                         var fileContent = new StreamContent(file.OpenReadStream());
                         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
-                        content.Add(fileContent, $"{property.Name}", file.FileName);
+                        content.Add(fileContent, $"{property.Name}{index}", file.FileName);
                         index++;
                     }
                 }

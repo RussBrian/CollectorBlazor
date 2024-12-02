@@ -52,7 +52,7 @@ namespace Collector.Client.Services.Reports
             {
                 Report.FireBaseCode = "9zeirWQJnldZ2qizLbalnxjxpQh2";
             }
-            var report = await _httpServiceExtensions.CustomFormDataAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
+            var report = await _httpServiceExtensions.CustomFormDataReportAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
             return report;
         }
     }
