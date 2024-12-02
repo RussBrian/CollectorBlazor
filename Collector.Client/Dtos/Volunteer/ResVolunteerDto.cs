@@ -5,7 +5,7 @@ namespace Collector.Client.Dtos.Volunteer
     public class ResVolunteerDto
     {
         [JsonPropertyName("volunteerId")]
-        public int Id { get; set; }
+        public int VolunteerId { get; set; }
 
         [JsonPropertyName("fireBaseCode")]
         public string FireBaseCode { get; set; } = string.Empty;
@@ -38,9 +38,10 @@ namespace Collector.Client.Dtos.Volunteer
         public bool IsActive { get; set; }
 
         [JsonPropertyName("volunteerDate")]
-        public DateTime VolunteerDate { get; set; }
+        public string? VolunteerDate { get; set; } 
 
         [JsonPropertyName("imageUrls")]
         public List<string> ImageUrls { get; set; } = new List<string>();
+        public List<IFormFile>? Images { get; set; } = [];
     }
 }

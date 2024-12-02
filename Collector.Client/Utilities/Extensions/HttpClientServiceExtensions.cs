@@ -14,7 +14,7 @@ namespace Collector.Client.Utilities.Extensions
         #region Method for Get
         public async Task<object?> CustomGetAsync<TResponse>(string uri, object? identifier = null)
         {
-            string fullUri = $"{uri}{identifier}";
+            string fullUri = $"{uri}/{identifier}";
 
             Uri url = new(fullUri);
             try
@@ -116,15 +116,28 @@ namespace Collector.Client.Utilities.Extensions
         {
             Uri url = new(uri);
 
-            using MultipartFormDataContent content = new();
+            using MultipartFormDataContent content = [];
 
             foreach (var property in typeof(TRequest).GetProperties())
             {
-                string? value = property.GetValue(request)?.ToString();
+                var value = property.GetValue(request);
 
-                if (value != null)
+                // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
+                if (value is IEnumerable<IFormFile> files)
                 {
-                    content.Add(new StringContent(value), property.Name);
+                    int index = 0;
+                    foreach (var file in files)
+                    {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, $"{property.Name}[{index}]", file.FileName);
+                        index++;
+                    }
+                }
+                else if (value != null)
+                {
+                    // Para propiedades simples, convertir a texto
+                    content.Add(new StringContent(value.ToString()!), property.Name);
                 }
             }
 
