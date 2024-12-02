@@ -81,11 +81,7 @@
         var file = e.File;
         if (file != null)
         {
-            var buffer = new byte[file.Size];
-            using var stream = file.OpenReadStream(4 * 1024 * 1024);
-            await stream.ReadAsync(buffer);
-            string base64String = Convert.ToBase64String(buffer);
-            ImagePreview = $"data:{file.ContentType};base64,{base64String}";
+            ImagePreview = await ImageConverter.ConvertSingleImageToStringAsync(file);
             reqUserDto.File = await ImageConverter.ConvertToIFormFile(file);
         }
     }

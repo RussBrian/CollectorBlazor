@@ -43,7 +43,7 @@ namespace Collector.Client.Helpers
             foreach (var file in browserFiles)
             {
                 var memoryStream = new MemoryStream();
-                await file.OpenReadStream().CopyToAsync(memoryStream);
+                await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(memoryStream);
                 memoryStream.Position = 0;
 
                 var formFile = new FormFile(memoryStream, 0, memoryStream.Length, $"images[{count}]", file.Name)

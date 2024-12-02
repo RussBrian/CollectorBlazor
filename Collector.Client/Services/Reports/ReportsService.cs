@@ -30,7 +30,7 @@ namespace Collector.Client.Services.Reports
 
             if (reportResult != null)
             {
-                var queryableList = reportResult.Value.AsQueryable();
+                var queryableList = reportResult.Value.OrderByDescending(x => x.Date).AsQueryable();
                 return [.. queryableList.Pagination(pagination)];
             }
 

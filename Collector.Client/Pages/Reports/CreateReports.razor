@@ -56,7 +56,7 @@
                             <MudItem>
                                 <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
                                                ToolTipDescription="Debe colocar la ubicación exacta de la zona afectada o un aproximado,
-                                                                   y/o puede indicar en la descripción 
+                                                                   y/o puede indicar en la descripción
                                                                    detalles para identificar mejor la zona afectada."
                                                ToolTipStyle="color:#37490B" />
                             </MudItem>
@@ -79,32 +79,33 @@
                             </MudItem>
                         </MudStack>
                         <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
-
                         <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
 
-                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
-                            <ActivatorContent>
-                                <MudButtonComponent Text="Añadir imagen"
-                                                    Variant="Variant.Outlined"
-                                                    Style="background-color:transparent;
+                        <div class="d-flex">
+                            <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                                <ActivatorContent>
+                                    <MudButtonComponent Text="Añadir imagen"
+                                                        Variant="Variant.Outlined"
+                                                        Style="background-color:transparent;
                             width: 155px; border: 3px solid #767572; color: #767572;
                             border-radius: 0.5rem;font-weight: bold; margin-left:60px" />
-                            </ActivatorContent>
-                        </MudFileUpload>
+                                </ActivatorContent>
+                            </MudFileUpload>
+                        </div>
                     </div>
                 </div>
 
-                <div class="m-4 d-flex">
+                <div class="m-4 d-flex justify-content-center">
 
                     <MudTooltip Style="background-color:darkgray; color:black;"
                                 Arrow="true" Placement="Placement.Right" Delay="400">
                         <ChildContent>
-                            <MudIcon Style="color:#37490B;" Icon="@Icons.Material.Filled.ErrorOutline"
+                            <MudIcon Style="color:#37490B; margin-top:5px" Icon="@Icons.Material.Filled.ErrorOutline"
                                      Size="Size.Small" />
                         </ChildContent>
                     </MudTooltip>
 
-                    <p class="text-secondary">Dar click sobre el icono para ver más detalles del campo a completar.</p>
+                    <p class="text-secondary text-center">Dar click sobre el icono para ver más detalles del campo a completar.</p>
                 </div>
 
             </div>
@@ -186,10 +187,11 @@
     public async Task UploadFiles(IReadOnlyList<IBrowserFile> newFiles)
     {
         var filesToProcess = newFiles.Except(_processedFiles).ToList();
-
+        int reportCount = Report.Images.Count();
         if (filesToProcess.Any())
         {
-            if (Report.Images.Count == 4 || newFiles.Count > 4)
+
+            if (reportCount == 4 || newFiles.Count() > 4 || reportCount + filesToProcess.Count() > 4)
             {
                 await JS.InvokeVoidAsync("showSweetAlert", "Solo se permiten 4 imágenes", "error");
                 return;
@@ -198,7 +200,6 @@
             _selectedFiles.AddRange(filesToProcess);
             _processedFiles.AddRange(filesToProcess);
 
-            // Convertimos las imágenes a IFormFile para enviar a la API
             var formFiles = await ImageConverter.ConvertBrowserFilesToFormFilesAsync(_selectedFiles);
             foreach (var image in formFiles)
             {
@@ -208,6 +209,7 @@
 
             if (!HasFrontImage)
             {
+                FrontImage = await ImageConverter.ConvertSingleImageToStringAsync(newFiles[0]);
                 HasFrontImage = true;
                 StateHasChanged();
             }
@@ -221,7 +223,7 @@
     {
         var reportJson = System.Text.Json.JsonSerializer.Serialize(Report, new System.Text.Json.JsonSerializerOptions
             {
-                WriteIndented = true 
+                WriteIndented = true
             });
 
         await JS.InvokeVoidAsync("console.log", reportJson);
