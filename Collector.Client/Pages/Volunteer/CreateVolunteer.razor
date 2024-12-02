@@ -7,115 +7,23 @@
 @using Microsoft.AspNetCore.Components.Authorization;
 @using System.Text.Json
 @using System.Text.Encodings.Web
+@using System.Globalization
 @inject IVolunteerService _volunteerService
 @inject NavigationManager Navigation;
 
 @* <AuthorizeView Roles="Admin,Institution">
     <Authorized> *@
+@if (_isLoading)
+{
+    <p>Cargando...</p>
+}
+else
+{
 @if (!_isEditMode)
 {
     <div class="primary-container">
         <main class="secondary-container">
-            <EditForm Model="@ReqVolunteerDto" class="edit-form-style">
-                <h3 class="title">@Title</h3>
-                <div class="card-body-container">
-
-                    @* <DataAnnotationsValidator /> *@
-
-                    <div class="text-field-container">
-                        <div class="text-field-style">
-                            <div class="d-flex justify-content-between">
-                                <label class="custom-label">Título del voluntariado</label>
-                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small;" ToolTipDescription="Ayudame" ToolTipStyle="color:#37490B;" />
-                            </div>
-                            <MudTextField @bind-Value="ReqVolunteerDto.Name" Variant="Variant.Outlined" />
-                            <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
-                        </div>
-
-                        <div class="text-field-style" style="width: 30%;">
-                            <label class="custom-label">Fecha</label>
-                            <MudTextField InputType="InputType.Date" @bind-Value="ReqVolunteerDto.VolunteerDate" Variant="Variant.Outlined" />
-                        </div>
-                    </div>
-
-                    <div class="map-container">
-                        <div>
-                            <label class="custom-label">Ubicación</label>
-                            <CustomMap Width="275px"
-                                       Height="250px"
-                                       OnLocationSelected="HandleLocationSelected" />
-
-                        </div>
-
-                        <div>
-                            <MudStack Row="true">
-                                <MudItem Class="m-0">
-                                    <label class="custom-label">Imágenes</label>
-                                </MudItem>
-                                <MudItem>
-                                    <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
-                                                   ToolTipDescription="Coloque una imagen de la zona afectada.
-                                               Puede colocar hasta cuatro imágenes si asi lo desea."
-                                                   ToolTipStyle="color:#37490B" />
-                                </MudItem>
-                            </MudStack>
-                            <img class="rounded-3" src="@(FrontImage != string.Empty ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
-
-                            <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
-
-                            <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
-                                <ActivatorContent>
-                                    <MudButtonComponent Text="Añadir imagen"
-                                                        Variant="Variant.Outlined"
-                                                        Style="background-color:transparent;
-                            width: 155px; border: 3px solid #767572; color: white;
-                            border-radius: 0.5rem;font-weight: bold; margin-left:60px" />
-                                </ActivatorContent>
-                            </MudFileUpload>
-                        </div>
-                    </div>
-
-                    <div class="text-field-container">
-                        <div class="text-field-style">
-                            <div class="d-flex justify-content-between">
-                                <label class="custom-label">Tipo de voluntariado</label>
-                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small;" ToolTipDescription="Ayudame" ToolTipStyle="color:#37490B;" />
-                            </div>
-                            <MudSwitch @bind-Value="ReqVolunteerDto.IsPrivate" Color="Color.Primary" UncheckedColor="Color.Secondary">Privado</MudSwitch>
-                        </div>
-                        @if (ReqVolunteerDto.IsPrivate)
-                        {
-                            <div class="text-field-style" style="width: 30%;">
-                                <label class="custom-label">Código</label>
-                                <MudTextField @bind-Value="ReqVolunteerDto.VolunteerCode" Variant="Variant.Outlined" />
-                            </div>
-                        }
-                    </div>
-
-                    <div class="container-message d-flex">
-                        <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
-                                 Size="Size.Small"
-                                 Style="background-color:darkgray; margin-left:15px;" />
-                        <p class="text-secondary">Dar click sobre el icono para ver más detalles del campo a completar.</p>
-                    </div>
-                </div>
-
-                <div class="button-send-container">
-                    <MudButton Variant="Variant.Filled"
-                               ButtonType="ButtonType.Submit"
-                               Style="background-color:#515B3B; margin-bottom:10px; color:white; width:400px;">
-                        Crear voluntariado
-                    </MudButton>
-                </div>
-            </EditForm>
-        </main>
-    </div>
-}
-else
-{
-    <div class="primary-container">
-        <main class="secondary-container">
-            <EditForm Model="@ReqVolunteerDto" class="edit-form-style">
+                <EditForm Model="@ResVolunteerDto" class="edit-form-style" OnValidSubmit="OnSubmit">
                 <h3 class="title">@Title</h3>
                 <div class="card-body-container">
 
@@ -135,11 +43,6 @@ else
                             <label class="custom-label">Fecha</label>
                             <MudTextField InputType="InputType.Date" @bind-Value="ResVolunteerDto.VolunteerDate" Variant="Variant.Outlined" />
                         </div>
-
-                        <div class="text-field-style" style="width: 30%;">
-                            <MudTextField hidden InputType="InputType.Text" @bind-Value="ResVolunteerDto.Id" Variant="Variant.Outlined" />
-                        </div>
-
                     </div>
 
                     <div class="map-container">
@@ -215,6 +118,110 @@ else
         </main>
     </div>
 }
+else
+{
+    <div class="primary-container">
+        <main class="secondary-container">
+                <EditForm Model="@ResVolunteerDto" class="edit-form-style" OnValidSubmit="OnSubmit">
+                <h3 class="title">@Title</h3>
+                <div class="card-body-container">
+
+                    @* <DataAnnotationsValidator /> *@
+
+                    <div class="text-field-container">
+                        <div class="text-field-style">
+                            <div class="d-flex justify-content-between">
+                                <label class="custom-label">Título del voluntariado</label>
+                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small;" ToolTipDescription="Ayudame" ToolTipStyle="color:#37490B;" />
+                            </div>
+                            <MudTextField @bind-Value="ResVolunteerDto.Name" Variant="Variant.Outlined" />
+                            <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
+                        </div>
+
+                        <div class="text-field-style" style="width: 30%;">
+                            <label class="custom-label">Fecha</label>
+                            <MudTextField InputType="InputType.Date" @bind-Value="ResVolunteerDto.VolunteerDate" Variant="Variant.Outlined" />
+                        </div>
+
+                        <div class="text-field-style" style="width: 30%;">
+                            <MudTextField hidden InputType="InputType.Text" @bind-Value="ResVolunteerDto.VolunteerId" Variant="Variant.Outlined" />
+                        </div>
+
+                    </div>
+
+                    <div class="map-container">
+                        <div>
+                            <label class="custom-label">Ubicación</label>
+                            <CustomMap Width="275px"
+                                       Height="250px"
+                                       OnLocationSelected="HandleLocationSelected" />
+                        </div>
+
+                        <div>
+                            <MudStack Row="true">
+                                <MudItem Class="m-0">
+                                    <label class="custom-label">Imágenes</label>
+                                </MudItem>
+                                <MudItem>
+                                    <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                                   ToolTipDescription="Coloque una imagen de la zona afectada.
+                                               Puede colocar hasta cuatro imágenes si asi lo desea."
+                                                   ToolTipStyle="color:#37490B" />
+                                </MudItem>
+                            </MudStack>
+                            <img class="rounded-3" src="@(FrontImage != string.Empty ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
+
+                            <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
+
+                            <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                                <ActivatorContent>
+                                    <MudButtonComponent Text="Añadir imagen"
+                                                        Variant="Variant.Outlined"
+                                                        Style="background-color:transparent;
+                            width: 155px; border: 3px solid #767572; color: white;
+                            border-radius: 0.5rem;font-weight: bold; margin-left:60px" />
+                                </ActivatorContent>
+                            </MudFileUpload>
+                        </div>
+                    </div>
+
+                    <div class="text-field-container">
+                        <div class="text-field-style">
+                            <div class="d-flex justify-content-between">
+                                <label class="custom-label">Tipo de voluntariado</label>
+                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small;" ToolTipDescription="Ayudame" ToolTipStyle="color:#37490B;" />
+                            </div>
+                            <MudSwitch @bind-Value="ResVolunteerDto.IsPrivate" Color="Color.Primary" UncheckedColor="Color.Secondary">Privado</MudSwitch>
+                        </div>
+                        @if (ResVolunteerDto.IsPrivate)
+                        {
+                            <div class="text-field-style" style="width: 30%;">
+                                <label class="custom-label">Código</label>
+                                <MudTextField @bind-Value="ResVolunteerDto.VolunteerCode" Variant="Variant.Outlined" />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="container-message d-flex">
+                        <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                                 Size="Size.Small"
+                                 Style="background-color:darkgray; margin-left:15px;" />
+                        <p class="text-secondary">Dar click sobre el icono para ver más detalles del campo a completar.</p>
+                    </div>
+                </div>
+
+                <div class="button-send-container">
+                    <MudButton Variant="Variant.Filled"
+                               ButtonType="ButtonType.Submit"
+                               Style="background-color:#515B3B; margin-bottom:10px; color:white; width:400px;">
+                        Crear voluntariado
+                    </MudButton>
+                </div>
+            </EditForm>
+        </main>
+    </div>
+}
+}
 
 <style>
     .custom-textfield {
@@ -246,35 +253,43 @@ else
 
 @code {
     [Parameter] public int VolunteerId { get; set; }
-    public ReqVolunteerDto? ReqVolunteerDto { get; set; }
     public ResVolunteerDto? ResVolunteerDto { get; set; }
     public string FrontImage { get; set; } = string.Empty;
     public bool HasFrontImage { get; set; } = false;
     public bool _isEditMode { get; set; } = false;
     public string Title => _isEditMode ? "Crea un voluntariado" : "Editar un voluntariado";
+    private bool _isLoading = true;
+
 
     #region OnInitialize
     protected async override Task OnInitializedAsync()
     {
+        _isLoading = true; 
         if (VolunteerId != 0)
         {
             ResVolunteerDto = await _volunteerService.GetVolunteerById(VolunteerId);
+            var date = ResVolunteerDto.VolunteerDate;
+            if(DateTime.TryParse(date,out DateTime formatedDate))
+            {
+                ResVolunteerDto.VolunteerDate = formatedDate.ToString("yyyy-MM-dd");
+            }
+
             _isEditMode = true;
         }
         else
         {
-            ReqVolunteerDto ??= new();
-            ReqVolunteerDto.VolunteerDate = DateTime.Now.ToString("yyyy-MM-dd");
+            ResVolunteerDto ??= new();
         }
-        await base.OnInitializedAsync();
+        _isLoading = false; 
     }
+
     #endregion
 
     #region SetMapPorperites
     private void HandleLocationSelected((double Latitude, double Longitude) location)
     {
-        ReqVolunteerDto.Longitude = (float)location.Longitude;
-        ReqVolunteerDto.Latitude = (float)location.Latitude;
+        ResVolunteerDto.Longitude = (float)location.Longitude;
+        ResVolunteerDto.Latitude = (float)location.Latitude;
         Console.WriteLine($"Ubicación seleccionada: Longitud={location.Longitude}, Latitud={location.Latitude}");
     }
     #endregion
@@ -293,13 +308,15 @@ else
             _selectedFiles.AddRange(filesToProcess);
             _processedFiles.AddRange(filesToProcess);
 
-            var result = await ImageConverter.ConvertImagesListToStringAsync(_selectedFiles);
-
+            var formFiles = await ImageConverter.ConvertBrowserFilesToFormFilesAsync(_selectedFiles);
+            foreach (var image in formFiles)
+            {
+                ResVolunteerDto.Images.Add(image);
+            }
             _selectedFiles.Clear();
 
             if (!HasFrontImage)
             {
-                FrontImage = result[0];
                 HasFrontImage = true;
                 StateHasChanged();
             }
@@ -310,24 +327,18 @@ else
     #region OnSubmit method
     private async Task OnSubmit()
     {
-        PaginationDto pagination = new()
-            {
-                Page = 1,
-                AmountofInfo = 4
-            };
-        var getall = await _volunteerService.GetAllVolunteers(pagination);
+        if (_isEditMode)
+        {
+            ResVolunteerDto? data = await _volunteerService.UpdateVolunteer(ResVolunteerDto);
+            Navigation.NavigateTo($"/Volunteer/MyVolunteers");
+        }
+        else
+        {
+            ResVolunteerDto.FireBaseCode = "9zeirWQJnldZ2qizLbalnxjxpQh2";
+            ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ResVolunteerDto); 
+            Navigation.NavigateTo($"/Volunteer/MyVolunteers");
+        }
 
-        JsonSerializerOptions options = new()
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                WriteIndented = true
-            };
-
-        string json = JsonSerializer.Serialize(getall, options);
-
-        Console.WriteLine(json);
-
-        ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ReqVolunteerDto);
     }
     #endregion
 }

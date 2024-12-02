@@ -14,7 +14,7 @@ namespace Collector.Client.Utilities.Extensions
         #region Method for Get
         public async Task<object?> CustomGetAsync<TResponse>(string uri, object? identifier = null)
         {
-            string fullUri = $"{uri}{identifier}";
+            string fullUri = $"{uri}/{identifier}";
 
             Uri url = new(fullUri);
             try
@@ -62,7 +62,54 @@ namespace Collector.Client.Utilities.Extensions
                 throw new AggregateException("Error general al procesar la solicitud.", ex);
             }          
         }
+
         public async Task<TResponse?> CustomFormDataAsync<TResponse, TRequest>(string uri, TRequest request)
+        {
+            Uri url = new(uri);
+
+            using MultipartFormDataContent content = [];
+
+            foreach (var property in typeof(TRequest).GetProperties())
+            {
+                var value = property.GetValue(request);
+
+                // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
+                if (value is IEnumerable<IFormFile> files)
+                {
+                    foreach (var file in files)
+                    {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, $"{property.Name}", file.FileName);
+                    }
+                }
+                else if (value != null)
+                {
+                    // Para propiedades simples, convertir a texto
+                    content.Add(new StringContent(value.ToString()!), property.Name);
+                }
+            }
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsync(url, content);
+
+                string result = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<TResponse>(result);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new AggregateException("Error al realizar la solicitud HTTP.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new AggregateException("Error general al procesar la solicitud.", ex);
+            }
+
+        }
+
+        public async Task<TResponse?> CustomFormDataReportAsync<TResponse, TRequest>(string uri, TRequest request)
         {
             Uri url = new(uri);
 
@@ -70,9 +117,25 @@ namespace Collector.Client.Utilities.Extensions
 
             foreach(var property in typeof(TRequest).GetProperties())
             {
-                string? value = property.GetValue(request)?.ToString();
+                var value = property.GetValue(request);
 
-                content.Add(new StringContent(value), property.Name);
+                // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
+                if (value is IEnumerable<IFormFile> files)
+                {
+                    int index = 0;
+                    foreach (var file in files)
+                    {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, $"{property.Name}[{index}]", file.FileName);
+                        index++;
+                    }
+                }
+                else if (value != null)
+                {
+                    // Para propiedades simples, convertir a texto
+                    content.Add(new StringContent(value.ToString()!), property.Name);
+                }
             }
 
             try
@@ -100,15 +163,26 @@ namespace Collector.Client.Utilities.Extensions
         {
             Uri url = new(uri);
 
-            using MultipartFormDataContent content = new();
+            using MultipartFormDataContent content = [];
 
             foreach (var property in typeof(TRequest).GetProperties())
             {
-                string? value = property.GetValue(request)?.ToString();
+                var value = property.GetValue(request);
 
-                if (value != null)
+                // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
+                if (value is IEnumerable<IFormFile> files)
                 {
-                    content.Add(new StringContent(value), property.Name);
+                    foreach (var file in files)
+                    {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, $"{property.Name}", file.FileName);
+                    }
+                }
+                else if (value != null)
+                {
+                    // Para propiedades simples, convertir a texto
+                    content.Add(new StringContent(value.ToString()!), property.Name);
                 }
             }
 
@@ -127,6 +201,53 @@ namespace Collector.Client.Utilities.Extensions
             catch (Exception ex)
             {
                 throw new AggregateException("Error general al procesar la solicitud - ",ex);
+            }
+        }
+
+        public async Task<TResponse?> CustomPutFormDataReportAsync<TResponse, TRequest>(string uri, TRequest request)
+        {
+            Uri url = new(uri);
+
+            using MultipartFormDataContent content = [];
+
+            foreach (var property in typeof(TRequest).GetProperties())
+            {
+                var value = property.GetValue(request);
+
+                // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
+                if (value is IEnumerable<IFormFile> files)
+                {
+                    int index = 0;
+                    foreach (var file in files)
+                    {
+                        var fileContent = new StreamContent(file.OpenReadStream());
+                        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                        content.Add(fileContent, $"{property.Name}[{index}]", file.FileName);
+                        index++;
+                    }
+                }
+                else if (value != null)
+                {
+                    // Para propiedades simples, convertir a texto
+                    content.Add(new StringContent(value.ToString()!), property.Name);
+                }
+            }
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PutAsync(url, content);
+
+                string result = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<TResponse>(result);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new AggregateException("Error al realizar la solicitud HTTP - ", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new AggregateException("Error general al procesar la solicitud - ", ex);
             }
         }
         #endregion
