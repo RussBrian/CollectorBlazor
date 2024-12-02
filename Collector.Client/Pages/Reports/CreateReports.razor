@@ -178,7 +178,7 @@
 
         if (filesToProcess.Any())
         {
-            if (Report.Files.Count == 4 || newFiles.Count > 4)
+            if (Report.Images.Count == 4 || newFiles.Count > 4)
             {
                 await JS.InvokeVoidAsync("showSweetAlert", "Solo se permiten 4 imágenes", "error");
                 return;
@@ -191,14 +191,12 @@
             var formFiles = await ImageConverter.ConvertBrowserFilesToFormFilesAsync(_selectedFiles);
             foreach (var image in formFiles)
             {
-                Report.Files.Add(image);
+                Report.Images.Add(image);
             }
             _selectedFiles.Clear();
 
             if (!HasFrontImage)
             {
-                var result = await ImageConverter.ConvertSingleImageToStringAsync(_selectedFiles[0]);
-                FrontImage = result;
                 HasFrontImage = true;
                 StateHasChanged();
             }
@@ -210,6 +208,13 @@
     #region On submitReport
     public async Task OnSubmitReport()
     {
+        var reportJson = System.Text.Json.JsonSerializer.Serialize(Report, new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true 
+            });
+
+        await JS.InvokeVoidAsync("console.log", reportJson);
+
         var response = await _reportService.CreateReport(Report);
         await JS.InvokeVoidAsync("showSweetAlert", "Reporte creado existosamente!", "success");
     }
