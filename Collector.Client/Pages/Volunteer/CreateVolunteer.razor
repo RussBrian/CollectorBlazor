@@ -10,6 +10,7 @@
 @using System.Globalization
 @inject IVolunteerService _volunteerService
 @inject NavigationManager Navigation;
+@inject IJSRuntime JS;
 
 @* <AuthorizeView Roles="Admin,Institution">
     <Authorized> *@
@@ -139,6 +140,29 @@ else
     </div>
 }
 
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: icon,
+            title: Message
+        });
+    };
+</script>
+
 <style>
     .custom-textfield {
         border: 2px solid #767572;
@@ -214,13 +238,19 @@ else
     private List<IBrowserFile> _selectedFiles = new();
     private List<IBrowserFile> _processedFiles = new();
 
-
-    public async Task UploadFiles(IReadOnlyList<IBrowserFile> e)
+    public async Task UploadFiles(IReadOnlyList<IBrowserFile> newFiles)
     {
-        var filesToProcess = e.Except(_processedFiles).ToList();
-
+        var filesToProcess = newFiles.Except(_processedFiles).ToList();
+        int reportCount = ResVolunteerDto.Images.Count();
         if (filesToProcess.Any())
         {
+
+            if (reportCount == 4 || newFiles.Count() > 4 || reportCount + filesToProcess.Count() > 4)
+            {
+                await JS.InvokeVoidAsync("showSweetAlert", "Solo se permiten 4 imágenes", "error");
+                return;
+            }
+
             _selectedFiles.AddRange(filesToProcess);
             _processedFiles.AddRange(filesToProcess);
 
@@ -233,6 +263,7 @@ else
 
             if (!HasFrontImage)
             {
+                FrontImage = await ImageConverter.ConvertSingleImageToStringAsync(newFiles[0]);
                 HasFrontImage = true;
                 StateHasChanged();
             }
