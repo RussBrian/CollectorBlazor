@@ -4,117 +4,134 @@
 @inject IReportsService _reportService
 @inject NavigationManager navManager
 
-<div class="container">
-    <div class="card-custom">
-        <div class="card-header-custom">
-            <h2>@reportDetails.Title</h2>
-            <p class="text-muted">@reportDetails.Date</p>
-        </div>
 
-        @if (reportDetails.ImageUrls.Any())
-        {
-            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @foreach (var (url, index) in reportDetails.ImageUrls.Select((value, i) => (value, i)))
-                    {
-                        <div class="carousel-item @(index == 0 ? "active" : "")">
-                            <img src="@url" class="d-block w-100 carousel-img" alt="Image @index" />
+<div class="container-fluid">
+    <div class="w">
+        <!-- IMAGES PROPERTIES -->
+        <div class="w-100">
+
+            <div class="text-center mt-3">
+
+                <h2 class="title text-white m-4">@reportDetails.Title</h2>
+
+                <section id="carousel-section">
+                    <div id="carouselExampleIndicators" class="carousel slide">
+                        <div class="carousel-indicators">
+                            @for (int i = 0; i < reportDetails.ImageUrls.Count; i++)
+                            {
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" class="@((i == 0) ? "active" : "")" aria-current="true" aria-label="Slide @(i + 1)"></button>
+                            }
                         </div>
-                    }
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < reportDetails.ImageUrls.Count; i++)
+                            {
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="@reportDetails.ImageUrls[i]" class="object-fit-cover w-100" style="height:500px" alt="Image @(i + 1)">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+
+            <div class="info-container">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <span class="ms-3">Nombre: <span class="badge rounded-pill bg-info">@reportDetails.Name</span></span>
+                            <span class="ms-3">Estado: <span class="badge rounded-pill bg-info">@reportDetails.Status</span></span>
+                            <span class="ms-3">
+                                Fecha: <span style="color:forestgreen; font-weight:bold">
+                                    @reportDetails.Date
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="col-10 offset-1 mt-3">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <i class="fa-solid fa-location-dot"></i> Latitud: @reportDetails.Latitude
+                                </div>
+                                <div class="col-md-6">
+                                    <i class="fa-solid fa-location-dot"></i> Longitud: @reportDetails.Longitude
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        }
 
-        <div class="card-body-custom">
-            <div class="section">
-                <h5>Descripción</h5>
-                <p>@reportDetails.Description</p>
-            </div>
+                <hr class="mt-2" />
 
-            <div class="section">
-                <h5>Ubicación</h5>
-                <p>Lat: @reportDetails.Latitude, Lng: @reportDetails.Longitude</p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Descripción</h4>
+                                <p>@reportDetails.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="card-footer-custom">
-            <button class="btn btn-secondary" @onclick="NavigateBack">Volver</button>
         </div>
     </div>
 </div>
 
+
+@* STILOS *@
 <style>
-    .container {
-        max-width: 600px;
-        margin: 20px auto;
-        color: black;
+    .container-fluid {
+        display: flex;
         background-color: #25251D;
-    }
-
-    .card-custom {
-        background-color: #BDBABAF2;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-    }
-
-    .card-header-custom {
-        background-color: #BDBABAF2;
-        padding: 20px;
-        border-bottom: 1px solid #444;
-        text-align: center;
-    }
-
-        .card-header-custom h2 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-    .card-body-custom {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
         padding: 20px;
     }
 
-        .card-body-custom .section {
-            margin-bottom: 15px;
-        }
-
-        .card-body-custom h5 {
-            margin: 0 0 10px;
-            font-size: 1.2rem;
-            color: #e3e3e3;
-        }
-
-    .card-footer-custom {
-        background-color: #3b3b3b;
-        padding: 10px;
-        text-align: right;
+    .info-container {
+        width: 100$;
+        align-items: center;
+        justify-content: center;
     }
 
-    .btn-secondary {
-        background-color: #555;
-        color: #fff;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 5px;
-        cursor: pointer;
+    .title {
+        font-weight: bold
     }
 
-        .btn-secondary:hover {
-            background-color: #777;
-        }
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
 
-    .carousel-img {
-        height: 300px;
+    .col-md-3, .col-7 {
+        flex: 1;
+    }
+
+    .card {
+        width: 100%;
+        margin: 15px;
+    }
+
+    .carousel-inner img {
+        width: 100%;
         object-fit: cover;
-        border-radius: 5px;
+    }
+
+    .text-center {
+        text-align: center;
     }
 </style>
 
