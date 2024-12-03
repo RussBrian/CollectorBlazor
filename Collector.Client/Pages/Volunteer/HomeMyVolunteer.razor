@@ -13,70 +13,72 @@
 
 <div class="first-container">
 
-    @if (isDataLoaded)
+    @if (!isDataLoaded)
     {
-        <div class="d-flex flex-row">
-            <h2 class="title">Voluntariados</h2>
-            <button @onclick="NavigateToCreateReports"
-                    class="btn-new-report btn mt-3">
-                Nuevo Voluntariado
-            </button>
-        </div>
-
-        <main class="secundary-container">
-            @foreach (var volunteer  in volunteers)
-            {
-                <div class="card card-content">
-
-                    <img class="card-img-top" style="width:100%; height:250px;" src="@(volunteer.ImageUrls.Any() ? volunteer.ImageUrls[0]
-                        : "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow")" />
-                    <div class="card-body">
-                        <div class="card-body-container">
-                            <h6>@volunteer.InstitutionName</h6>
-                            <p>@volunteer.Name</p>
-                        </div>
-                        <div class="date-container">
-                            <p>
-                                Privacidad:
-                                @if (!volunteer.IsPrivate)
-                                {
-                                    <p>Publico</p>
-                                }
-                                else
-                                {
-                                    <p>Privado</p>
-                                }
-                            </p>
-                            <p>@volunteer.VolunteerDate</p>
-                        </div>
-                        <div class="btn-container">
-                            <button @onclick="() => GetReportById(volunteer.VolunteerId)" class="btn btn-details">
-                                Ver más detalles
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                                    <path d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            }
-        </main>
-
-        <div class="pagination-container m-4">
-            <MudPagination Class="custom-pagination" Size="Size.Large" Rectangular="true" Variant="Variant.Filled" Count="6" />
+        <!-- Mostrar un estado de carga mientras se obtienen los datos -->
+        <div class="loading-container">
+            <div class="spinner-border" role="status">
+            </div>
+            <h4 style="color:white; margin-top:8px;">Cargando datos...</h4>
         </div>
     }
     else
     {
-        <h2 class="title">Voluntariados</h2>
-        <div class="container-no-reports col-6 offset-12 mt-3">
-            <div class="text-center">
-                <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
-                <h5 class="card-title mt-2 text-secondary">No se han encontrado voluntariados registrados ¿desea crear uno?</h5>
-                <a href="/User/Create/Reports" class="btn-new-report btn mt-2">Nuevo Voluntariado</a>
+        @if (volunteers.Count() != 0)
+        {
+            <main class="secundary-container">
+                @foreach (var volunteer in volunteers)
+                {
+                    <div class="card card-content">
+
+                        <img class="card-img-top" style="width:100%; height:250px;" src="@(volunteer.ImageUrls.Any() ? volunteer.ImageUrls[0]
+                        : "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow")" />
+                        <div class="card-body">
+                            <div class="card-body-container">
+                                <h6>@volunteer.InstitutionName</h6>
+                                <p>@volunteer.Name</p>
+                            </div>
+                            <div class="date-container">
+                                    Privacidad:
+                                    @if (!volunteer.IsPrivate)
+                                    {
+                                    <p>Publico</p>
+                                    }
+                                    else
+                                    {
+                                    <p>Privado</p>
+                                    }
+                                <p>@volunteer.VolunteerDate</p>
+                            </div>
+                            <div class="btn-container">
+                                <button @onclick="() => GetReportById(volunteer.VolunteerId)" class="btn btn-details">
+                                    Ver más detalles
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </main>
+        }
+        else
+        {
+            <div class="pagination-container m-4">
+                <MudPagination Class="custom-pagination" Size="Size.Large" Rectangular="true" Variant="Variant.Filled" Count="6" />
             </div>
-        </div>
+
+            <h2 class="title">Voluntariados</h2>
+            <div class="container-no-reports col-6 offset-12 mt-3">
+                <div class="text-center">
+                    <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
+                    <h5 class="card-title mt-2 text-secondary">No se han encontrado voluntariados registrados ¿desea crear uno?</h5>
+                    <a href="/User/Create/Reports" class="btn-new-report btn mt-2">Nuevo Voluntariado</a>
+                </div>
+            </div>
+        }
     }
 </div>
 
@@ -84,6 +86,48 @@
     .custom-pagination .mud-pagination-item {
         color: white;
     }
+
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .spinner-border {
+        color: #7B885B;
+        font-weight: bold;
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .custom-textfield {
+        border: 2px solid #767572;
+        border-radius: 0.5rem;
+        padding: 8px;
+        font-size: 14px;
+        color: #37490B;
+        background-color: #f9f9f9;
+        width: 100%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-textfield:focus {
+        outline: none;
+        border-color: #515B3B;
+        box-shadow: 0 0 5px #515B3B;
+    }
+
+    .edit-form-style {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+
 </style>
 
 @code {
@@ -100,8 +144,7 @@
     {
         volunteers = await _volunteerService.GetAllVolunteers(pagination);
         isDataLoaded = true;
-        await base.OnInitializedAsync();
     }
 
-    private void GetReportById(int Id) => navManager.NavigateTo($"/Reports/Details/{Id}");
+    private void GetReportById(int Id) => navManager.NavigateTo($"/Volunteer/Details/{Id}");
 }
