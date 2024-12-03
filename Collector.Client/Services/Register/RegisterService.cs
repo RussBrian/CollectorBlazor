@@ -65,13 +65,6 @@ namespace Collector.Client.Services.Register
             return JsonSerializer.Deserialize<ReqUserDto>(responseData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        //public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
-        //{
-
-
-        //    return await _httpExtension.CustomFormDataAsync<ReqUserDto, ReqUserDto>($"{_appOptions.UrlRegisterUserService}/register", request);
-        //}
-
         public async Task SendCodeToEmail(UserEmailDto email)
         { 
             _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
