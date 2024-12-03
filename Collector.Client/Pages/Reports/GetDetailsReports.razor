@@ -11,7 +11,6 @@
             <p class="text-muted">@reportDetails.Date</p>
         </div>
 
-        <!-- Carrusel de imágenes -->
         @if (reportDetails.ImageUrls.Any())
         {
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -34,7 +33,6 @@
             </div>
         }
 
-        <!-- Información del reporte -->
         <div class="card-body-custom">
             <div class="section">
                 <h5>Descripción</h5>
@@ -54,7 +52,6 @@
 </div>
 
 <style>
-    /* Estilo general del contenedor */
     .container {
         max-width: 600px;
         margin: 20px auto;
@@ -62,7 +59,6 @@
         background-color: #25251D;
     }
 
-    /* Estilo para el card */
     .card-custom {
         background-color: #BDBABAF2;
         border-radius: 10px;
@@ -115,7 +111,6 @@
             background-color: #777;
         }
 
-    /* Estilo para el carrusel */
     .carousel-img {
         height: 300px;
         object-fit: cover;

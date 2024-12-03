@@ -1,12 +1,18 @@
 ﻿@using Collector.Client.Dtos.Login
-@using Collector.Client.Components.Shared
+@using Collector.Client.Helpers
+@using Collector.Client.Validations
 @using MudBlazor
 @inherits ComponentBase;
 
 <div class="step2-container">
     <MudForm Model="reqUserDto">
         <label class="custom-label">Teléfono</label>
-        <MudTextField @bind-Value="@reqUserDto.Phone" Required="true" AutoFocus="true" Variant="Variant.Outlined" Style="color:white;" />
+        <MudTextField @bind-Value="@reqUserDto.Phone"
+                      AutoFocus="true"
+                      Immediate="true"
+                      For="@(() => reqUserDto.Phone)"
+                      Variant="Variant.Outlined"
+                      Style="color:white;" />
 
         <div class="d-flex justify-content-between mt-5">
             <label class="custom-label">Contraseña</label>
@@ -27,12 +33,15 @@
             </MudTooltip>
         </div>
         <MudTextField @bind-Value="reqUserDto.Password"
+                      Immediate="true"
+                      For="@(() => reqUserDto.Password)"
                       Variant="Variant.Outlined"
                       InputType="@PasswordInput"
                       Adornment="Adornment.End"
                       AdornmentIcon="@PasswordInputIcon"
                       OnAdornmentClick="TogglePasswordVisibility"
                       Style="color:white;" />
+
         <div class="d-flex justify-content-between mt-5">
             <label class="custom-label">Confirmar Contraseña</label>
             <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
@@ -45,9 +54,12 @@
             </MudTooltip>
         </div>
         <MudTextField @bind-Value="reqUserDto.ConfirmPassword"
+                      Immediate="true"
+                      For="@(() => reqUserDto.ConfirmPassword)"
                       Variant="Variant.Outlined"
                       InputType="InputType.Password"
                       Style="color:white;" />
+        <p class="custom-message-required">El campo es requerido.</p>
     </MudForm>
 </div>
 
@@ -62,10 +74,26 @@
             color: #ef4444;
             margin-right: 0.25rem;
         }
+
+    .custom-message-required {
+        color: #7B885B;
+        font-weight: bold;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+    }
+
+        .custom-message-required::before {
+            content: '*';
+            color: #ef4444;
+            margin-right: 0.25rem;
+        }
 </style>
 
 @code {
-    #region
+    [Parameter]
+    public ReqUserDto reqUserDto { get; set; }
+
+    #region VisibilityMethod
     private InputType PasswordInput = InputType.Password;
     private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
@@ -76,8 +104,4 @@
         PasswordInputIcon = isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
     }
     #endregion
-
-    [Parameter]
-    public ReqUserDto reqUserDto { get; set; }
-
 }

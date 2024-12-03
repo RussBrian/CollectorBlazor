@@ -30,22 +30,22 @@ namespace Collector.Client.Services.Volunteer
         #region Controlador de Volunteer
 
         #region Form
-        public async Task<ResVolunteerDto?> CreateVolunteer(ReqVolunteerDto request)
+        public async Task<ResVolunteerDto?> CreateVolunteer(ResVolunteerDto request)
         {
-            var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
+            //var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
-            string user = userInSession.Value?.UserId ?? string.Empty;
+            //string user = userInSession.Value?.UserId ?? string.Empty;
 
-            return await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
+            return await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
         }
 
-        public async Task<ResVolunteerDto?> UpdateVolunteer(ReqVolunteerDto request)
+        public async Task<ResVolunteerDto?> UpdateVolunteer(ResVolunteerDto request)
         {
             var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
             string user = userInSession.Value?.UserId ?? string.Empty;
 
-            return await _httpExtension.CustomPutFormDataAsync<ResVolunteerDto, ReqVolunteerDto>(_appOptions.UrlVolunteerService, request);
+            return await _httpExtension.CustomPutFormDataAsync<ResVolunteerDto, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
         }
 
         #endregion

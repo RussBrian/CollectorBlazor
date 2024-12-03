@@ -1,4 +1,6 @@
-﻿namespace Collector.Client.Dtos.Volunteer
+﻿using System.Text.Json.Serialization;
+
+namespace Collector.Client.Dtos.Volunteer
 {
     public class ReqVolunteerDto
     {
