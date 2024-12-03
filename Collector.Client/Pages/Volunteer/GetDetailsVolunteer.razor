@@ -1,8 +1,8 @@
-﻿@page "/Reports/Details/{Id:int}"
-@using Collector.Client.Dtos.Reports
-@using Collector.Client.Services.Reports
-@inject IReportsService _reportService
-@inject NavigationManager navManager
+﻿@page "/Volunteer/Details/{Id:int}"
+@using Collector.Client.Dtos.Volunteer
+@using Collector.Client.Services.Volunteer
+@inject IVolunteerService _volunteerService;
+@inject NavigationManager navManager;
 
 <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 
@@ -11,23 +11,31 @@
         <div class="left-container">
 
             <div class="header-container">
-                <p style="font-weight:bold; font-size:20px">@reportDetails.Title</p>
-                <img src="/ImagenCollector.jpg" class="img-reporter" />
-                <p style="font-weight:bold;">@reportDetails.Name</p>
+                <p style="font-weight:bold; font-size:20px">@ResVolunteer.InstitutionName</p>
+                <img class="img-volunteer" src="@(!string.IsNullOrWhiteSpace(ResVolunteer.UserImage) ? "./ImagenCollector.jpg" : ResVolunteer.UserImage)" />
+                <p style="font-weight:bold;">@ResVolunteer.Name</p>
             </div>
 
             <p class="brand">Detalles</p>
             <div class="details-container">
-                <span class="badge bg-secondary">Status - @reportDetails.Status</span>
-                <span class="badge bg-secondary mt-2">Fecha - @reportDetails.Date</span>
+                <span class="badge bg-secondary">Privacidad - @if (!ResVolunteer.IsPrivate)
+                    {
+                        <p> Privado</p>
+                    }
+                    else
+                    {
+                        <p> Publico</p>
+                    }
+                </span>
+                <span class="badge bg-secondary mt-2">Fecha - @ResVolunteer.VolunteerDate</span>
                 <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
-                    Ubicación - <i class="fa-solid fa-location-dot" style="color: white;"></i>
+                    Ubicación -  <i class="fa-solid fa-location-dot" style="color: white;"></i>
                 </a>
             </div>
 
             <p class="brand">Descripción</p>
             <div class="description-container">
-                <p>@reportDetails.Description</p>
+                <p>@ResVolunteer.Details</p>
             </div>
         </div>
         <div class="right-container">
@@ -41,9 +49,9 @@
             <div class="carrussel-container">
 
                 <h4 style="font-weight:bold; font-size:larger; margin-bottom:10px">Imágenes del reporte</h4>
-              
-                <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@reportDetails.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;" 
-                ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
+
+                <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@ResVolunteer.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;"
+                             ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
                     <ItemTemplate>
                         <div class="d-flex flex-column flex-column justify-center" style="height:100%">
                             <img src="@context" alt="Imagen del reporte" style="max-height:100%; max-width:100%;" />
@@ -55,9 +63,10 @@
     </div>
 </div>
 
+
 @code {
+    public ResVolunteerDto ResVolunteer { get; set; } = new();
     [Parameter] public int Id { get; set; }
-    private ResReportsGetById reportDetails = new();
     public Uri? linkUri { get; set; }
     private MudCarousel<string> _carousel;
     private bool _arrows = true;
@@ -67,17 +76,16 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var report = await _reportService.GetByIdReports(Id);
-        reportDetails = report.Value[0] ?? new ResReportsGetById();
-        linkUri = new($"https://www.google.com/maps?q={reportDetails.Latitude},{reportDetails.Longitude}");
+        ResVolunteer = await _volunteerService.GetVolunteerById(Id);
+        linkUri = new($"https://www.google.com/maps?q={ResVolunteer.Latitude},{ResVolunteer.Longitude}");
         await base.OnInitializedAsync();
     }
 
+    #region NavigigteBack
     private void NavigateBack()
     {
-        navManager.NavigateTo("/User/Reports");
+        navManager.NavigateTo("/Volunteers");
     }
-
-
+    #endregion
 
 }

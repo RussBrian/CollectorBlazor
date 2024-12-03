@@ -69,7 +69,6 @@ namespace Collector.Client.Helpers
                 Headers = new HeaderDictionary(),
                 ContentType = file.ContentType
             };
-            
         }
     }
 }
