@@ -53,26 +53,27 @@
     width: 100%; 
 }
 
-
 .btn-new-report-container {
     justify-content: space-between
 }
 
+/*Card-Related-Styles*/
+
 .btn-container {
     width: 100%;
     display: flex;
-    align-content: center;
     justify-content: center;
+    margin:8px; 
 }
-
-/*Card-Related-Styles*/
 
 .card-body-container h6{
     font-weight:bold
 }
 
 .card-content {
+    height: 100%;
     display: flex;
+    justify-content: space-between; 
     flex-direction: column;
     background-color: #f4f4f4;
     border-radius: 10px;
@@ -81,10 +82,11 @@
 }
 
 .card-body-container {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-items:center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
 }
 
 .card-body-container p{
@@ -106,11 +108,10 @@
 
 .btn-details {
     background-color: #4C673C;
-    text-align:center;
+    text-align: center;
     font-size: 12px;
     width: 75%;
-    height:40px;
-    margin: 0;
+    height: 40px;
     color: whitesmoke;
     font-weight: bold;
     border-radius: 10px;

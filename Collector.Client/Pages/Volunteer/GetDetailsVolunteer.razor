@@ -1,0 +1,122 @@
+﻿@page "/Volunteer/Details/{Id:int}"
+@using Collector.Client.Dtos.Login
+@using Collector.Client.Dtos.Volunteer
+@using Collector.Client.Services.Volunteer
+@inject IVolunteerService _volunteerService;
+@inject NavigationManager navManager;
+@inject ProtectedBrowserStorage _protectedBrowserStorage;
+
+<script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+
+<div class="primary-container">
+    <div class="card-container">
+        <div class="left-container">
+
+            <div class="header-container">
+                <p style="font-weight:bold; font-size:20px">@ResVolunteer.InstitutionName</p>
+                <img class="img-volunteer" src="@(!string.IsNullOrWhiteSpace(ResVolunteer.UserImage) ? "./ImagenCollector.jpg" : ResVolunteer.UserImage)" />
+                <p style="font-weight:bold;">@ResVolunteer.Name</p>
+            </div>
+
+            <p class="brand">Detalles</p>
+            <div class="details-container">
+                <span class="badge bg-secondary">
+                    Privacidad - @if (!ResVolunteer.IsPrivate)
+                    {
+                        <p> Privado</p>
+                    }
+                    else
+                    {
+                        <p> Publico</p>
+                    }
+                </span>
+                <span class="badge bg-secondary mt-2">Fecha - @ResVolunteer.VolunteerDate</span>
+                <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
+                    Ubicación -  <i class="fa-solid fa-location-dot" style="color: white;"></i>
+                </a>
+            </div>
+
+            <p class="brand">Descripción</p>
+            <div class="description-container">
+                <p>@ResVolunteer.Details</p>
+            </div>
+        </div>
+        <div class="right-container">
+
+            <div class="close-button">
+                <button onclick="@NavigateBack">
+                    <i class="fa-solid fa-xmark fa-xl" style="color: #ededed;"></i>
+                </button>
+            </div>
+
+            <div class="carrussel-container">
+
+                <h4 style="font-weight:bold; font-size:larger; margin-bottom:10px">Imágenes del reporte</h4>
+
+                <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@ResVolunteer.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;"
+                             ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
+                    <ItemTemplate>
+                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                            <img src="@context" alt="Imagen del reporte" style="max-height:100%; max-width:100%;" />
+                        </div>
+                    </ItemTemplate>
+                </MudCarousel>
+
+                <div class="button-send-container">
+                    <MudButton Variant="Variant.Filled"
+                               ButtonType="ButtonType.Submit"
+                               Style="background-color:#515B3B; margin-bottom:10px; color:white; width:275px;">
+                        Inscribirme
+                    </MudButton>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .button-send-container {
+        margin-top: 50px;
+    }
+</style>
+
+@code {
+    public ResVolunteerDto ResVolunteer { get; set; } = new();
+    [Parameter] public int Id { get; set; }
+    public Uri? linkUri { get; set; }
+    private MudCarousel<string> _carousel;
+    private bool _arrows = true;
+    private bool _bullets = true;
+    private bool _enableSwipeGesture = true;
+    private int selectedIndex = 0;
+
+    protected async override Task OnInitializedAsync()
+    {
+        ResVolunteer = await _volunteerService.GetVolunteerById(Id);
+        linkUri = new($"https://www.google.com/maps?q={ResVolunteer.Latitude},{ResVolunteer.Longitude}");
+        await base.OnInitializedAsync();
+    }
+
+    #region NavigigteBack
+    private void NavigateBack()
+    {
+        navManager.NavigateTo("/Volunteers");
+    }
+    #endregion
+
+    #region VolunteerInscription
+    private async Task EnList()
+    {
+        var user = await _protectedBrowserStorage.GetAsync<ResLoginDto>("session");
+
+        var userVolunteer = new ReqUserVolunteerDto
+        {
+           UserId = user.Value.UserId,
+           VolunteerId = Id
+        };
+
+        await _volunteerService.RegisterUserInVolunteer(userVolunteer);
+    }
+    #endregion
+
+}

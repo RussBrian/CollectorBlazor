@@ -6,8 +6,10 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization;
 @using System.Security.Claims
+@using System.Text.Json
 @inject IReportsService reportService;
 @inject NavigationManager navManager;
+@inject HttpClient _httpClient;
 @inject Collector.Client.SessionHelpers.SessionManager _sessionManager;
 
 @{
@@ -15,75 +17,99 @@
 }
 
 <div class="first-container">
-
-    @if (isDataLoaded)
+    @if (!isDataLoaded)
     {
-        <div class="d-flex flex-row">
-            <h2 class="title">REPORTES</h2>
-            <button @onclick="NavigateToCreateReports"
-                    class="btn-new-report btn mt-3">
-                Nuevo Reporte
-            </button>
-        </div>
-
-        <main class="secundary-container">
-            @foreach (var reports in reportDtos)
-            {
-                <div class="card card-content">
-
-                        <img class="card-img-top" style="width:100%; height:250px;"  src="@(reports.ImageUrls.Any() ? reports.ImageUrls[0] 
-                        : "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1sCkwCuiG0ibXP5xmF61qsQQ80Z0PE4MC7jjQw1PyG1oAKF-QFEKwoBnc7_aDBudFVJftO0zACm6EVpjIrnQYjRz0aHVJosmehRm5Ow")"/>
-                    <div class="card-body">
-                        <div class="card-body-container">
-                            <h6>@reports.Title</h6>
-                            <p>@reports.Description</p>
-                        </div>
-                        <div class="date-container">
-                            <p>@reports.Status</p>
-                            <p>@reports.Date</p>
-                        </div>
-                        <div class="btn-container">
-                            <button @onclick="() => GetReportById(reports.Id)" class="btn btn-details">
-                                Ver más detalles
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                                    <path d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            }
-        </main>
-
-
-        <div class="pagination-container m-4">
-            <MudPagination Class="custom-pagination" Size="Size.Large" Rectangular="true" Variant="Variant.Filled" Count="6" />
+        <!-- Mostrar un estado de carga mientras se obtienen los datos -->
+        <div class="loading-container">
+            <div class="spinner-border" role="status">
+            </div>
+            <h4 style="color:white; margin-top:8px;">Cargando datos...</h4>
         </div>
     }
     else
     {
-        <h2 class="title">REPORTES</h2>
-        <div class="container-no-reports col-6 offset-12 mt-3">
-            <div class="text-center">
-                <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
-                <h5 class="card-title mt-2 text-secondary">No se han encontrado reportes registrados ¿desea crear uno?</h5>
-                <a href="/User/Create/Reports" class="btn-new-report btn mt-2">Nuevo Reporte</a>
+        @if (reportDtos.Count() != 0)
+        {
+            <div class="d-flex flex-row">
+                <h2 class="title">REPORTES</h2>
+                <button @onclick="NavigateToCreateReports"
+                        class="btn-new-report btn mt-3">
+                    Nuevo Reporte
+                </button>
             </div>
-        </div>
+
+            <main class="secundary-container">
+                @foreach (var reports in reportDtos)
+                {
+                    <div class="card card-content">
+                        <img class="card-img-top" style="width:100%; height:250px;"
+                             src="@(reports.ImageUrls.Any() ? reports.ImageUrls[0]
+                         : "https://www.shutterstock.com/image-photo/empty-streets-sidewalks-5th-avenue-600nw-2459090389.jpg")" />
+                        <div class="card-body">
+                            <div class="card-body-container">
+                                <h6>@reports.Title</h6>
+                                <p>@reports.Description</p>
+                            </div>
+                            <div class="date-container">
+                                <p>@reports.Status</p>
+                                <p>@reports.Date</p>
+                            </div>
+                        </div>
+                        <div class="btn-container">
+                            <button @onclick="() => GetReportById(reports.Id)"
+                                    class="btn btn-details">
+                                Ver más detalles
+                                <i class="fa-solid fa-arrow-right fa-lg" style="color: #f0f0f0;"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </main>
+
+            <div class="m-3">
+            </div>
+
+        }
+        else
+        {
+            <h2 class="title-noreports">REPORTES</h2>
+            <div class="container-no-reports col-6 offset-12 mt-3">
+                <div class="text-center">
+                    <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
+                    <h5 class="card-title mt-2 text-secondary">No se han encontrado reportes registrados ¿desea crear uno?</h5>
+                    <a href="/User/Create/Reports" class="btn-new-report-no-report btn mt-2">Nuevo Reporte</a>
+                </div>
+            </div>
+        }
     }
 </div>
 
 <style>
-    .custom-pagination .mud-pagination-item {
-        color: white;
+    .title {
+        margin-bottom: 20px; /* Separación del título */
+    }
+
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .spinner-border {
+        color: #7B885B;
+        font-weight: bold;
+        width: 3rem;
+        height: 3rem;
     }
 </style>
 
 @code {
     private List<ResReportsDto> reportDtos { get; set; } = new();
-    private PaginationDto pagination { set; get; } = new();
     private bool isDataLoaded = false;
+    private int PaginaActual = 1;
+    private int PaginasTotales;
 
     public void NavigateToCreateReports()
     {
@@ -93,14 +119,13 @@
     protected async override Task OnInitializedAsync()
     {
         await GetUserReports();
-        await base.OnInitializedAsync();
+        isDataLoaded = true;
     }
 
     private void GetReportById(int Id) => navManager.NavigateTo($"/Reports/Details/{Id}");
 
     private async Task GetUserReports(string UserId = "9zeirWQJnldZ2qizLbalnxjxpQh2")
     {
-        reportDtos = await reportService.GetAllReportsByUserId(UserId, pagination);
-        isDataLoaded = true;
+        reportDtos = await reportService.GetAllReportsByUserId(UserId, new PaginationDto());
     }
 }

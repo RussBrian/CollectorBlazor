@@ -44,7 +44,7 @@
     justify-content: center;
     margin-top: 10px;
     margin-bottom: 40px;
-    color: whitesmoke;
+    color: white;
 }
 /*OutSideCard-Elements*/
 
@@ -128,3 +128,36 @@
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     }
 /*Card-Related-Styles*/
+
+/*No Reports-Styles*/
+
+.btn-new-report-no-report {
+    background-color: #7B885B;
+    height: 45px;
+    width: 200px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+.title-noreports {
+    color: white;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-reports-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.container-no-reports {
+    max-width: 500px; 
+}
+
+/*No Reports-Styles*/

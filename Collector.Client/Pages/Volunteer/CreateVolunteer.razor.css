@@ -5,10 +5,15 @@
 
 .title {
     font-weight: bold;
-    color: #FEFEFE91;
+    color: white;
+}
+
+.tooltip-container {
+    display: flex;
 }
 
 .map-container {
+    margin-top: 8px;
     display: flex;
     justify-content: space-evenly;
     align-items: flex-start;
@@ -63,10 +68,14 @@
 
 .card-body-container {
     display: flex;
-    background-color: #BDBABAF2;
+    background-color: #EDEDED;
     flex-direction: column;
     width: 50%;
     min-height: 300px;
     margin: 20px auto;
     border-radius: 20px;
+}
+
+.button-send-container {
+    margin-bottom: 10px;
 }

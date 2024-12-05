@@ -4,128 +4,72 @@
 @inject IReportsService _reportService
 @inject NavigationManager navManager
 
-<div class="container">
-    <div class="card-custom">
-        <div class="card-header-custom">
-            <h2>@reportDetails.Title</h2>
-            <p class="text-muted">@reportDetails.Date</p>
-        </div>
+<script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 
-        @if (reportDetails.ImageUrls.Any())
-        {
-            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @foreach (var (url, index) in reportDetails.ImageUrls.Select((value, i) => (value, i)))
-                    {
-                        <div class="carousel-item @(index == 0 ? "active" : "")">
-                            <img src="@url" class="d-block w-100 carousel-img" alt="Image @index" />
-                        </div>
-                    }
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+<div class="primary-container">
+    <div class="card-container">
+        <div class="left-container">
+
+            <div class="header-container">
+                <p style="font-weight:bold; font-size:20px">@reportDetails.Title</p>
+                <img src="/ImagenCollector.jpg" class="img-reporter" />
+                <p style="font-weight:bold;">@reportDetails.Name</p>
             </div>
-        }
 
-        <div class="card-body-custom">
-            <div class="section">
-                <h5>Descripción</h5>
+            <p class="brand">Detalles</p>
+            <div class="details-container">
+                <span class="badge bg-secondary">Status - @reportDetails.Status</span>
+                <span class="badge bg-secondary mt-2">Fecha - @reportDetails.Date</span>
+                <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
+                    Ubicación - <i class="fa-solid fa-location-dot" style="color: white;"></i>
+                </a>
+            </div>
+
+            <p class="brand">Descripción</p>
+            <div class="description-container">
                 <p>@reportDetails.Description</p>
             </div>
-
-            <div class="section">
-                <h5>Ubicación</h5>
-                <p>Lat: @reportDetails.Latitude, Lng: @reportDetails.Longitude</p>
-            </div>
         </div>
+        <div class="right-container">
 
-        <div class="card-footer-custom">
-            <button class="btn btn-secondary" @onclick="NavigateBack">Volver</button>
+            <div class="close-button">
+                <button onclick="@NavigateBack">
+                    <i class="fa-solid fa-xmark fa-xl" style="color: #ededed;"></i>
+                </button>
+            </div>
+
+            <div class="carrussel-container">
+
+                <h4 style="font-weight:bold; font-size:larger; margin-bottom:10px">Imágenes del reporte</h4>
+              
+                <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@reportDetails.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;" 
+                ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
+                    <ItemTemplate>
+                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                            <img src="@context" alt="Imagen del reporte" style="max-height:100%; max-width:100%;" />
+                        </div>
+                    </ItemTemplate>
+                </MudCarousel>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-    .container {
-        max-width: 600px;
-        margin: 20px auto;
-        color: black;
-        background-color: #25251D;
-    }
-
-    .card-custom {
-        background-color: #BDBABAF2;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-    }
-
-    .card-header-custom {
-        background-color: #BDBABAF2;
-        padding: 20px;
-        border-bottom: 1px solid #444;
-        text-align: center;
-    }
-
-        .card-header-custom h2 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-    .card-body-custom {
-        padding: 20px;
-    }
-
-        .card-body-custom .section {
-            margin-bottom: 15px;
-        }
-
-        .card-body-custom h5 {
-            margin: 0 0 10px;
-            font-size: 1.2rem;
-            color: #e3e3e3;
-        }
-
-    .card-footer-custom {
-        background-color: #3b3b3b;
-        padding: 10px;
-        text-align: right;
-    }
-
-    .btn-secondary {
-        background-color: #555;
-        color: #fff;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-        .btn-secondary:hover {
-            background-color: #777;
-        }
-
-    .carousel-img {
-        height: 300px;
-        object-fit: cover;
-        border-radius: 5px;
-    }
-</style>
-
 @code {
     [Parameter] public int Id { get; set; }
     private ResReportsGetById reportDetails = new();
+    public Uri? linkUri { get; set; }
+    private MudCarousel<string> _carousel;
+    private bool _arrows = true;
+    private bool _bullets = true;
+    private bool _enableSwipeGesture = true;
+    private int selectedIndex = 0;
 
     protected async override Task OnInitializedAsync()
     {
         var report = await _reportService.GetByIdReports(Id);
         reportDetails = report.Value[0] ?? new ResReportsGetById();
+        linkUri = new($"https://www.google.com/maps?q={reportDetails.Latitude},{reportDetails.Longitude}");
         await base.OnInitializedAsync();
     }
 
