@@ -8,6 +8,7 @@ public interface IRegisterService
     Task<ReqUserDto?> CreateUserAsync(ReqUserDto request);
     Task SendCodeToEmail(UserEmailDto email);
     Task<(string, bool)> VerifyCode(UserEmailDto verifyCode);
-
     Task ConfirmEmail(UserEmailDto confirmEmail);
+    Task<ReqUserDto?> GetUserByEmail(string email);
+    Task<ReqUserDto?> GetUserByDocumentNumber(string documentNumber);
 }

@@ -106,6 +106,35 @@
     {
         try
         {
+            var userEmailTask = RegisterService.GetUserByEmail(reqUserDto.Email);
+            var userDocumentTask = RegisterService.GetUserByDocumentNumber(reqUserDto.Identification);
+
+            var userInDb = await Task.WhenAll(userEmailTask, userDocumentTask);
+
+            var userInDbEmail = userInDb[0];
+            var userInDbDocument = userInDb[1];
+
+
+
+            if (userInDbEmail != null || userInDbDocument != null)
+            {
+                string message = string.Empty;
+                if (userInDbEmail != null)
+                {
+                    message = $"Ya esta registrado el correo electrónico - {reqUserDto.Email}";
+                }
+                else if (userInDbDocument != null)
+                {
+                    message = $"Ya esta registrado el número de documento - {reqUserDto.Identification}";
+                }
+
+                await JSRuntime.InvokeVoidAsync("showSweetAlert", message, "error");
+
+                return;
+            }
+
+
+
             var userEmail = new UserEmailDto
             {
                 Email = reqUserDto.Email,
