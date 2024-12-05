@@ -133,11 +133,19 @@
     {
         var userVolunteer = new ReqUserVolunteerDto
             {
-                UserId = "9zeirWQJnldZ2qizLbalnxjxpQh2",
-                VolunteerId = Id
+                UserId = "NYdC0VO2GdRNaTNatCSzwVfDj9b2",
+                VolunteerId = Id,
+                VolunteerCode = null
             };
 
-        await _volunteerService.RegisterUserInVolunteer(userVolunteer);
+        var(message, isSuccess) = await _volunteerService.RegisterUserInVolunteer(userVolunteer);
+
+        if(message != null && !isSuccess)
+        {
+            await JS.InvokeVoidAsync("showSweetAlert", $"{message}", "error");
+            return;
+        }
+
         await JS.InvokeVoidAsync("showSweetAlert", "Te has registrado correctamente en el voluntariado", "success");
     }
     #endregion
