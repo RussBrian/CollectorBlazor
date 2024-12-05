@@ -25,15 +25,16 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
         {
             using var client = new HttpClient();
-            var data = new HttpRequestMessage(HttpMethod.Post, "http://collectord-001-site2.ktempurl.com/api/Authentication/register");
-            var formDataContent = new MultipartFormDataContent();
-
-            formDataContent.Add(new StringContent(request.FirstName ?? string.Empty), "firstName");
-            formDataContent.Add(new StringContent(request.LastName ?? string.Empty), "lastName");
-            formDataContent.Add(new StringContent(request.UserName ?? string.Empty), "username");
-            formDataContent.Add(new StringContent(request.Phone ?? string.Empty), "phone");
-            formDataContent.Add(new StringContent(request.Email ?? string.Empty), "email");
-            formDataContent.Add(new StringContent(request.Identification ?? string.Empty), "identification");
+            var data = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5004/api/Authentication/register");
+            var formDataContent = new MultipartFormDataContent
+            {
+                { new StringContent(request.FirstName ?? string.Empty), "firstName" },
+                { new StringContent(request.LastName ?? string.Empty), "lastName" },
+                { new StringContent(request.UserName ?? string.Empty), "username" },
+                { new StringContent(request.Phone ?? string.Empty), "phone" },
+                { new StringContent(request.Email ?? string.Empty), "email" },
+                { new StringContent(request.Identification ?? string.Empty), "identification" }
+            };
 
             if (request.File != null)
             {

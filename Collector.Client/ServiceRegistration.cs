@@ -2,6 +2,7 @@
 using Collector.Client.Services.Password;
 using Collector.Client.Services.Register;
 using Collector.Client.Services.Reports;
+using Collector.Client.Services.User;
 using Collector.Client.Services.Volunteer;
 using Collector.Client.SessionHelpers;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -27,6 +28,7 @@ namespace Collector.Client
             services.AddScoped<IReportsService, ReportsService>();
             services.AddHttpClient();
             
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILoginService, LoginService>();
 
             

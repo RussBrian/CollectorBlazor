@@ -1,4 +1,4 @@
-﻿@page "/RegisterUser/{identification}/{email}/{code}/{isInstitution}"
+﻿@page "/RegisterUser/{identification}/{email}/{code}/{_IsInstitution:bool}"
 @using Collector.Client.Components.Shared
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Dtos.User
@@ -17,7 +17,14 @@
 
         <div class="step-header">
             <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-3</MudText>
-            <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Registrar Persona</MudText>
+            @if (!_IsInstitution)
+            {
+                <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Registrar Persona</MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-right: 1px;">Registrar Insitutución</MudText>
+            }
         </div>
 
         <div>
@@ -27,16 +34,16 @@
         @switch (step)
         {
             case 1:
-                <Step1UserReg reqUserDto="reqUserDto"  />
+                <Step1UserReg reqUserDto="reqUserDto" _IsInstitution="_IsInstitution" />
                 break;
             case 2:
-                <Step2UserReg reqUserDto="reqUserDto" />
+                <Step2UserReg reqUserDto="reqUserDto"/>
                 break;
             case 3:
-                <Step3UserReg reqUserDto="reqUserDto" />
+                <Step3UserReg reqUserDto="reqUserDto"/>
                 break;
             default:
-                <Step1UserReg reqUserDto="reqUserDto" />
+                <Step1UserReg reqUserDto="reqUserDto"/>
                 break;
         }
 
@@ -80,7 +87,7 @@
     [Parameter]
     public string code { get; set; } = string.Empty;
     [Parameter]
-    public string isInstitution { get; set; } = string.Empty;
+    public bool _IsInstitution { get; set; }
 
     #region Register Method
     private async Task RegisterUserAsync()
@@ -90,7 +97,6 @@
             var decodeIdentify = Convert.FromBase64String(identification);
             var decodeEmail = Convert.FromBase64String(email);
             var decodeCode = Convert.FromBase64String(code);
-            var decodeIsInstitution = Convert.FromBase64String(isInstitution);
 
             string resultEmail = Encoding.UTF8.GetString(decodeEmail);
 
@@ -102,10 +108,8 @@
 
             reqUserDto.Email = resultEmail;
             reqUserDto.Identification = Encoding.UTF8.GetString(decodeIdentify);
-            bool parsedIsInstitution = bool.TryParse(Encoding.UTF8.GetString(decodeIsInstitution), out bool result) && result;
 
-
-            reqUserDto.RolId = parsedIsInstitution ? 7 : 8;
+            (reqUserDto.RolId, reqUserDto.LastName) = _IsInstitution ? (7, "Institution") : (8, reqUserDto.LastName);
 
             var response = await _registerService.CreateUserAsync(reqUserDto);
             if (response.IsSuccess)

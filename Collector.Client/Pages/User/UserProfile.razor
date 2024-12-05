@@ -1,7 +1,191 @@
-﻿<h3>UserProfile</h3>
+﻿@page "/User/Profile"
+@using Collector.Client.Dtos.User
+@using Collector.Client.Dtos.Volunteer
+@using Collector.Client.Helpers
+@using Collector.Client.Services.User
+@inject IJSRuntime JS;
+@inject IUserService _userService;
 
+<div class="primary-container">
+    <main class="secondary-container">
+        <EditForm Model="@UserUpdate" class="edit-form-style" OnValidSubmit="OnSubmit">
+            <h3 class="title">¡Actualiza tu información aquí!</h3>
+            <div class="card-body-container">
 
+                <div class="img-container">
+                    <button type="button" class="rounded-button" @onclick="TriggerFileInput">
+                        <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" alt="Select an Image" />
+                    </button>
+                    <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />
+                    <p class="text-secondary text-center mt-1">Hacer click en la imágen para cambiar la imágen de perfil!</p>
+                </div>
+
+                <div class="input-container1">
+                    <div class="text-field-style">
+                        <label class="custom-label">Nombre</label>
+                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.FirstName" Variant="Variant.Outlined" />
+                    </div>
+
+                    <div class="text-field-style">
+                        <label class="custom-label">Apellido</label>
+                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.LastName" Variant="Variant.Outlined" />
+                    </div>
+                </div>
+
+                <div class="input-container2">
+                    <div class="text-field-style" style="width: 100%;">
+                        <label class="custom-label">Nombre de usuario</label>
+                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.UserName" Variant="Variant.Outlined" />
+                    </div>
+                </div>
+
+                <div class="input-container1">
+                    <div class="text-field-style">
+                        <label class="custom-label">Identificación</label>
+                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.Identification" Variant="Variant.Outlined" />
+                    </div>
+
+                    <div class="text-field-style">
+                        <label class="custom-label">Telefono</label>
+                        <MudTextField InputType="InputType.Telephone" @bind-Value="UserUpdate.Phone" Variant="Variant.Outlined" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-send-container">
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+                           Style="background-color:#515B3B;
+                        color:white; width:400px;">
+                    Actualizar perfil
+                </MudButton>
+            </div>
+
+        </EditForm>
+    </main>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: icon,
+            title: Message
+        });
+    };
+</script>
+
+<style>
+
+    .input-container1 {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 10px;
+    }
+
+    .custom-label {
+        font-weight: bold;
+        margin-bottom: 6px;
+        font-size: 18px;
+    }
+
+    .input-container2 {
+        margin-top: 12px;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-content: center;
+    }
+
+    .img-container {
+        display: flex;
+        flex-direction: column;
+        margin: 10px;
+        justify-content: center;
+        align-content: center;
+    }
+
+    .rounded-button-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ccc;
+    }
+
+    .edit-form-style {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-buttom: 5px;
+    }
+
+    .text-field-style {
+        flex-direction: column;
+        width: 250px;
+    }
+
+</style>
 
 @code {
+    public UserUpdateDto UserUpdate { get; set; } = new();
+    public string UserId { get; set; } = string.Empty;
+    public string ImagePreview { get; set; } = string.Empty;
 
+    #region Handle Image Methods
+    private async Task TriggerFileInput()
+    {
+        await JS.InvokeVoidAsync("eval", "document.getElementById('fileInput').click()");
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            ImagePreview = await ImageConverter.ConvertSingleImageToStringAsync(file);
+            await ImageConverter.ConvertToIFormFile(file);
+        }
+    }
+    #endregion
+
+    #region OnInitialize
+    protected async override Task OnInitializedAsync()
+    {
+        UserUpdate = await _userService.GetUserInfoById();
+        await base.OnInitializedAsync();
+    }
+    #endregion
+
+    #region ObSubmit
+    private async Task OnSubmit()
+    {
+        var (message, IsSucess) = await _userService.UpdateUser(UserUpdate);
+        if (!IsSucess)
+        {
+            await JS.InvokeVoidAsync("showSweetAlert", message, "error");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("showSweetAlert", message, "success");
+            StateHasChanged();
+        }
+    }
+    #endregion
 }

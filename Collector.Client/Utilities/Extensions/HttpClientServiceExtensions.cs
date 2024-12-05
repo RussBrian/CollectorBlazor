@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text;
 
 namespace Collector.Client.Utilities.Extensions
 {
@@ -203,7 +204,31 @@ namespace Collector.Client.Utilities.Extensions
                 throw new AggregateException("Error general al procesar la solicitud - ",ex);
             }
         }
+        public async Task<TResponse?> CustomPutAsync<TResponse>(string uri, TResponse request)
+        {
+            Uri url = new(uri);
 
+            try
+            {
+                string jsonContent = JsonConvert.SerializeObject(request);
+
+                StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PutAsync(uri, httpContent);
+
+                string result = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<TResponse>(result);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new AggregateException("Error al realizar la solicitud HTTP.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new AggregateException("Error general al procesar la solicitud.", ex);
+            }
+        }
         public async Task<TResponse?> CustomPutFormDataReportAsync<TResponse, TRequest>(string uri, TRequest request)
         {
             Uri url = new(uri);
