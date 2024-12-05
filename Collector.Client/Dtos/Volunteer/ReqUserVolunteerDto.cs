@@ -9,5 +9,8 @@ namespace Collector.Client.Dtos.Volunteer
 
         [JsonPropertyName("fireBaseCode")]
         public string? UserId { get; set; }
+
+        [JsonPropertyName("VolunteerCode")]
+        public string? VolunteerCode { get; set; }
     }
 }
