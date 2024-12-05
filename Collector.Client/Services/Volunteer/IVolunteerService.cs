@@ -15,7 +15,7 @@ namespace Collector.Client.Services.Volunteer
         #endregion
 
         #region User/Volunteer
-        Task<ResUserVolunteerDto?> RegisterUserInVolunteer(ReqUserVolunteerDto request);
+        Task<(string, bool)> RegisterUserInVolunteer(ReqUserVolunteerDto request);
         Task<List<ResUserVolunteerDto>> GetAllUserInVolunteer(int id, PaginationDto pagination);
         Task DeleteUserInVolunteer(int id, string userId);
         #endregion

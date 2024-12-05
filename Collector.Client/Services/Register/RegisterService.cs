@@ -1,6 +1,7 @@
 ﻿using Collector.Client.Dtos.Login;
 using Collector.Client.Dtos.Response;
 using Collector.Client.Dtos.User;
+using Collector.Client.Dtos.Volunteer;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
@@ -25,7 +26,7 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
         {
             using var client = new HttpClient();
-            var data = new HttpRequestMessage(HttpMethod.Post, "http://localhost:5004/api/Authentication/register");
+            var data = new HttpRequestMessage(HttpMethod.Post, _appOptions.UrlRegisterUserService);
             var formDataContent = new MultipartFormDataContent
             {
                 { new StringContent(request.FirstName ?? string.Empty), "firstName" },
@@ -86,6 +87,30 @@ namespace Collector.Client.Services.Register
             _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/confirm-email", confirmEmail);
         }
 
+        public async Task<ReqUserDto?> GetUserByEmail(string email)
+        {
 
+            var user = await _httpExtension.CustomGetAsync<ReqUserDto>($"{_appOptions.UrlUserService}", email);
+
+            if (user != null)
+            {
+                return user as ReqUserDto;
+            }
+
+            return null;
+
+        }
+
+        public async Task<ReqUserDto?> GetUserByDocumentNumber(string documentNumber)
+        {
+            var user = await _httpExtension.CustomGetAsync<ReqUserDto>($"{_appOptions.UrlUserService}/documentnumber/", documentNumber);
+
+            if (user != null)
+            {
+                return user as ReqUserDto;
+            }
+
+            return null;
+        }
     }
 }
