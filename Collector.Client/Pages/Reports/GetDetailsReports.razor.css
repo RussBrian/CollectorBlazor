@@ -43,6 +43,7 @@ a:hover{
     min-height: 100vh;
     background-color: #25251D;
     display: flex;
+    flex-direction:row;
     justify-content: center;
     align-items: center;
     padding: 20px;
@@ -66,7 +67,7 @@ a:hover{
 }
 
 .left-container {
-    width: 40%;
+    width: 45%;
     background-color: #F8F8F2;
     font-size: 12px;
     line-height: 1.5;
@@ -74,7 +75,7 @@ a:hover{
 }
 
 .right-container {
-    width: 60%;
+    width: 55%;
     background-color: #66664F;
     color: white;
     text-align: center;
