@@ -14,6 +14,11 @@
 
 @* <AuthorizeView Roles="Admin,Institution">
     <Authorized> *@
+
+@{
+    <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+}
+
 @if (_isLoading)
 {
     <p>Cargando...</p>
@@ -38,7 +43,11 @@ else
                             <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
                         </div>
 
-                        <div class="text-field-style" style="width: 30%;">
+                        <div class="text-field-style" style="width: 30%; position: relative;">
+                            <button onclick="@NavigateBack" style="position: absolute; top: 0; right: 0; background: none; border: none;">
+                                <i class="fa-solid fa-xmark fa-xl" style="color: black;"></i>
+                            </button>
+
                             <label class="custom-label">Fecha</label>
                             <MudTextField InputType="InputType.Date" @bind-Value="ResVolunteerDto.VolunteerDate" Variant="Variant.Outlined" />
                         </div>
@@ -287,4 +296,9 @@ else
         }
     }
     #endregion
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo("/Volunteers", forceLoad:true);
+    }
 }

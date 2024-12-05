@@ -118,19 +118,11 @@ namespace Collector.Client.Services.Volunteer
         }
 
 
-        public async Task<List<ResUserVolunteerDto>> GetAllUserInVolunteer(int id, PaginationDto pagination)
+        public async Task<List<ResUserVolunteerDto>> GetAllUserInVolunteer(int id)
         {
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResUserVolunteerDto>>>(_appOptions.UrlUserVolunteerService, id);
-
             var result = volunteers as Response<List<ResUserVolunteerDto>>;
-
-            if (result?.Value?.Count != 0)
-            {
-                var queryableList = result?.Value?.AsQueryable();
-                return [.. queryableList?.Pagination(pagination)];
-            }
-
-            return [];
+            return result.Value ?? [];
         }
 
         public async Task DeleteUserInVolunteer(int id, string userId) 
