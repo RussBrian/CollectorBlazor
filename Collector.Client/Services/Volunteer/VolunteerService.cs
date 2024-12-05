@@ -108,7 +108,7 @@ namespace Collector.Client.Services.Volunteer
         #region Controlador de User/Volunteer
         public async Task<(string, bool)> RegisterUserInVolunteer(ReqUserVolunteerDto request)
         {
-            var result = await _httpExtension.CustomFormDataAsync<Response<ReqUserVolunteerDto>, ReqUserVolunteerDto>(_appOptions.UrlUserVolunteerService, request);
+            var result = await _httpExtension.CustomPostAsync<Response<ReqUserVolunteerDto>, ReqUserVolunteerDto>(_appOptions.UrlUserVolunteerService, request);
           
             if (result == null)
             {
