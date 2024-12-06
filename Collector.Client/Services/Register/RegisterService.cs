@@ -87,5 +87,6 @@ namespace Collector.Client.Services.Register
         }
 
 
+
     }
 }
