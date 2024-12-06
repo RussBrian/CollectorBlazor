@@ -79,6 +79,13 @@ else
                                    Style="background-color:#515B3B; margin-bottom:10px; color:white; width:275px;">
                             Inscribirme
                         </MudButton>
+
+                        @if (ResVolunteer.IsPrivate)
+                        {
+                            <div class="volunteer-code-container">
+                                <MudTextField @bind-Value="volunteerCode" Label="Código del voluntariado" Variant="Variant.Outlined" Style="width: 275px;" />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -108,7 +115,7 @@ else
                 @foreach (var user in ResUserVolunteer)
                 {
                     <div class="user-card" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding: 10px; border-bottom: 2px solid #515B3B;">
-                        <img src="./ImagenCollector.jpg" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;" />
+                        <img src="@user.UserImage" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;" />
                         <div>
                             <p style="margin: 0; font-weight: bold;">@user.FirstName @user.LastName</p>
                             <p style="margin: 0; font-size: 14px; color: gray;">@user.Phone</p>
@@ -120,7 +127,7 @@ else
             else
             {
                 <div class="card-error-message">
-                    <p style="font-weight:bold; font-size:15px">No hay usuarios incscritos <i class="fa-solid fa-user-xmark fa-lg"></i></p>
+                    <p style="font-weight:bold; font-size:15px">No hay usuarios incscritos <i class="fa-solid fa-lg"></i></p>
                 </div>
             }
         </div>
@@ -195,6 +202,10 @@ else
         margin-left: 33px;
     }
 
+    .volunteer-code-container {
+        margin-top: 10px;
+    }
+
 </style>
 
 @code {
@@ -203,6 +214,7 @@ else
     public List<ResUserVolunteerDto> ResUserVolunteer { get; set; } = new();
     public bool isDataLoaded { get; set; } = false;
     public Uri? linkUri { get; set; }
+    private string volunteerCode { get; set; } = string.Empty;
 
     #region MusCarousel Props
     private MudCarousel<string> _carousel;
@@ -238,7 +250,7 @@ else
             {
                 UserId = "NYdC0VO2GdRNaTNatCSzwVfDj9b2",
                 VolunteerId = Id,
-                VolunteerCode = null
+                VolunteerCode = ResVolunteer.IsPrivate ? volunteerCode : null
             };
 
         var (message, isSuccess) = await _volunteerService.RegisterUserInVolunteer(userVolunteer);
