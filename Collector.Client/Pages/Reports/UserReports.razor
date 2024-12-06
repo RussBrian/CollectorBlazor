@@ -48,10 +48,13 @@
                         <div class="card-body">
                             <div class="card-body-container">
                                 <h6>@reports.Title</h6>
+
+                                <div style=" width:90%; border-bottom: 2px solid #515B3B; margin-bottom:8px;"></div>
+
                                 <p>@reports.Description</p>
                             </div>
                             <div class="date-container">
-                                <p>@reports.Status</p>
+                                <p><i class="fa-solid fa-circle fa-flip-both" style="color: #FFD43B;"></i> @reports.Status</p>
                                 <p>@reports.Date</p>
                             </div>
                         </div>
@@ -85,6 +88,11 @@
 </div>
 
 <style>
+
+    .card-body{
+
+    }
+
     .title {
         margin-bottom: 20px; /* Separación del título */
     }
