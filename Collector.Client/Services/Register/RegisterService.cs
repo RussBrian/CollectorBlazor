@@ -26,7 +26,7 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
         {
             using var client = new HttpClient();
-            var data = new HttpRequestMessage(HttpMethod.Post, _appOptions.UrlRegisterUserService);
+            var data = new HttpRequestMessage(HttpMethod.Post, $"{_appOptions.UrlRegisterUserService}/Register");
             var formDataContent = new MultipartFormDataContent
             {
                 { new StringContent(request.FirstName ?? string.Empty), "firstName" },
@@ -69,7 +69,7 @@ namespace Collector.Client.Services.Register
 
         public async Task SendCodeToEmail(UserEmailDto email)
         { 
-            _ = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
+             var response = await _httpExtension.CustomPostAsync<nuint, UserEmailDto>($"{_appOptions.UrlRegisterUserService}/send-email", email);
         }
 
         public async Task<(string, bool)> VerifyCode(UserEmailDto verifyCode)
