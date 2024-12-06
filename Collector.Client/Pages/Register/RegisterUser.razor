@@ -1,4 +1,4 @@
-﻿@page "/RegisterUser"
+﻿@page "/RegisterUser/{identification}/{email}/{code}/{_IsInstitution:bool}"
 @using Collector.Client.Components.Shared
 @using Collector.Client.Dtos.Login
 @using Collector.Client.Dtos.User
@@ -113,7 +113,6 @@
 
             if(reqUserDto.File == null)
             {
-
                 await ShowAlert("Error en el registro", "Debe adjuntar una imagen para el perfil.", "error");
                 return;
             }
