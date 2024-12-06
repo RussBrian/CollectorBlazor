@@ -16,11 +16,6 @@ namespace Collector.Client.Validations
                 .Matches(@"^[a-zA-Z\s]+$").WithMessage("El nombre no debe contener números ni caracteres especiales ni vocales con tilde.")
                 .MaximumLength(50).WithMessage("El nombre no debe exceder 50 caracteres.");
 
-                //RuleFor(p => p.LastName)
-                //    .NotEmpty().WithMessage("El apellido es requerido.")
-                //    .Matches(@"^[a-zA-Z\s]+$").WithMessage("El apellido no debe contener números ni caracteres especiales ni vocales con tilde.")
-                //    .MaximumLength(50).WithMessage("El apellido no debe exceder 50 caracteres.");
-
                 RuleFor(p => p.UserName)
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty().WithMessage("El nombre de usuario es requerido.")
@@ -47,7 +42,6 @@ namespace Collector.Client.Validations
                     .Equal(p => p.Password).WithMessage("Las contraseñas deben coincidir.");
             });
         }
-
     }
 }
 

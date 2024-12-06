@@ -26,7 +26,7 @@ namespace Collector.Client.Services.Register
         public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
         {
             using var client = new HttpClient();
-            var data = new HttpRequestMessage(HttpMethod.Post, $"{_appOptions.UrlRegisterUserService}/Register");
+            var data = new HttpRequestMessage(HttpMethod.Post, $"{_appOptions.UrlRegisterUserService}/register");
             var formDataContent = new MultipartFormDataContent
             {
                 { new StringContent(request.FirstName ?? string.Empty), "firstName" },
