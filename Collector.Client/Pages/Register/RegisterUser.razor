@@ -111,6 +111,13 @@
 
             (reqUserDto.RolId, reqUserDto.LastName) = _IsInstitution ? (7, "Institution") : (8, reqUserDto.LastName);
 
+            if(reqUserDto.File == null)
+            {
+
+                await ShowAlert("Error en el registro", "Debe adjuntar una imagen para el perfil.", "error");
+                return;
+            }
+
             var response = await _registerService.CreateUserAsync(reqUserDto);
             if (response.IsSuccess)
             {
