@@ -70,8 +70,8 @@ namespace Collector.Client.Services.Volunteer
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>(_appOptions.UrlVolunteerService);
 
             var result = volunteers as Response<List<ResVolunteerDto>>;
-
-            if(result?.Value?.Count != 0)
+            
+            if (result?.Value != null && result?.Value?.Count() != 0)
             {
                 var queryableList = result?.Value?.AsQueryable();
                 return [.. queryableList?.Pagination(pagination)];
@@ -90,7 +90,7 @@ namespace Collector.Client.Services.Volunteer
 
             var result = volunteers as Response<List<ResVolunteerDto>>;
 
-            if (result?.Value?.Count != 0)
+            if (result?.Value != null && result?.Value?.Count() != 0)
             {
                 var queryableList = result?.Value?.AsQueryable();
                 return [.. queryableList?.Pagination(pagination)];
