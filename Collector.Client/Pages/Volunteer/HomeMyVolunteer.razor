@@ -58,6 +58,7 @@
                                 }
                                 <p>@volunteer.VolunteerDate</p>
                             </div>
+
                             <div class="btn-container">
                                 <button @onclick="() => GetReportById(volunteer.VolunteerId)" class="btn btn-details">
                                     Ver más detalles
@@ -66,6 +67,13 @@
                                         <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
                                     </svg>
                                 </button>
+
+                                <MudButton Variant="Variant.Outlined"
+                                           OnClick="@(() => UpdateReport(volunteer.VolunteerId))"
+                                           Style="background-color:transparent;
+                                           width:20px; border: 3px solid #767572; color: #767572;
+                                           border-radius: 0.5rem;font-weight: bold; margin-left:60px"> <i class="fa-solid fa-pen-to-square fa-lg"></i></MudButton>
+
                             </div>
                         </div>
                     </div>
@@ -74,9 +82,6 @@
         }
         else
         {
-            <div class="pagination-container m-4">
-                <MudPagination Class="custom-pagination" Size="Size.Large" Rectangular="true" Variant="Variant.Filled" Count="6" />
-            </div>
 
             <h2 class="title">Voluntariados</h2>
             <div class="container-no-reports col-6 offset-12 mt-3">
@@ -159,4 +164,8 @@
     }
 
     private void GetReportById(int Id) => navManager.NavigateTo($"/Volunteer/Details/{Id}");
+
+    private void UpdateReport(int Id) => navManager.NavigateTo($"/Volunteer/Create/{Id}");
+
+
 }

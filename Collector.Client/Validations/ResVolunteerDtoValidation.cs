@@ -8,9 +8,8 @@ namespace Collector.Client.Validations
     {
         public ResVolunteerDtoValidation()
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Este campo no puede estar vacio.");
-            RuleFor(x => x.Details).NotEmpty().WithMessage("Este campo no puede estar vacio.");
-            RuleFor(x => x.VolunteerDate).NotEmpty().WithMessage("Este campo no puede estar vacio.");
+            RuleFor(x => x.Name).NotEmpty().WithMessage("Este campo no puede estar vacío.");
+            RuleFor(x => x.VolunteerDate).NotEmpty().WithMessage("Este campo no puede estar vacío.");
         }
     }
 }
