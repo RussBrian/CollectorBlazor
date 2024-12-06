@@ -7,6 +7,11 @@
 @using Collector.Client.Services.Reports;
 @inject IReportsService _reportService;
 @inject IJSRuntime JS;
+@inject NavigationManager _NavManager;
+
+@{
+    <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+}
 
 <div class="primary-container">
     <main class="secondary-container">
@@ -14,7 +19,6 @@
 
             <h3 class="title">Crea un reporte</h3>
             <div class="card-body-container">
-                <!-- Aquí inicia el EditForm -->
                 <FluentValidationValidator />
 
                 <div class="text-field-container align-content-center">
@@ -32,7 +36,12 @@
                         <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Title)" />
                     </div>
 
-                    <div class="text-field-style" style="width: 30%;">
+                    <div class="text-field-style" style="width: 30%; position:relative">
+
+                        <button onclick="@NavigateBack" style="position: absolute; top: 0; right: 0; background: none; border: none;">
+                            <i class="fa-solid fa-xmark fa-xl" style="color: black;"></i>
+                        </button>
+
                         <label class="custom-label">Fecha</label>
                         <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
                                       Variant="Variant.Outlined" Style="custom-textfield" />
@@ -230,6 +239,13 @@
 
         var response = await _reportService.CreateReport(Report);
         await JS.InvokeVoidAsync("showSweetAlert", "Reporte creado existosamente!", "success");
+    }
+    #endregion
+
+    #region NavigateBack 
+    private void NavigateBack()
+    {
+        _NavManager.NavigateTo("/User/Reports", forceLoad:true);
     }
     #endregion
 }

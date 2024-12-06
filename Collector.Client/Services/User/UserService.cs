@@ -17,7 +17,8 @@ namespace Collector.Client.Services.User
         public async Task<UserUpdateDto> GetUserInfoById()
         {
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
-            var response = await _serviceExtension.CustomGetAsync<UserUpdateDto>(_appOptions.URLLocalUserService, $"id/69lZV6YaZUdfQDKwXHgm8QuC85U2");
+            var response = await _serviceExtension.CustomGetAsync<UserUpdateDto>($"{_appOptions.UrlUserService}/id/", "9zeirWQJnldZ2qizLbalnxjxpQh2");
+
             var userResult = response as UserUpdateDto;
             return userResult ?? new();
         }
@@ -36,7 +37,7 @@ namespace Collector.Client.Services.User
                 Phone = userUpdateDto.Phone,
             };
 
-            var response = await _serviceExtension.CustomPutAsync<ReqUserUpdateDto>(_appOptions.URLLocalUserService, userUpdate);
+            var response = await _serviceExtension.CustomPutAsync<ReqUserUpdateDto>(_appOptions.UrlUserService, userUpdate);
 
             if(response == null)
             {

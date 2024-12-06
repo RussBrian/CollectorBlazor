@@ -26,6 +26,14 @@
     {
         @if (volunteers.Count() != 0)
         {
+            <div class="d-flex flex-row">
+                <h2 class="title">VOLUNTARIADOS</h2>
+                <button @onclick="NavigateToCreateReports"
+                        class="btn-new-report btn mt-3">
+                    Nuevo Voluntariado
+                </button>
+            </div>
+
             <main class="secundary-container">
                 @foreach (var volunteer in volunteers)
                 {
@@ -39,15 +47,15 @@
                                 <p>@volunteer.Name</p>
                             </div>
                             <div class="date-container">
-                                    Privacidad:
-                                    @if (!volunteer.IsPrivate)
-                                    {
+                                Privacidad:
+                                @if (!volunteer.IsPrivate)
+                                {
                                     <p>Publico</p>
-                                    }
-                                    else
-                                    {
+                                }
+                                else
+                                {
                                     <p>Privado</p>
-                                    }
+                                }
                                 <p>@volunteer.VolunteerDate</p>
                             </div>
                             <div class="btn-container">
@@ -113,11 +121,11 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .custom-textfield:focus {
-        outline: none;
-        border-color: #515B3B;
-        box-shadow: 0 0 5px #515B3B;
-    }
+        .custom-textfield:focus {
+            outline: none;
+            border-color: #515B3B;
+            box-shadow: 0 0 5px #515B3B;
+        }
 
     .edit-form-style {
         width: 100%;

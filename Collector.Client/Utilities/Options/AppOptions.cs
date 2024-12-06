@@ -9,7 +9,6 @@
         public string UrlVolunteerService {  get; set; } = string.Empty;
         public string UrlUserVolunteerService {  get; set; } = string.Empty;
         public string UrlForgotPassword {  get; set; } = string.Empty;
-        public string URLLocalUserService { get; set; } = string.Empty;
-
+        public string UrlUserService { get; set; } = string.Empty;
     }
 }
