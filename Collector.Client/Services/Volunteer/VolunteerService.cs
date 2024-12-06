@@ -70,8 +70,8 @@ namespace Collector.Client.Services.Volunteer
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>(_appOptions.UrlVolunteerService);
 
             var result = volunteers as Response<List<ResVolunteerDto>>;
-
-            if(result?.Value?.Count != 0)
+            
+            if (result?.Value != null && result?.Value?.Count() != 0)
             {
                 var queryableList = result?.Value?.AsQueryable();
                 return [.. queryableList?.Pagination(pagination)];
@@ -90,7 +90,7 @@ namespace Collector.Client.Services.Volunteer
 
             var result = volunteers as Response<List<ResVolunteerDto>>;
 
-            if (result?.Value?.Count != 0)
+            if (result?.Value != null && result?.Value?.Count() != 0)
             {
                 var queryableList = result?.Value?.AsQueryable();
                 return [.. queryableList?.Pagination(pagination)];
@@ -106,22 +106,23 @@ namespace Collector.Client.Services.Volunteer
         #endregion
 
         #region Controlador de User/Volunteer
-        public async Task<ResUserVolunteerDto?> RegisterUserInVolunteer(ReqUserVolunteerDto request)
-          => await _httpExtension.CustomFormDataAsync<ResUserVolunteerDto, ReqUserVolunteerDto>(_appOptions.UrlUserVolunteerService, request);
+        public async Task<(string, bool)> RegisterUserInVolunteer(ReqUserVolunteerDto request)
+        {
+            var result = await _httpExtension.CustomPostAsync<Response<ReqUserVolunteerDto>, ReqUserVolunteerDto>(_appOptions.UrlUserVolunteerService, request);
+          
+            if (result == null)
+            {
+                return (string.Empty, true);
+            }
+            return (result.ErrorMessage, result.IsSuccess);
+        }
 
-        public async Task<List<ResUserVolunteerDto>> GetAllUserInVolunteer(int id, PaginationDto pagination)
+
+        public async Task<List<ResUserVolunteerDto>> GetAllUserInVolunteer(int id)
         {
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResUserVolunteerDto>>>(_appOptions.UrlUserVolunteerService, id);
-
             var result = volunteers as Response<List<ResUserVolunteerDto>>;
-
-            if (result?.Value?.Count != 0)
-            {
-                var queryableList = result?.Value?.AsQueryable();
-                return [.. queryableList?.Pagination(pagination)];
-            }
-
-            return [];
+            return result.Value ?? [];
         }
 
         public async Task DeleteUserInVolunteer(int id, string userId) 

@@ -8,12 +8,18 @@
 @using System.Text.Json
 @using System.Text.Encodings.Web
 @using System.Globalization
+@using Blazored.FluentValidation;
 @inject IVolunteerService _volunteerService
 @inject NavigationManager Navigation;
 @inject IJSRuntime JS;
 
 @* <AuthorizeView Roles="Admin,Institution">
     <Authorized> *@
+
+@{
+    <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
+}
+
 @if (_isLoading)
 {
     <p>Cargando...</p>
@@ -26,7 +32,7 @@ else
                 <h3 class="title">@Title</h3>
                 <div class="card-body-container">
 
-                    @* <DataAnnotationsValidator /> *@
+                    <FluentValidationValidator/>
 
                     <div class="text-field-container">
                         <div class="text-field-style">
@@ -36,11 +42,18 @@ else
                             </div>
                             <MudTextField @bind-Value="ResVolunteerDto.Name" Variant="Variant.Outlined" />
                             <p class="text-secondary">Coloque un título que identifique su voluntariado.</p>
+                            <ValidationMessage style="validation-message: 0 ;" For="(() => ResVolunteerDto.Name)" />
+
                         </div>
 
-                        <div class="text-field-style" style="width: 30%;">
+                        <div class="text-field-style" style="width: 30%; position: relative;">
+                            <button onclick="@NavigateBack" style="position: absolute; top: 0; right: 0; background: none; border: none;">
+                                <i class="fa-solid fa-xmark fa-xl" style="color: black;"></i>
+                            </button>
+
                             <label class="custom-label">Fecha</label>
                             <MudTextField InputType="InputType.Date" @bind-Value="ResVolunteerDto.VolunteerDate" Variant="Variant.Outlined" />
+                            <ValidationMessage style="validation-message: 0 ;" For="(() => ResVolunteerDto.VolunteerDate)" />
                         </div>
                     </div>
 
@@ -193,7 +206,7 @@ else
 
 @code {
     [Parameter] public int VolunteerId { get; set; }
-    public ResVolunteerDto? ResVolunteerDto { get; set; }
+    public ResVolunteerDto ResVolunteerDto { get; set; } = new();
     public string FrontImage { get; set; } = string.Empty;
     public bool HasFrontImage { get; set; } = false;
     public bool _isEditMode { get; set; } = false;
@@ -282,9 +295,19 @@ else
         else
         {
             ResVolunteerDto.FireBaseCode = "9zeirWQJnldZ2qizLbalnxjxpQh2";
+            if (ResVolunteerDto.Images.Count() == 0)
+            {
+                await JS.InvokeVoidAsync("showSweetAlert", "El voluntariado debe de contener al menos una imagen.", "error");
+                return;
+            }
             ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ResVolunteerDto);
             Navigation.NavigateTo($"/Volunteer/MyVolunteers");
         }
     }
     #endregion
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo("/Volunteers", forceLoad:true);
+    }
 }

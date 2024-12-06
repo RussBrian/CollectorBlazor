@@ -4,96 +4,223 @@
 @using Collector.Client.Services.Volunteer
 @inject IVolunteerService _volunteerService;
 @inject NavigationManager navManager;
-@inject ProtectedBrowserStorage _protectedBrowserStorage;
+@inject IJSRuntime JS;
 
 <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 
-<div class="primary-container">
-    <div class="card-container">
-        <div class="left-container">
-
-            <div class="header-container">
-                <p style="font-weight:bold; font-size:20px">@ResVolunteer.InstitutionName</p>
-                <img class="img-volunteer" src="@(!string.IsNullOrWhiteSpace(ResVolunteer.UserImage) ? "./ImagenCollector.jpg" : ResVolunteer.UserImage)" />
-                <p style="font-weight:bold;">@ResVolunteer.Name</p>
-            </div>
-
-            <p class="brand">Detalles</p>
-            <div class="details-container">
-                <span class="badge bg-secondary">
-                    Privacidad - @if (!ResVolunteer.IsPrivate)
-                    {
-                        <p> Privado</p>
-                    }
-                    else
-                    {
-                        <p> Publico</p>
-                    }
-                </span>
-                <span class="badge bg-secondary mt-2">Fecha - @ResVolunteer.VolunteerDate</span>
-                <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
-                    Ubicación -  <i class="fa-solid fa-location-dot" style="color: white;"></i>
-                </a>
-            </div>
-
-            <p class="brand">Descripción</p>
-            <div class="description-container">
-                <p>@ResVolunteer.Details</p>
-            </div>
+@if (!isDataLoaded)
+{
+    <div class="loading-container">
+        <div class="spinner-border" role="status">
         </div>
-        <div class="right-container">
+        <h4 style="color:white; margin-top:8px;">Cargando datos...</h4>
+    </div>
+}
+else
+{
+    <div class="primary-container">
+        <div class="card-container">
+            <div class="left-container">
 
-            <div class="close-button">
-                <button onclick="@NavigateBack">
-                    <i class="fa-solid fa-xmark fa-xl" style="color: #ededed;"></i>
-                </button>
+                <div class="header-container">
+                    <p style="font-weight:bold; font-size:20px">@ResVolunteer.InstitutionName</p>
+                    <img class="img-volunteer" src="@(!string.IsNullOrWhiteSpace(ResVolunteer.UserImage) ? "./ImagenCollector.jpg" : ResVolunteer.UserImage)" />
+                    <p style="font-weight:bold;">@ResVolunteer.Name</p>
+                </div>
+
+                <p class="brand">Detalles</p>
+                <div class="details-container">
+                    <span class="badge bg-secondary">
+                        Privacidad - @if (!ResVolunteer.IsPrivate)
+                        {
+                            <p> Privado</p>
+                        }
+                        else
+                        {
+                            <p> Publico</p>
+                        }
+                    </span>
+                    <span class="badge bg-secondary mt-2">Fecha - @ResVolunteer.VolunteerDate</span>
+                    <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
+                        Ubicación -  <i class="fa-solid fa-location-dot" style="color: white;"></i>
+                    </a>
+                </div>
+
+                <p class="brand">Descripción</p>
+                <div class="description-container">
+                    <p>@ResVolunteer.Details</p>
+                </div>
             </div>
+            <div class="right-container">
 
-            <div class="carrussel-container">
+                <div class="close-button">
+                    <button onclick="@NavigateBack">
+                        <i class="fa-solid fa-xmark fa-xl" style="color: #ededed;"></i>
+                    </button>
+                </div>
 
-                <h4 style="font-weight:bold; font-size:larger; margin-bottom:10px">Imágenes del reporte</h4>
+                <div class="carrussel-container">
 
-                <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@ResVolunteer.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;"
-                             ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
-                    <ItemTemplate>
-                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-                            <img src="@context" alt="Imagen del reporte" style="max-height:100%; max-width:100%;" />
-                        </div>
-                    </ItemTemplate>
-                </MudCarousel>
+                    <h4 style="font-weight:bold; font-size:larger; margin-bottom:10px">Imágenes del voluntariado</h4>
 
-                <div class="button-send-container">
-                    <MudButton Variant="Variant.Filled"
-                               ButtonType="ButtonType.Submit"
-                               Style="background-color:#515B3B; margin-bottom:10px; color:white; width:275px;">
-                        Inscribirme
-                    </MudButton>
+                    <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@ResVolunteer.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;"
+                                 ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
+                        <ItemTemplate>
+                            <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                                <img src="@context" alt="Imagen del reporte" style="max-height:300px; max-width:350px;" />
+                            </div>
+                        </ItemTemplate>
+                    </MudCarousel>
+
+                    <div class="button-send-container">
+                        <MudButton Variant="Variant.Filled"
+                                   OnClick="EnListUser"
+                                   ButtonType="ButtonType.Submit"
+                                   Style="background-color:#515B3B; margin-bottom:10px; color:white; width:275px;">
+                            Inscribirme
+                        </MudButton>
+
+                        @if (ResVolunteer.IsPrivate)
+                        {
+                            <div class="volunteer-code-container">
+                                <MudTextField @bind-Value="volunteerCode" Label="Código del voluntariado" Variant="Variant.Outlined" Style="width: 275px;" />
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Nueva sección scrollable para usuarios inscritos -->
+        <div class="users-container">
+
+            <div class="title-users-container">
+                <p style="font-weight:bold; font-size:20px">Usuarios inscritos</p>
+            </div>
+
+            @if (ResUserVolunteer.Count() != 0)
+            {
+                @foreach (var user in ResUserVolunteer)
+                {
+                    <div class="user-card" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding: 10px; border-bottom: 2px solid #515B3B;">
+                        <img src="@user.UserImage" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;" />
+                        <div>
+                            <p style="margin: 0; font-weight: bold;">@user.FirstName @user.LastName</p>
+                            <p style="margin: 0; font-size: 14px; color: gray;">@user.Phone</p>
+                            <p style="margin: 0; font-size: 14px; color: gray;">@user.Email</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="card-error-message">
+                    <p style="font-weight:bold; font-size:15px">No hay usuarios incscritos <i class="fa-solid fa-lg"></i></p>
+                </div>
+            }
+        </div>
     </div>
-</div>
+
+}
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSweetAlert(Message, icon) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: icon,
+            title: Message
+        });
+    };
+</script>
 
 <style>
+    
+    .card-error-message{
+        display:flex;
+        justify-content:center;
+    }
+
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #25251D;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .spinner-border {
+        color: #7B885B;
+        font-weight: bold;
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .title-users-container {
+        display: flex;
+        justify-content: center;
+    }
+
     .button-send-container {
         margin-top: 50px;
     }
+
+    .users-container {
+        background-color: #F8F8F2;
+        display: flex;
+        overflow-y:scroll;
+        border-radius: 10px;
+        padding: 20px;
+        flex-direction: column;
+        width: 315px;
+        max-height:575px;
+        margin-left: 33px;
+    }
+
+    .volunteer-code-container {
+        margin-top: 10px;
+    }
+
 </style>
 
 @code {
-    public ResVolunteerDto ResVolunteer { get; set; } = new();
     [Parameter] public int Id { get; set; }
+    public ResVolunteerDto ResVolunteer { get; set; } = new();
+    public List<ResUserVolunteerDto> ResUserVolunteer { get; set; } = new();
+    public bool isDataLoaded { get; set; } = false;
     public Uri? linkUri { get; set; }
+    private string volunteerCode { get; set; } = string.Empty;
+
+    #region MusCarousel Props
     private MudCarousel<string> _carousel;
     private bool _arrows = true;
     private bool _bullets = true;
     private bool _enableSwipeGesture = true;
     private int selectedIndex = 0;
+    #endregion
 
     protected async override Task OnInitializedAsync()
     {
         ResVolunteer = await _volunteerService.GetVolunteerById(Id);
+
+        ResUserVolunteer = await _volunteerService.GetAllUserInVolunteer(Id);
+
         linkUri = new($"https://www.google.com/maps?q={ResVolunteer.Latitude},{ResVolunteer.Longitude}");
+
+        isDataLoaded = true;
         await base.OnInitializedAsync();
     }
 
@@ -105,17 +232,24 @@
     #endregion
 
     #region VolunteerInscription
-    private async Task EnList()
+    private async Task EnListUser()
     {
-        var user = await _protectedBrowserStorage.GetAsync<ResLoginDto>("session");
-
         var userVolunteer = new ReqUserVolunteerDto
-        {
-           UserId = user.Value.UserId,
-           VolunteerId = Id
-        };
+            {
+                UserId = "NYdC0VO2GdRNaTNatCSzwVfDj9b2",
+                VolunteerId = Id,
+                VolunteerCode = ResVolunteer.IsPrivate ? volunteerCode : null
+            };
 
-        await _volunteerService.RegisterUserInVolunteer(userVolunteer);
+        var (message, isSuccess) = await _volunteerService.RegisterUserInVolunteer(userVolunteer);
+
+        if (message != null && !isSuccess)
+        {
+            await JS.InvokeVoidAsync("showSweetAlert", $"{message}", "error");
+            return;
+        }
+
+        await JS.InvokeVoidAsync("showSweetAlert", "Te has registrado correctamente en el voluntariado", "success");
     }
     #endregion
 

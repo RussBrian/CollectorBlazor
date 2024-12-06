@@ -15,6 +15,7 @@ namespace Collector.Client.Validations
                 .Cascade(CascadeMode.Stop)
                 .MaximumLength(600).WithMessage("La descripcion no puede ser mas larga de 600 caracteres.")
                 .NotEmpty().WithMessage("La descripcion es requerida.");
+
         }
     }
 }

@@ -10,7 +10,7 @@
 
         <div class="img-container">
             <button type="button" class="rounded-button" @onclick="TriggerFileInput">
-                <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" alt="Select an Image" />
+                <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./Defaultuser.png" : ImagePreview)" alt="Select an Image" />
             </button>
 
             <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />

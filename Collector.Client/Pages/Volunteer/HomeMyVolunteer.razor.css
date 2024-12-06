@@ -87,12 +87,9 @@
     justify-items: center;
 }
 
-    .card-body-container p {
-        margin-right: 70px;
-    }
-
 .date-container {
     display: flex;
+    margin-bottom:4px;
     flex-direction: row;
     justify-content: space-evenly;
     align-content: center;

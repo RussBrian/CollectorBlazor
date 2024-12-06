@@ -48,16 +48,19 @@
                         <div class="card-body">
                             <div class="card-body-container">
                                 <h6>@reports.Title</h6>
+
+                                <div style=" width:90%; border-bottom: 2px solid #515B3B; margin-bottom:8px;"></div>
+
                                 <p>@reports.Description</p>
                             </div>
                             <div class="date-container">
-                                <p>@reports.Status</p>
+                                <p><i class="fa-solid fa-circle fa-flip-both" style="color: #de940b;"></i> @reports.Status</p>
                                 <p>@reports.Date</p>
                             </div>
                         </div>
                         <div class="btn-container">
                             <button @onclick="() => GetReportById(reports.Id)"
-                                    class="btn btn-details">
+                                    class="btn btn-details-no-report">
                                 Ver más detalles
                                 <i class="fa-solid fa-arrow-right fa-lg" style="color: #f0f0f0;"></i>
                             </button>
@@ -77,7 +80,10 @@
                 <div class="text-center">
                     <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
                     <h5 class="card-title mt-2 text-secondary">No se han encontrado reportes registrados ¿desea crear uno?</h5>
-                    <a href="/User/Create/Reports" class="btn-new-report-no-report btn mt-2">Nuevo Reporte</a>
+                    <button @onclick="NavigateToCreateReports"
+                            class="btn-new-no-report btn mt-3">
+                        Nuevo Reporte
+                    </button>
                 </div>
             </div>
         }
@@ -85,8 +91,23 @@
 </div>
 
 <style>
+
+    .btn-new-no-report{
+         background-color: #7B885B;
+         height: 45px;
+         width: 200px;
+         border-radius: 10px;
+         color: white;
+         font-weight: bold;
+    }
+
+    .title-noreports{
+        color:white;
+        font-weight:bold;
+    }
+
     .title {
-        margin-bottom: 20px; /* Separación del título */
+        margin-bottom: 20px;
     }
 
     .loading-container {
