@@ -98,18 +98,6 @@ else
                 <p style="font-weight:bold; font-size:20px">Usuarios inscritos</p>
             </div>
 
-@*             @for (var i = 0; i < 20; i++)
-            {
-                <div class="user-card" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding: 10px; border-bottom: 2px solid #515B3B;">
-                    <img src="./ImagenCollector.jpg" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;" />
-                    <div>
-                        <p style="margin: 0; font-weight: bold;">FirstName LastName</p>
-                        <p style="margin: 0; font-size: 14px; color: gray;">Phone</p>
-                        <p style="margin: 0; font-size: 14px; color: gray;">Email</p>
-                    </div>
-                </div>
-            } *@
-
             @if (ResUserVolunteer.Count() != 0)
             {
                 @foreach (var user in ResUserVolunteer)

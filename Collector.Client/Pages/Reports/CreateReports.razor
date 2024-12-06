@@ -230,12 +230,12 @@
     #region On submitReport
     public async Task OnSubmitReport()
     {
-        var reportJson = System.Text.Json.JsonSerializer.Serialize(Report, new System.Text.Json.JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
 
-        await JS.InvokeVoidAsync("console.log", reportJson);
+        if(Report.Images.Count() == 0)
+        {
+            await JS.InvokeVoidAsync("showSweetAlert", "El reporte debe de contener al menos una imagen.", "error");
+            return;
+        }
 
         var response = await _reportService.CreateReport(Report);
         await JS.InvokeVoidAsync("showSweetAlert", "Reporte creado existosamente!", "success");
