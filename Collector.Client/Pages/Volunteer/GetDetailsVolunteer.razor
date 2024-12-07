@@ -30,16 +30,6 @@ else
 
                 <p class="brand">Detalles</p>
                 <div class="details-container">
-                    <span class="badge bg-secondary">
-                        Privacidad - @if (!ResVolunteer.IsPrivate)
-                        {
-                            <p> Privado</p>
-                        }
-                        else
-                        {
-                            <p> Publico</p>
-                        }
-                    </span>
                     <span class="badge bg-secondary mt-2">Fecha - @ResVolunteer.VolunteerDate</span>
                     <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
                         Ubicación -  <i class="fa-solid fa-location-dot" style="color: white;"></i>
@@ -91,7 +81,6 @@ else
             </div>
         </div>
 
-        <!-- Nueva sección scrollable para usuarios inscritos -->
         <div class="users-container">
 
             <div class="title-users-container">

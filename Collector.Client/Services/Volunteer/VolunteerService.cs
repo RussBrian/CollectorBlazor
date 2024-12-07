@@ -7,6 +7,7 @@ using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Options;
+using System.Data.SqlTypes;
 
 namespace Collector.Client.Services.Volunteer
 {
@@ -30,13 +31,22 @@ namespace Collector.Client.Services.Volunteer
         #region Controlador de Volunteer
 
         #region Form
-        public async Task<ResVolunteerDto?> CreateVolunteer(ResVolunteerDto request)
+        public async Task<(bool, string)> CreateVolunteer(ResVolunteerDto request)
         {
-            //var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
+            var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
-            //string user = userInSession.Value?.UserId ?? string.Empty;
+            string user = userInSession.Value?.UserId ?? string.Empty;
 
-            return await _httpExtension.CustomFormDataAsync<ResVolunteerDto, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
+            var volunteer = await _httpExtension.CustomFormDataAsync<Response<ResVolunteerDto>, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
+
+            var result = volunteer as Response<ResVolunteerDto>;
+
+            if (result.IsSuccess)
+            {
+                return (true, string.Empty);
+            }
+
+            return (false, result.ErrorMessage);
         }
 
         public async Task<ResVolunteerDto?> UpdateVolunteer(ResVolunteerDto request)
@@ -84,7 +94,7 @@ namespace Collector.Client.Services.Volunteer
         {
             var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
-            string user = "ZxGcXj9TRTcEmvPKhwsTGLMz95l2";//userInSession.Value?.UserId ?? string.Empty;
+            string user = userInSession.Value?.UserId ?? string.Empty;
 
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>($"{_appOptions.UrlVolunteerService}/user/",user);
 

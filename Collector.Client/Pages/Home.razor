@@ -170,9 +170,13 @@
     {
         var resModel = await loginservice.Login(loginModel);
 
-        if (resModel.IsSuccess)
+        if (resModel.IsSuccess && resModel.Value.RolName == "Person")
         {
             Navigation.NavigateTo("/User/Reports", forceLoad: true);
+        }
+        else if (resModel.IsSuccess && resModel.Value.RolName == "Institution")
+        {
+            Navigation.NavigateTo("/Volunteers", forceLoad: true);
         }
         else
         {
