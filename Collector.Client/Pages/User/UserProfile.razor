@@ -3,8 +3,10 @@
 @using Collector.Client.Dtos.Volunteer
 @using Collector.Client.Helpers
 @using Collector.Client.Services.User
+@inject NavigationManager navManager;
 @inject IJSRuntime JS;
 @inject IUserService _userService;
+@using Microsoft.AspNetCore.Components.Authorization
 
 <RoleBasedAccess Roles="Person,Institution">
     <div class="primary-container">
@@ -17,10 +19,10 @@
                         <div class="custom-image-title">Foto de Perfil</div>
                     </div>
 
-                    <div class="img-container">
-                        <button type="button" class="rounded-button" @onclick="TriggerFileInput">
-                            <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./Defaultuser.png" : ImagePreview)" alt="Select an Image" />
-                        </button>
+                <div class="img-container">
+                    <button type="button" class="rounded-button" @onclick="TriggerFileInput">
+                        <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? UserUpdate.Image : ImagePreview)" alt="Select an Image" />
+                    </button>
 
                         <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />
                     </div>
@@ -32,19 +34,23 @@
                         </p>
                     </div>
 
-                    <div class="input-container1">
-                        <div class="text-field-style">
-                            <label class="custom-label">Nombre</label>
-                            <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.FirstName" Variant="Variant.Outlined" />
-                        </div>
-
-                        <div class="text-field-style">
-                            <label class="custom-label">Apellido</label>
-                            <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.LastName" Variant="Variant.Outlined" />
-                        </div>
+                <div class="input-container1">
+                    <div class="text-field-full-width">
+                        <label class="custom-label">Nombre</label>
+                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.FirstName" Variant="Variant.Outlined" />
                     </div>
+                    <AuthorizeView Roles="Person">
+                        <Authorized Context="authContext">
+                            <div class="text-field-full-width">
+                                <label class="custom-label">Apellido</label>
+                                <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.LastName" Variant="Variant.Outlined" />
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
 
-                    <div class="input-container1">
+
+                <div class="input-container1">
 
                         <div class="text-field-style">
                             <label class="custom-label">Nombre de usuario</label>
@@ -111,9 +117,16 @@
     .input-container1 {
         margin-top: 12px;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column; 
+        width: 100%; 
         align-items: start;
         gap: 10px;
+    }
+
+
+    .text-field-full-width {
+        flex-direction: column;
+        width: 100%;
     }
 
     .custom-label {
@@ -177,7 +190,7 @@
         var file = e.File;
         if (file != null)
         {
-            ImagePreview = await ImageConverter.ConvertSingleImageToStringAsync(file);
+            ImagePreview = await ImageConverter.ConvertSingleImageToStringAsync(file);  
             UserUpdate.File = await ImageConverter.ConvertToIFormFile(file);
         }
     }
@@ -194,6 +207,7 @@
     #region ObSubmit
     private async Task OnSubmit()
     {
+        
         var (message, IsSucess) = await _userService.UpdateUser(UserUpdate);
         if (!IsSucess)
         {
@@ -202,7 +216,7 @@
         else
         {
             await JS.InvokeVoidAsync("showSweetAlert", message, "success");
-            StateHasChanged();
+            navManager.NavigateTo("/User/Profile", forceLoad: true);
         }
     }
     #endregion

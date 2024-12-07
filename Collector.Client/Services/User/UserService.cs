@@ -1,9 +1,13 @@
 ﻿using Collector.Client.Dtos.Login;
+using Collector.Client.Dtos.Response;
 using Collector.Client.Dtos.User;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.Net.Http.Headers;
+
 
 namespace Collector.Client.Services.User
 {
@@ -28,22 +32,50 @@ namespace Collector.Client.Services.User
             return userResult ?? new();
         }
 
-        public async Task<(string, bool)> UpdateUser(UserUpdateDto userEdit)
+        public async Task<(string, bool)> UpdateUser(UserUpdateDto request)
         {
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
+            request.UserId = user.Value?.UserId;
 
-            userEdit.UserId = user.Value?.UserId ?? string.Empty;
-
-            var response = await _serviceExtension.CustomPutFormDataReportAsync<UserUpdateDto, UserUpdateDto>(_appOptions.UrlUserService, userEdit);
-
-            if(response == null)
+            using var client = new HttpClient();
+            var data = new HttpRequestMessage(HttpMethod.Put, $"{_appOptions.UrlUserService}");
+            var formDataContent = new MultipartFormDataContent
             {
-                return ("El usuario ha sido actulizado", true);
+                { new StringContent(request.FirstName ?? string.Empty), "firstName" },
+                { new StringContent(request.LastName ?? string.Empty), "lastName" },
+                { new StringContent(request.UserName ?? string.Empty), "username" },
+                { new StringContent(request.Phone ?? string.Empty), "phone" },
+                { new StringContent(request.UserId ?? string.Empty), "userId" },
+
+            };
+
+            if (request.File != null)
+            {
+                var fileStream = request.File.OpenReadStream();
+                var fileContent = new StreamContent(fileStream);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(request.File.ContentType);
+                formDataContent.Add(fileContent, "file", request.File.Name);
             }
-            else
+
+            formDataContent.Add(new StringContent(request.Image ?? string.Empty), "Image");
+            formDataContent.Add(new StringContent(request.Address), "address");
+            formDataContent.Add(new StringContent(DateTime.Now.ToString()), "dateModified");
+            formDataContent.Add(new StringContent("DEFAULT"), "modifiedBy");
+
+            data.Content = formDataContent;
+
+            var response = await client.SendAsync(data);
+
+            if (!response.IsSuccessStatusCode)
             {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode}, Details: {errorContent}");
                 return ("Hubo un error al actualizar su usuario", false);
             }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            return ("El usuario ha sido actulizado", true);
+
         }
     }
 }

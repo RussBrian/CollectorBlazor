@@ -2,11 +2,13 @@
 @using Blazored.FluentValidation
 @using Collector.Client.Components.Shared;
 @using Collector.Client.Dtos
+@using Collector.Client.Dtos.Login
 @using Collector.Client.Dtos.Volunteer
 @using Collector.Client.Services.Volunteer
 @using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager navManager;
 @inject IVolunteerService _volunteerService;
+@inject ProtectedSessionStorage _sessionStorage;
 
 @{
     <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
@@ -191,9 +193,20 @@
         isDataLoaded = true;
     }
 
-    private async Task GetAll()
-    {
-        volunteers = await _volunteerService.GetAllVolunteers(pagination);
+    private async Task GetAll(){
+
+        var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
+
+        if("Institution" == user.Value.RolName)
+        {
+            volunteers = await _volunteerService.GetAllVolunteersByUser(pagination);
+        }
+        else
+        {
+            volunteers = await _volunteerService.GetAllVolunteers(pagination);
+        }
+
+        volunteers.ForEach(date => date.VolunteerDate = date.VolunteerDate?.Substring(0, 10));
 
     }
 
