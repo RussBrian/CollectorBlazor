@@ -23,21 +23,13 @@ namespace Collector.Client.Services.User
             return userResult ?? new();
         }
 
-        public async Task<(string, bool)> UpdateUser(UserUpdateDto userUpdateDto)
+        public async Task<(string, bool)> UpdateUser(UserUpdateDto userEdit)
         {
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
 
-            var userUpdate = new ReqUserUpdateDto 
-            {
-                UserName = userUpdateDto.UserName,
-                FirstName = userUpdateDto.FirstName,
-                LastName = userUpdateDto.LastName,
-                Image =  userUpdateDto.Image,
-                FireBaseCode = user.Value.UserId,
-                Phone = userUpdateDto.Phone,
-            };
+            userEdit.UserId = user.Value?.UserId ?? string.Empty;
 
-            var response = await _serviceExtension.CustomPutAsync<ReqUserUpdateDto>(_appOptions.UrlUserService, userUpdate);
+            var response = await _serviceExtension.CustomPutAsync<UserUpdateDto>(_appOptions.UrlUserService, userEdit);
 
             if(response == null)
             {

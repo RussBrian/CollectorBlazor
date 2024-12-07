@@ -4,7 +4,7 @@ namespace Collector.Client.Services.User
 {
     public interface IUserService
     {
-        Task<(string, bool)> UpdateUser(UserUpdateDto userUpdateDto);
+        Task<(string, bool)> UpdateUser(UserUpdateDto userEdit);
         Task<UserUpdateDto> GetUserInfoById();
     }
 }

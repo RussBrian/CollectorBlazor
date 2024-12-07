@@ -4,6 +4,7 @@
 @using Collector.Client.Dtos
 @using Collector.Client.Dtos.Volunteer
 @using Collector.Client.Services.Volunteer
+@using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager navManager;
 @inject IVolunteerService _volunteerService;
 
@@ -67,13 +68,16 @@
                                         <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
                                     </svg>
                                 </button>
-
-                                <MudButton Variant="Variant.Outlined"
-                                           OnClick="@(() => UpdateReport(volunteer.VolunteerId))"
-                                           Style="background-color:transparent;
-                                           width:20px; border: 3px solid #767572; color: #767572;
-                                           border-radius: 0.5rem;font-weight: bold; margin-left:60px"> <i class="fa-solid fa-pen-to-square fa-lg"></i></MudButton>
-
+                               
+                                <AuthorizeView Roles="Institution">
+                                  <Authorized>
+                                        <MudButton Variant="Variant.Outlined"
+                                                   OnClick="@(() => UpdateReport(volunteer.VolunteerId))"
+                                                   Style="background-color:transparent;
+                                                   width:20px; border: 3px solid #767572; color: #767572;
+                                                   border-radius: 0.5rem;font-weight: bold; margin-left:60px"> <i class="fa-solid fa-pen-to-square fa-lg"></i></MudButton>
+                                    </Authorized>
+                                </AuthorizeView>
                             </div>
                         </div>
                     </div>

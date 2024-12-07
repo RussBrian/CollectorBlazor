@@ -4,6 +4,7 @@
 @using Collector.Client.Services.Volunteer
 @inject IVolunteerService _volunteerService;
 @inject NavigationManager navManager;
+@using Microsoft.AspNetCore.Components.Authorization
 @inject IJSRuntime JS;
 
 <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
@@ -62,52 +63,62 @@ else
                         </ItemTemplate>
                     </MudCarousel>
 
-                    <div class="button-send-container">
-                        <MudButton Variant="Variant.Filled"
-                                   OnClick="EnListUser"
-                                   ButtonType="ButtonType.Submit"
-                                   Style="background-color:#515B3B; margin-bottom:10px; color:white; width:275px;">
-                            Inscribirme
-                        </MudButton>
+                    <AuthorizeView Roles="Person">
+                        <Authorized>
+                            <div class="button-send-container">
+                                <MudButton Variant="Variant.Filled"
+                                           OnClick="EnListUser"
+                                           ButtonType="ButtonType.Submit"
+                                           Style="background-color:#515B3B; margin-bottom:10px; color:white; width:275px;">
+                                    Inscribirme
+                                </MudButton>
 
-                        @if (ResVolunteer.IsPrivate)
+                                @if (ResVolunteer.IsPrivate)
+                                {
+                                    <div class="volunteer-code-container">
+                                        <MudTextField @bind-Value="volunteerCode" Label="Código del voluntariado" Variant="Variant.Outlined" Style="width: 275px;" />
+                                    </div>
+                                }
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
+                    
+                </div>
+            </div>
+        </div>
+
+        <AuthorizeView Roles="Institution">
+            <Authorized>
+
+                <div class="users-container">
+
+                    <div class="title-users-container">
+                        <p style="font-weight:bold; font-size:20px">Usuarios inscritos</p>
+                    </div>
+
+                    @if (ResUserVolunteer.Count() != 0)
+                    {
+                        @foreach (var user in ResUserVolunteer)
                         {
-                            <div class="volunteer-code-container">
-                                <MudTextField @bind-Value="volunteerCode" Label="Código del voluntariado" Variant="Variant.Outlined" Style="width: 275px;" />
+                            <div class="user-card" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding: 10px; border-bottom: 2px solid #515B3B;">
+                                <img src="@user.UserImage" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;" />
+                                <div>
+                                    <p style="margin: 0; font-weight: bold;">@user.FirstName @user.LastName</p>
+                                    <p style="margin: 0; font-size: 14px; color: gray;">@user.Phone</p>
+                                    <p style="margin: 0; font-size: 14px; color: gray;">@user.Email</p>
+                                </div>
                             </div>
                         }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="users-container">
-
-            <div class="title-users-container">
-                <p style="font-weight:bold; font-size:20px">Usuarios inscritos</p>
-            </div>
-
-            @if (ResUserVolunteer.Count() != 0)
-            {
-                @foreach (var user in ResUserVolunteer)
-                {
-                    <div class="user-card" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding: 10px; border-bottom: 2px solid #515B3B;">
-                        <img src="@user.UserImage" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;" />
-                        <div>
-                            <p style="margin: 0; font-weight: bold;">@user.FirstName @user.LastName</p>
-                            <p style="margin: 0; font-size: 14px; color: gray;">@user.Phone</p>
-                            <p style="margin: 0; font-size: 14px; color: gray;">@user.Email</p>
+                    }
+                    else
+                    {
+                        <div class="card-error-message">
+                            <p style="font-weight:bold; font-size:15px">No hay usuarios incscritos <i class="fa-solid fa-lg"></i></p>
                         </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="card-error-message">
-                    <p style="font-weight:bold; font-size:15px">No hay usuarios incscritos <i class="fa-solid fa-lg"></i></p>
+                    }
                 </div>
-            }
-        </div>
+            </Authorized>
+        </AuthorizeView>
     </div>
 
 }
@@ -225,7 +236,6 @@ else
     {
         var userVolunteer = new ReqUserVolunteerDto
             {
-                UserId = "NYdC0VO2GdRNaTNatCSzwVfDj9b2",
                 VolunteerId = Id,
                 VolunteerCode = ResVolunteer.IsPrivate ? volunteerCode : null
             };

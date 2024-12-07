@@ -76,19 +76,19 @@ namespace Collector.Client.Services.Volunteer
         }
 
      public async Task<List<ResVolunteerDto>> GetAllVolunteers(PaginationDto pagination)
-        {
-            var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>(_appOptions.UrlVolunteerService);
+    {
+        var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>(_appOptions.UrlVolunteerService);
 
-            var result = volunteers as Response<List<ResVolunteerDto>>;
+        var result = volunteers as Response<List<ResVolunteerDto>>;
             
-            if (result?.Value != null && result?.Value?.Count() != 0)
-            {
-                var queryableList = result?.Value?.AsQueryable();
-                return [.. queryableList?.Pagination(pagination)];
-            }
-
-            return [];
+        if (result?.Value != null && result?.Value?.Count() != 0)
+        {
+            var queryableList = result?.Value?.AsQueryable();
+            return [.. queryableList?.Pagination(pagination)];
         }
+
+        return [];
+    }
 
         public async Task<List<ResVolunteerDto>> GetAllVolunteersByUser(PaginationDto pagination)
         {
@@ -116,6 +116,11 @@ namespace Collector.Client.Services.Volunteer
         #region Controlador de User/Volunteer
         public async Task<(string, bool)> RegisterUserInVolunteer(ReqUserVolunteerDto request)
         {
+
+            var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
+
+            request.UserId = user.Value?.UserId ?? string.Empty;
+
             var result = await _httpExtension.CustomPostAsync<Response<ReqUserVolunteerDto>, ReqUserVolunteerDto>(_appOptions.UrlUserVolunteerService, request);
           
             if (result == null)
