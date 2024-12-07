@@ -82,11 +82,9 @@ namespace Collector.Client.Services.Volunteer
 
         public async Task<List<ResVolunteerDto>> GetAllVolunteersByUser(PaginationDto pagination)
         {
-            var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
+            var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
-            string user = "ZxGcXj9TRTcEmvPKhwsTGLMz95l2";//userInSession.Value?.UserId ?? string.Empty;
-
-            var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>($"{_appOptions.UrlVolunteerService}/user/",user);
+            var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResVolunteerDto>>>($"{_appOptions.UrlVolunteerService}/user/",user.Value.UserId);
 
             var result = volunteers as Response<List<ResVolunteerDto>>;
 

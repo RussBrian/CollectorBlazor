@@ -31,6 +31,7 @@ namespace Collector.Client.SessionHelpers
                       new Claim(ClaimTypes.Name, userSession.UserName),
                       new Claim(ClaimTypes.Role, userSession.RolName),
                       new Claim(ClaimTypes.Email, userSession.Email),
+                      new Claim("Image", userSession.Image),
                       new Claim("Jwt", userSession.IdToken),
                       new Claim("UserId", userSession.UserId.ToString())
                         }));

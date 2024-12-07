@@ -14,10 +14,8 @@
 
                 <div class="img-container">
                     <button type="button" class="rounded-button" @onclick="TriggerFileInput">
-                        <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./BosqueLindo.png" : ImagePreview)" alt="Select an Image" />
+                        <img class="rounded-button-img" src="@(UserUpdate.Image)"/>
                     </button>
-                    <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />
-                    <p class="text-secondary text-center mt-1">Hacer click en la imágen para cambiar la imágen de perfil!</p>
                 </div>
 
                 <div class="input-container1">

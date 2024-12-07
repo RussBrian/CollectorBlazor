@@ -100,7 +100,6 @@ namespace Collector.Client.Services.Register
             return null;
 
         }
-
         public async Task<ReqUserDto?> GetUserByDocumentNumber(string documentNumber)
         {
             var user = await _httpExtension.CustomGetAsync<ReqUserDto>($"{_appOptions.UrlUserService}/documentnumber/", documentNumber);
