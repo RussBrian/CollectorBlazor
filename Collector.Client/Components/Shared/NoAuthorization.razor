@@ -1,13 +1,14 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@using Collector.Client.Dtos.Login
 @inject NavigationManager Navigation
+@inject ProtectedSessionStorage _protectedSessionStorage;
 
 <main class="centered-container">
     <div class="secundary-container">
         <img class="img-collector" src="/ImagenCollector.jpg" />
         <h5 class="title">
-            No estás autorizado para acceder a esta página.
+            No estas autorizado para acceder a esta pagina.
         </h5>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GoToLastPage">Volver</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => GoToPage(RedirectUrl)">Volver al inicio </MudButton>
     </div>
 </main>
 
@@ -23,7 +24,7 @@
     }
 
     .title {
-        color: gray;
+        color: gray
     }
 
     .secundary-container {
@@ -32,7 +33,7 @@
         background-color: #BDBABAF2;
         border-radius: 10px;
         transition: 0.3s;
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     }
 
     .img-collector {
@@ -49,18 +50,45 @@
 </style>
 
 @code {
-    private string LastVisitedUrl { get; set; } = "/";
+    [Parameter] public string RedirectUrl { get; set; } = string.Empty;
+    public ResLoginDto ResLogin { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    #region OnInitialize Method
+    protected async override void OnInitialized()
     {
-        LastVisitedUrl = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "lastVisitedUrl") ?? "/";
-    }
+        var role = await GetUserRol();
 
-    private async Task GoToLastPage()
+        if (role == "Person")
+        {
+            RedirectUrl = "/User/Reports";
+        }
+        else if (role == "Institution")
+        {
+            RedirectUrl = "/Volunteers";
+        }
+        else
+        {
+            RedirectUrl = "/";
+        }
+    }
+    #endregion
+
+    #region GetUserRoleMethod
+    private async Task<string> GetUserRol()
     {
-        var currentUrl = Navigation.Uri.Replace(Navigation.BaseUri, "");
-        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "lastVisitedUrl", currentUrl);
-
-        Navigation.NavigateTo(LastVisitedUrl);
+        var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
+        if (user.Value == null)
+        {
+            return "";
+        }
+        return user.Value.RolName;
     }
+    #endregion
+
+    #region Navigate Method
+    private void GoToPage(string redirectUrl)
+    {
+        Navigation.NavigateTo($"{redirectUrl}");
+    }
+    #endregion
 }
