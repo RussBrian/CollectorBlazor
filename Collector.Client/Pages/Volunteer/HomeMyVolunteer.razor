@@ -187,6 +187,7 @@
 
     private async Task GetAll(){
         volunteers = await _volunteerService.GetAllVolunteers(pagination);
+
     }
 
     private void GetReportById(int Id) => navManager.NavigateTo($"/Volunteer/Details/{Id}");
