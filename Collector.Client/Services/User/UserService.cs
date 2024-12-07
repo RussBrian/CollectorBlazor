@@ -29,7 +29,7 @@ namespace Collector.Client.Services.User
 
             userEdit.UserId = user.Value?.UserId ?? string.Empty;
 
-            var response = await _serviceExtension.CustomPutFormDataReportAsync<UserUpdateDto, UserUpdateDto>(_appOptions.UrlUserService, userEdit);
+            var response = await _serviceExtension.CustomPutFormDataAsync<UserUpdateDto,UserUpdateDto>(_appOptions.UrlUserService, userEdit);
 
             if(response == null)
             {

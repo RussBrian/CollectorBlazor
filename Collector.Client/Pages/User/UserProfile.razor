@@ -3,6 +3,7 @@
 @using Collector.Client.Dtos.Volunteer
 @using Collector.Client.Helpers
 @using Collector.Client.Services.User
+@inject NavigationManager navManager;
 @inject IJSRuntime JS;
 @inject IUserService _userService;
 
@@ -18,7 +19,7 @@
 
                 <div class="img-container">
                     <button type="button" class="rounded-button" @onclick="TriggerFileInput">
-                        <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./Defaultuser.png" : ImagePreview)" alt="Select an Image" />
+                        <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? UserUpdate.Image : ImagePreview)" alt="Select an Image" />
                     </button>
 
                     <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />
@@ -175,7 +176,7 @@
         var file = e.File;
         if (file != null)
         {
-            ImagePreview = await ImageConverter.ConvertSingleImageToStringAsync(file);
+            ImagePreview = await ImageConverter.ConvertSingleImageToStringAsync(file);  
             UserUpdate.File = await ImageConverter.ConvertToIFormFile(file);
         }
     }
@@ -192,6 +193,7 @@
     #region ObSubmit
     private async Task OnSubmit()
     {
+        
         var (message, IsSucess) = await _userService.UpdateUser(UserUpdate);
         if (!IsSucess)
         {
@@ -200,7 +202,7 @@
         else
         {
             await JS.InvokeVoidAsync("showSweetAlert", message, "success");
-            StateHasChanged();
+            navManager.NavigateTo("/User/Profile", forceLoad: true);
         }
     }
     #endregion
