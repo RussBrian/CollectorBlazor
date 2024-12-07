@@ -41,7 +41,7 @@ namespace Collector.Client.Services.Volunteer
 
             var result = volunteer as Response<ResVolunteerDto>;
 
-            if (result.IsSuccess)
+            if (result == null)
             {
                 return (true, string.Empty);
             }

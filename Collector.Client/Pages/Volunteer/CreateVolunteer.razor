@@ -307,6 +307,7 @@ else
                 return;
             }
             Navigation.NavigateTo($"/Volunteer/MyVolunteers");
+            await JS.InvokeVoidAsync("showSweetAlert", "Voluntariado creado existosamente!", "success");
         }
     }
     #endregion
