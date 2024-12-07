@@ -6,7 +6,17 @@
 
 <div class="step2-container">
     <MudForm Model="reqUserDto">
-        <label class="custom-label">Teléfono</label>
+        <div class="d-flex justify-content-between">
+            <label class="custom-label">Teléfono</label>
+            <MudTooltip Style="background-color:darkgray; color:black;" Arrow="true" Placement="Placement.Right" Delay="400">
+                <ChildContent>
+                    <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Style="color:darkgray" />
+                </ChildContent>
+                <TooltipContent>
+                    <MudText Style="font-weight:bold; font-size:small">Digite los 10 números de su teléfono.</MudText>
+                </TooltipContent>
+            </MudTooltip>
+        </div>
         <MudTextField @bind-Value="@reqUserDto.Phone"
                       AutoFocus="true"
                       Immediate="true"
