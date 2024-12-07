@@ -1,6 +1,7 @@
 ﻿using Collector.Client.Dtos;
 using Collector.Client.Dtos.Login;
 using Collector.Client.Dtos.Response;
+using Collector.Client.Dtos.User;
 using Collector.Client.Dtos.Volunteer;
 using Collector.Client.Helpers;
 using Collector.Client.Utilities.Extensions;
@@ -116,6 +117,8 @@ namespace Collector.Client.Services.Volunteer
         #region Controlador de User/Volunteer
         public async Task<(string, bool)> RegisterUserInVolunteer(ReqUserVolunteerDto request)
         {
+            var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
+            request.UserId = user.Value?.UserId;
             var result = await _httpExtension.CustomPostAsync<Response<ReqUserVolunteerDto>, ReqUserVolunteerDto>(_appOptions.UrlUserVolunteerService, request);
           
             if (result == null)
@@ -130,7 +133,7 @@ namespace Collector.Client.Services.Volunteer
         {
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResUserVolunteerDto>>>(_appOptions.UrlUserVolunteerService, id);
             var result = volunteers as Response<List<ResUserVolunteerDto>>;
-            return result.Value ?? [];
+            return result?.Value ?? [];
         }
 
         public async Task DeleteUserInVolunteer(int id, string userId) 

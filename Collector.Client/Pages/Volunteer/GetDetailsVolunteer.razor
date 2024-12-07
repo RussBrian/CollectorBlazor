@@ -104,7 +104,7 @@ else
             else
             {
                 <div class="card-error-message">
-                    <p style="font-weight:bold; font-size:15px">No hay usuarios incscritos <i class="fa-solid fa-lg"></i></p>
+                    <p style="font-weight:bold; font-size:15px">No hay usuarios inscritos <i class="fa-solid fa-lg"></i></p>
                 </div>
             }
         </div>
@@ -136,7 +136,10 @@ else
 </script>
 
 <style>
-    
+    .mud-input-label {
+        background-color: #66664F;
+        color:white;
+    }
     .card-error-message{
         display:flex;
         justify-content:center;
@@ -225,7 +228,6 @@ else
     {
         var userVolunteer = new ReqUserVolunteerDto
             {
-                UserId = "NYdC0VO2GdRNaTNatCSzwVfDj9b2",
                 VolunteerId = Id,
                 VolunteerCode = ResVolunteer.IsPrivate ? volunteerCode : null
             };
