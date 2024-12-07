@@ -17,7 +17,6 @@ namespace Collector.Client.Validations
             .NotEmpty().WithMessage("Debe de digitar una contraseña.")
             .Matches(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*#?&])[A-Za-z0-9@$!%*#?&]{8,16}$")
                 .WithMessage("La contraseña debe de estar en un formato valido.");
-
         }
     }
 }

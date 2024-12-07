@@ -51,7 +51,7 @@ a:hover {
 .card-container {
     width: 80%;
     max-width: 600px;
-    background-color: #FAEBD7;
+    background-color: #EDEDED;
     display: flex;
     border-radius: 8px;
     overflow: hidden;

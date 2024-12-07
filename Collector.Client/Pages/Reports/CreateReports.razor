@@ -51,7 +51,7 @@
 
                 <div class="description-container">
                     <label class="custom-label">Descripción</label>
-                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Style="custom-textfield:0;" />
+                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Lines="5" Style="custom-textfield:0;" />
                     <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
                     <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Description)" />
                 </div>

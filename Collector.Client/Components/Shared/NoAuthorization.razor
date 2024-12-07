@@ -1,8 +1,10 @@
-﻿@inject NavigationManager Navigation
+﻿@using Collector.Client.Dtos.Login
+@inject NavigationManager Navigation
+@inject ProtectedSessionStorage _protectedSessionStorage;
 
 <main class="centered-container">
     <div class="secundary-container">
-        <img class="img-collector" src="/ImagenCollector.jpg"/>
+        <img class="img-collector" src="/ImagenCollector.jpg" />
         <h5 class="title">
             No estas autorizado para acceder a esta pagina.
         </h5>
@@ -21,15 +23,15 @@
         text-align: center;
     }
 
-    .title{
-        color:gray
+    .title {
+        color: gray
     }
 
-    .secundary-container{
-        width:48%;
-        padding:10px;
+    .secundary-container {
+        width: 48%;
+        padding: 10px;
         background-color: #BDBABAF2;
-        border-radius:10px;
+        border-radius: 10px;
         transition: 0.3s;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     }
@@ -48,19 +50,45 @@
 </style>
 
 @code {
-    [Parameter] public string RedirectUrl { get; set; }
+    [Parameter] public string RedirectUrl { get; set; } = string.Empty;
+    public ResLoginDto ResLogin { get; set; } = new();
 
-    protected override void OnInitialized()
+    #region OnInitialize Method
+    protected async override void OnInitialized()
     {
-        base.OnInitialized();
-        if (string.IsNullOrEmpty(RedirectUrl))
+        var role = await GetUserRol();
+
+        if (role == "Person")
+        {
+            RedirectUrl = "/User/Reports";
+        }
+        else if (role == "Institution")
+        {
+            RedirectUrl = "/Volunteers";
+        }
+        else
         {
             RedirectUrl = "/";
         }
     }
+    #endregion
 
+    #region GetUserRoleMethod
+    private async Task<string> GetUserRol()
+    {
+        var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
+        if (user.Value == null)
+        {
+            return "";
+        }
+        return user.Value.RolName;
+    }
+    #endregion
+
+    #region Navigate Method
     private void GoToPage(string redirectUrl)
     {
         Navigation.NavigateTo($"{redirectUrl}");
     }
+    #endregion
 }
