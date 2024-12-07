@@ -13,12 +13,12 @@
 @inject NavigationManager Navigation;
 @inject IJSRuntime JS;
 
-@* <AuthorizeView Roles="Admin,Institution">
-    <Authorized> *@
+
 
 @{
     <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 }
+<RoleBasedAccess Roles="Person">
 
 @if (_isLoading)
 {
@@ -152,6 +152,7 @@ else
         </main>
     </div>
 }
+</RoleBasedAccess>
 
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

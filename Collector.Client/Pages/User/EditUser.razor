@@ -1,0 +1,207 @@
+@page "/Users/EditUser"
+@using Blazored.FluentValidation
+@using Collector.Client.Dtos.Login
+@using Collector.Client.Helpers
+@using Collector.Client.Services
+@inject IJSRuntime JS;
+
+<div class="primary-container">
+    <main class="secondary-container">
+        @* <EditForm Model="@User" OnValidSubmit="OnSubmitUser" class="edit-form-style"> *@
+        <h3 class="title">Crea un usuario</h3>
+        <div class="card-body-container">
+            <!-- Aquí inicia el EditForm -->
+            @* <FluentValidationValidator/> *@
+
+            <div class="text-field-container align-content-center">
+
+                <div class="text-field-style">
+                    <div class="d-flex justify-content-between">
+                        <label class="custom-label">Nombre</label>
+                        <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                       ToolTipDescription="Coloque el nombre completo del usuario."
+                                       ToolTipStyle="color:#37490B"/>
+                    </div>
+                    <MudTextField @bind-Value="User.FirstName" Variant="Variant.Outlined" Style="custom-textfield: 0;"/>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => User.FirstName)"/>
+                </div>
+
+                <div class="text-field-style">
+                    <label class="custom-label">Apellido</label>
+                    <MudTextField @bind-Value="User.LastName" Variant="Variant.Outlined" Style="custom-textfield: 0;"/>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => User.LastName)"/>
+                </div>
+
+                <div class="text-field-style">
+                    <label class="custom-label">Nombre de usuario</label>
+                    <MudTextField @bind-Value="User.UserName" Variant="Variant.Outlined" Style="custom-textfield: 0;"/>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => User.UserName)"/>
+                </div>
+
+                <div class="text-field-style">
+                    <label class="custom-label">Teléfono</label>
+                    <MudTextField @bind-Value="User.Phone" Variant="Variant.Outlined" Style="custom-textfield: 0;"/>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => User.Phone)"/>
+                </div>
+
+                <div class="text-field-style">
+                    <label class="custom-label">Correo Electrónico</label>
+                    <MudTextField @bind-Value="User.Email" Variant="Variant.Outlined" Style="custom-textfield: 0;"/>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => User.Email)"/>
+                </div>
+
+                <div class="text-field-style">
+                    <label class="custom-label">Identificación</label>
+                    <MudTextField @bind-Value="User.Identification" Variant="Variant.Outlined" Style="custom-textfield: 0;"/>
+                    <ValidationMessage style="validation-message: 0 ;" For="(() => User.Identification)"/>
+                </div>
+
+            </div>
+
+            <div class="description-container">
+                <label class="custom-label">Contraseña</label>
+                <MudTextField @bind-Value="User.Password" Variant="Variant.Outlined" InputType="InputType.Password" Style="custom-textfield:0;"/>
+                <ValidationMessage style="validation-message: 0 ;" For="(() => User.Password)"/>
+            </div>
+
+            <div class="description-container">
+                <label class="custom-label">Confirmar Contraseña</label>
+                <MudTextField @bind-Value="User.ConfirmPassword" Variant="Variant.Outlined" InputType="InputType.Password" Style="custom-textfield:0;"/>
+                <ValidationMessage style="validation-message: 0 ;" For="(() => User.ConfirmPassword)"/>
+            </div>
+
+
+
+            <div class="description-container">
+                <label class="custom-label">Dirección</label>
+                <MudTextField @bind-Value="User.Address" Variant="Variant.Outlined" Style="custom-textfield: 0;"/>
+                <ValidationMessage style="validation-message: 0 ;" For="(() => User.Address)"/>
+            </div>
+
+            @* <div class="description-container"> *@
+            @*     <label class="custom-label">Rol</label> *@
+            @*     <MudSelect @bind-Value="User.RolId" Variant="Variant.Outlined" Style="custom-textfield: 0;"> *@
+            @*         <MudSelectItem Value="1">Administrador</MudSelectItem> *@
+            @*         <MudSelectItem Value="2">Usuario</MudSelectItem> *@
+            @*     </MudSelect> *@
+            @* </div> *@
+
+            @* <div class="description-container"> *@
+            @*     <label class="custom-label">Imagen de Perfil</label> *@
+            @*     <img class="rounded-3" src="@(User.Image != "DEFAULT" ? User.Image : "./DefaultProfile.png")" width="275px" height="250px"/> *@
+            @*     <div class="d-flex"> *@
+            @*         <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadProfileImage"> *@
+            @*             <ActivatorContent> *@
+            @*                 <MudButtonComponent Text="Añadir imagen" *@
+            @*                                     Variant="Variant.Outlined" *@
+            @*                                     Style="background-color:transparent; width: 155px; border: 3px solid #767572; color: #767572; border-radius: 0.5rem;font-weight: bold;"/> *@
+            @*             </ActivatorContent> *@
+            @*         </MudFileUpload> *@
+            @*     </div> *@
+            @* </div> *@
+
+        </div>
+        @* *@
+        @* <div class="button-send-container"> *@
+        @*     <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" *@
+        @*                Style="background-color:#515B3B; color:white; width:400px;"> *@
+        @*         Crear usuario *@
+        @*     </MudButton> *@
+        @* </div> *@
+
+        @* </EditForm> *@
+    </main>
+</div>
+
+<script>
+    function showSweetAlert(Message, icon) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: icon,
+            title: Message
+        });
+    };
+</script>
+
+<style>
+    .text-secondary {
+        margin: 7px;
+    }
+
+    .validation-message {
+        color: red;
+    }
+
+    .edit-form-style {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .description-container,
+    .text-field-style {
+        margin-bottom: 15px;
+    }
+
+    .button-send-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>
+
+@code {
+    public ReqUserDto User { get; set; } = new();
+
+    #region File Manager
+    private List<IBrowserFile> _selectedFiles = new();
+    private List<IBrowserFile> _processedFiles = new();
+
+    public async Task UploadProfileImage(IReadOnlyList<IBrowserFile> newFiles)
+    {
+        var filesToProcess = newFiles.Except(_processedFiles).ToList();
+        if (filesToProcess.Any())
+        {
+            _selectedFiles.AddRange(filesToProcess);
+            _processedFiles.AddRange(filesToProcess);
+
+            var formFiles = await ImageConverter.ConvertBrowserFilesToFormFilesAsync(_selectedFiles);
+            foreach (var image in formFiles)
+            {
+                User.File = image;
+            }
+            _selectedFiles.Clear();
+
+            User.Image = await ImageConverter.ConvertSingleImageToStringAsync(newFiles[0]);
+            StateHasChanged();
+        }
+    }
+    #endregion
+
+    #region On submitUser
+    // public async Task OnSubmitUser()
+    // {
+    //     var userJson = System.Text.Json.JsonSerializer.Serialize(User, new System.Text.Json.JsonSerializerOptions
+    //     {
+    //         WriteIndented = true
+    //     });
+    //
+    //     await JS.InvokeVoidAsync("console.log", userJson);
+    //
+    //     var response = await _userService.CreateUser(User);
+    //     await JS.InvokeVoidAsync("showSweetAlert", "Usuario creado existosamente!", "success");
+    // }
+    #endregion
+}
