@@ -13,8 +13,6 @@
 @inject NavigationManager Navigation;
 @inject IJSRuntime JS;
 
-
-
 @{
     <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 }
@@ -145,7 +143,7 @@ else
                     <MudButton Variant="Variant.Filled"
                                ButtonType="ButtonType.Submit"
                                Style="background-color:#515B3B; margin-bottom:10px; color:white; width:400px;">
-                        Crear voluntariado
+                            @ButtonSend
                     </MudButton>
                 </div>
             </EditForm>
@@ -211,6 +209,7 @@ else
     public string FrontImage { get; set; } = string.Empty;
     public bool HasFrontImage { get; set; } = false;
     public bool _isEditMode { get; set; } = false;
+    public string ButtonSend => !_isEditMode ? "Crear voluntariado" : "Editar voluntariado";
     public string Title => !_isEditMode ? "Crea un voluntariado" : "Editar un voluntariado";
     private bool _isLoading = true;
 
@@ -291,7 +290,7 @@ else
         if (_isEditMode)
         {
             ResVolunteerDto? data = await _volunteerService.UpdateVolunteer(ResVolunteerDto);
-            Navigation.NavigateTo($"/Volunteer/MyVolunteers");
+            Navigation.NavigateTo($"/Volunteers");
         }
         else
         {
