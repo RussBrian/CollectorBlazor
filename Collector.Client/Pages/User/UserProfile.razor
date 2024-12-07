@@ -6,6 +6,7 @@
 @inject NavigationManager navManager;
 @inject IJSRuntime JS;
 @inject IUserService _userService;
+@using Microsoft.AspNetCore.Components.Authorization
 
 <div class="primary-container">
     <main class="secondary-container">
@@ -33,16 +34,20 @@
                 </div>
 
                 <div class="input-container1">
-                    <div class="text-field-style">
+                    <div class="text-field-full-width">
                         <label class="custom-label">Nombre</label>
                         <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.FirstName" Variant="Variant.Outlined" />
                     </div>
-
-                    <div class="text-field-style">
-                        <label class="custom-label">Apellido</label>
-                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.LastName" Variant="Variant.Outlined" />
-                    </div>
+                    <AuthorizeView Roles="Person">
+                        <Authorized Context="authContext">
+                            <div class="text-field-full-width">
+                                <label class="custom-label">Apellido</label>
+                                <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.LastName" Variant="Variant.Outlined" />
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
                 </div>
+
 
                 <div class="input-container1">
 
@@ -110,9 +115,16 @@
     .input-container1 {
         margin-top: 12px;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column; 
+        width: 100%; 
         align-items: start;
         gap: 10px;
+    }
+
+
+    .text-field-full-width {
+        flex-direction: column;
+        width: 100%;
     }
 
     .custom-label {

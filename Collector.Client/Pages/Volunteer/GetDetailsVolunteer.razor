@@ -218,6 +218,7 @@ else
     protected async override Task OnInitializedAsync()
     {
         ResVolunteer = await _volunteerService.GetVolunteerById(Id);
+        ResVolunteer.VolunteerDate = ResVolunteer.VolunteerDate.Substring(0,10);
 
         ResUserVolunteer = await _volunteerService.GetAllUserInVolunteer(Id);
 
@@ -237,6 +238,12 @@ else
     #region VolunteerInscription
     private async Task EnListUser()
     {
+        if (string.IsNullOrEmpty(volunteerCode))
+        {
+            await JS.InvokeVoidAsync("showSweetAlert", $"El código del voluntariado no puede estar vacio.", "error");
+            return;
+        }
+
         var userVolunteer = new ReqUserVolunteerDto
             {
                 VolunteerId = Id,
@@ -252,6 +259,7 @@ else
         }
 
         await JS.InvokeVoidAsync("showSweetAlert", "Te has registrado correctamente en el voluntariado", "success");
+        navManager.NavigateTo("/Volunteers");
     }
     #endregion
 

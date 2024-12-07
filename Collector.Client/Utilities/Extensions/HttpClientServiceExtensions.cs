@@ -74,7 +74,6 @@ namespace Collector.Client.Utilities.Extensions
             {
                 var value = property.GetValue(request);
 
-                // Si la propiedad es una lista de archivos (ejemplo: List<IFormFile>)
                 if (value is IEnumerable<IFormFile> files)
                 {
                     foreach (var file in files)
@@ -86,7 +85,6 @@ namespace Collector.Client.Utilities.Extensions
                 }
                 else if (value != null)
                 {
-                    // Para propiedades simples, convertir a texto
                     content.Add(new StringContent(value.ToString()!), property.Name);
                 }
             }
