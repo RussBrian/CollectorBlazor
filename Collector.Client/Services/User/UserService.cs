@@ -17,7 +17,7 @@ namespace Collector.Client.Services.User
         public async Task<UserUpdateDto> GetUserInfoById()
         {
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
-            var response = await _serviceExtension.CustomGetAsync<UserUpdateDto>($"{_appOptions.UrlUserService}/id/", "9zeirWQJnldZ2qizLbalnxjxpQh2");
+            var response = await _serviceExtension.CustomGetAsync<UserUpdateDto>($"{_appOptions.UrlUserService}/id", user.Value.UserId);
 
             var userResult = response as UserUpdateDto;
             return userResult ?? new();
@@ -33,7 +33,7 @@ namespace Collector.Client.Services.User
                 FirstName = userUpdateDto.FirstName,
                 LastName = userUpdateDto.LastName,
                 Image =  userUpdateDto.Image,
-                FireBaseCode = "69lZV6YaZUdfQDKwXHgm8QuC85U2",
+                FireBaseCode = user.Value.UserId,
                 Phone = userUpdateDto.Phone,
             };
 
