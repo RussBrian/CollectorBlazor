@@ -22,10 +22,12 @@ namespace Collector.Client.Services.Reports
             _options = options.Value;
             _httpServiceExtensions = httpServiceExtensions;
         }
-        public async Task<List<ResReportsDto>> GetAllReportsByUserId(string UserId, PaginationDto pagination)
+        public async Task<List<ResReportsDto>> GetAllReportsByUserId(PaginationDto pagination)
         {
+            var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
+
             var reports = await _httpServiceExtensions.CustomGetAsync<Response<List<ResReportsDto>>>
-                (_options.UrlReportService, $"?fireBaseCode={UserId}");
+                (_options.UrlReportService, $"?fireBaseCode={user.Value?.UserId}");
             var reportResult = reports as Response<List<ResReportsDto>>;
 
             if (reportResult != null)
@@ -45,14 +47,11 @@ namespace Collector.Client.Services.Reports
             return reportResult ?? new();
         }
 
-        public async Task<Response<ReqReportDto>> CreateReport(ReqReportDto Report)
+        public async Task<Response<ReqReportDto>> CreateReport(ReqReportDto request)
         {
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
-            if (!user.Success)
-            {
-                Report.FireBaseCode = "9zeirWQJnldZ2qizLbalnxjxpQh2";
-            }
-            var report = await _httpServiceExtensions.CustomFormDataReportAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, Report);
+            request.FireBaseCode = user.Value?.UserId ?? string.Empty;
+            var report = await _httpServiceExtensions.CustomFormDataReportAsync<Response<ReqReportDto>, ReqReportDto>(_options.UrlReportService, request);
             return report;
         }
     }

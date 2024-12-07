@@ -68,10 +68,6 @@
                     </div>
                 }
             </main>
-
-            <div class="m-3">
-            </div>
-
         }
         else
         {
@@ -145,8 +141,8 @@
 
     private void GetReportById(int Id) => navManager.NavigateTo($"/Reports/Details/{Id}");
 
-    private async Task GetUserReports(string UserId = "9zeirWQJnldZ2qizLbalnxjxpQh2")
+    private async Task GetUserReports()
     {
-        reportDtos = await reportService.GetAllReportsByUserId(UserId, new PaginationDto());
+        reportDtos = await reportService.GetAllReportsByUserId(new PaginationDto());
     }
 }

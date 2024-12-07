@@ -239,6 +239,7 @@
 
         var response = await _reportService.CreateReport(Report);
         await JS.InvokeVoidAsync("showSweetAlert", "Reporte creado existosamente!", "success");
+        NavigateBack();
     }
     #endregion
 

@@ -35,7 +35,7 @@ namespace Collector.Client.Services.Volunteer
         {
             var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
-            string user = userInSession.Value?.UserId ?? string.Empty;
+            request.FireBaseCode = userInSession.Value?.UserId ?? string.Empty;
 
             var volunteer = await _httpExtension.CustomFormDataAsync<Response<ResVolunteerDto>, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
 
@@ -53,7 +53,7 @@ namespace Collector.Client.Services.Volunteer
         {
             var userInSession = await _sessionStorage.GetAsync<ResLoginDto>("session");
 
-            string user = userInSession.Value?.UserId ?? string.Empty;
+            request.FireBaseCode = userInSession.Value?.UserId ?? string.Empty;
 
             return await _httpExtension.CustomPutFormDataAsync<ResVolunteerDto, ResVolunteerDto>(_appOptions.UrlVolunteerService, request);
         }

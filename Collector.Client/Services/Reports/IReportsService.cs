@@ -8,7 +8,7 @@ namespace Collector.Client.Services.Reports
     public interface IReportsService
     {
         Task<Response<List<ResReportsGetById>>> GetByIdReports(int Id);
-        Task<Response<ReqReportDto>> CreateReport(ReqReportDto Report);
-        Task<List<ResReportsDto>> GetAllReportsByUserId(string UserId, PaginationDto pagination);
+        Task<Response<ReqReportDto>> CreateReport(ReqReportDto request);
+        Task<List<ResReportsDto>> GetAllReportsByUserId(PaginationDto pagination);
     }
 }
