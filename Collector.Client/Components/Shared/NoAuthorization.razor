@@ -1,12 +1,13 @@
-﻿@inject NavigationManager Navigation
+﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 
 <main class="centered-container">
     <div class="secundary-container">
-        <img class="img-collector" src="/ImagenCollector.jpg"/>
+        <img class="img-collector" src="/ImagenCollector.jpg" />
         <h5 class="title">
-            No estas autorizado para acceder a esta pagina.
+            No estás autorizado para acceder a esta página.
         </h5>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => GoToPage(RedirectUrl)">Volver al inicio </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GoToLastPage">Volver</MudButton>
     </div>
 </main>
 
@@ -21,17 +22,17 @@
         text-align: center;
     }
 
-    .title{
-        color:gray
+    .title {
+        color: gray;
     }
 
-    .secundary-container{
-        width:48%;
-        padding:10px;
+    .secundary-container {
+        width: 48%;
+        padding: 10px;
         background-color: #BDBABAF2;
-        border-radius:10px;
+        border-radius: 10px;
         transition: 0.3s;
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     }
 
     .img-collector {
@@ -48,19 +49,18 @@
 </style>
 
 @code {
-    [Parameter] public string RedirectUrl { get; set; }
+    private string LastVisitedUrl { get; set; } = "/";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        if (string.IsNullOrEmpty(RedirectUrl))
-        {
-            RedirectUrl = "/";
-        }
+        LastVisitedUrl = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "lastVisitedUrl") ?? "/";
     }
 
-    private void GoToPage(string redirectUrl)
+    private async Task GoToLastPage()
     {
-        Navigation.NavigateTo($"{redirectUrl}");
+        var currentUrl = Navigation.Uri.Replace(Navigation.BaseUri, "");
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "lastVisitedUrl", currentUrl);
+
+        Navigation.NavigateTo(LastVisitedUrl);
     }
 }
