@@ -12,10 +12,23 @@
             <h3 class="title">¡Actualiza tu información aquí!</h3>
             <div class="card-body-container">
 
+                <div class="message-container" style="margin-top:5px; font-weight:bold; font-size:20px;">
+                    <div class="custom-image-title">Foto de Perfil</div>
+                </div>
+
                 <div class="img-container">
                     <button type="button" class="rounded-button" @onclick="TriggerFileInput">
-                        <img class="rounded-button-img" src="@(UserUpdate.Image)"/>
+                        <img class="rounded-button-img" src="@(string.IsNullOrEmpty(ImagePreview) ? "./Defaultuser.png" : ImagePreview)" alt="Select an Image" />
                     </button>
+
+                    <InputFile id="fileInput" hidden OnChange="OnFileSelected" accept="image/*" />
+                </div>
+
+
+                <div class="message-container">
+                    <p class="custom-message-image">
+                        Seleccione una imagen haciendo click en la imagen.
+                    </p>
                 </div>
 
                 <div class="input-container1">
@@ -30,17 +43,15 @@
                     </div>
                 </div>
 
-                <div class="input-container2">
-                    <div class="text-field-style" style="width: 100%;">
-                        <label class="custom-label">Nombre de usuario</label>
-                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.UserName" Variant="Variant.Outlined" />
-                    </div>
-                </div>
-
                 <div class="input-container1">
 
                     <div class="text-field-style">
-                        <label class="custom-label">Telefono</label>
+                        <label class="custom-label">Nombre de usuario</label>
+                        <MudTextField InputType="InputType.Text" @bind-Value="UserUpdate.UserName" Variant="Variant.Outlined" />
+                    </div>
+
+                    <div class="text-field-style">
+                        <label class="custom-label">Teléfono</label>
                         <MudTextField InputType="InputType.Telephone" @bind-Value="UserUpdate.Phone" Variant="Variant.Outlined" />
                     </div>
                 </div>
@@ -82,6 +93,18 @@
 </script>
 
 <style>
+    
+    .message-container{
+        display:flex;
+        justify-content:center;
+    }
+
+    .custom-message-image {
+        margin-top: 8px;
+        margin-bottom: 5px;
+        color: gray;
+        align-content: center;
+    }
 
     .input-container1 {
         margin-top: 12px;
