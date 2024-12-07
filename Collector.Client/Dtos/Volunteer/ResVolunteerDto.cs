@@ -11,10 +11,10 @@ namespace Collector.Client.Dtos.Volunteer
         public string FireBaseCode { get; set; } = string.Empty;
 
         [JsonPropertyName("userImage")]
-        public string UserImage { get; set; } = string.Empty;
+        public string? UserImage { get; set; }
 
         [JsonPropertyName("institutionName")]
-        public string InstitutionName { get; set; } = string.Empty;
+        public string? InstitutionName { get; set; }
 
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
@@ -35,7 +35,7 @@ namespace Collector.Client.Dtos.Volunteer
         public bool IsPrivate { get; set; }
 
         [JsonPropertyName("isActive")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [JsonPropertyName("volunteerDate")]
         public string? VolunteerDate { get; set; } 

@@ -5,26 +5,52 @@
 @inject ProtectedSessionStorage _sessionStorage;
 @inject ILoginService _loginService;
 
-<MudNavMenu Class="heightFix d-flex flex-column align-items-center">
-    <div style="display: flex; justify-content: center; align-items: center; margin: 20px;">
-        <img src="@(resloginDto.Image != null ? resloginDto.Image : "./ImagenCollector.jpg")" style="border-radius: 20%; height: 50px; width: 50px; object-fit: cover;" />
-    </div>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Tertiary" Href="/Volunteers" Match="NavLinkMatch.All">
-        <MudText Class="linkstyle">Voluntariados</MudText>
-    </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Person" IconColor="Color.Tertiary" Href="/User/Profile" Match="NavLinkMatch.All">
-        <MudText Class="linkstyle">Profile</MudText>
-    </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.LibraryBooks" IconColor="Color.Tertiary" Href="/User/Reports" Match="NavLinkMatch.All">
-        <MudText Class="linkstyle">Mis reportes</MudText>
-    </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.AddBox" IconColor="Color.Tertiary" Href="/Create/Reports" Match="NavLinkMatch.All">
-        <MudText Class="linkstyle">Crear reportes</MudText>
-    </MudNavLink>
-    <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Logout" IconColor="Color.Tertiary" OnClick="LogOutMethod" Match="NavLinkMatch.All">
-        <MudText Class="linkstyle">Log out</MudText>
-    </MudNavLink>
-</MudNavMenu>
+<AuthorizeView Roles="Person">
+    <Authorized>
+        <MudNavMenu Class="heightFix d-flex flex-column align-items-center">
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px;">
+                <img src="@(resloginDto.Image != null ? resloginDto.Image : "./ImagenCollector.jpg")" style="border-radius: 20%; height: 50px; width: 50px; object-fit: cover;" />
+            </div>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Person" IconColor="Color.Tertiary" Href="/User/Profile" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Perfil</MudText>
+            </MudNavLink>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Tertiary" Href="/Volunteers" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Voluntariados</MudText>
+            </MudNavLink>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.LibraryBooks" IconColor="Color.Tertiary" Href="/User/Reports" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Mis reportes</MudText>
+            </MudNavLink>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.AddBox" IconColor="Color.Tertiary" Href="/Create/Reports" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Crear reportes</MudText>
+            </MudNavLink>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Logout" IconColor="Color.Tertiary" OnClick="LogOutMethod" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Log out</MudText>
+            </MudNavLink>
+        </MudNavMenu>
+    </Authorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Institution">
+    <Authorized>
+        <MudNavMenu Class="heightFix d-flex flex-column align-items-center">
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px;">
+                <img src="@(resloginDto.Image != null ? resloginDto.Image : "./ImagenCollector.jpg")" style="border-radius: 20%; height: 50px; width: 50px; object-fit: cover;" />
+            </div>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Person" IconColor="Color.Tertiary" Href="/User/Profile" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Perfil</MudText>
+            </MudNavLink>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Tertiary" Href="/Volunteers" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Mis Voluntariados</MudText>
+            </MudNavLink>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.AddBox" IconColor="Color.Tertiary" Href="/Volunteer/Create" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Crear Voluntariados</MudText>
+            </MudNavLink>
+            <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Logout" IconColor="Color.Tertiary" OnClick="LogOutMethod" Match="NavLinkMatch.All">
+                <MudText Class="linkstyle">Cerrar Sesión</MudText>
+            </MudNavLink>
+        </MudNavMenu>
+    </Authorized>
+</AuthorizeView>
 
 <style>
     .linkstyle{
