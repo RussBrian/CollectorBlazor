@@ -3,34 +3,39 @@
         Ingrese el código enviado a su correo electrónico.
     </p>
     <MudTextField @bind-Value="LocalCode" Variant="Variant.Outlined"
-                  Style="color:white;"
-                  TextChanged="OnCodeChanged" />
+    Style="color:white;"
+    Placeholder="Ingresa tu código"
+    TextChanged="OnCodeChanged" />
 </MudForm>
 
 <style>
     .custom-label {
-        font-weight: 700;
-        color: #BDBABA;
+    font-weight: 700;
+    color: #BDBABA;
     }
 
     .custom-message {
-        color: #7B885B;
-        font-weight: bold;
-        font-size: 1rem;
-        margin-top: 1rem;
+    color: #7B885B;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 1rem;
     }
 </style>
 
 @code {
     [Parameter] public EventCallback<int> CodeChanged { get; set; }
-    public int LocalCode { get; set; }
+    public int? LocalCode { get; set; }
 
     private async Task OnCodeChanged(string value)
     {
         if (int.TryParse(value, out int code))
         {
             LocalCode = code;
-            await CodeChanged.InvokeAsync(LocalCode);
+            await CodeChanged.InvokeAsync(LocalCode.Value);
+        }
+        else
+        {
+            LocalCode = null;
         }
     }
 }
