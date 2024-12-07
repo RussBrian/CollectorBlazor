@@ -21,6 +21,11 @@ namespace Collector.Client.Services.User
         public async Task<UserUpdateDto> GetUserInfoById()
         {
             var user = await _protectedSessionStorage.GetAsync<ResLoginDto>("session");
+            if(user.Value == null)
+            {
+                UserUpdateDto userUpdate = new();
+                return userUpdate;
+            }
             var response = await _serviceExtension.CustomGetAsync<UserUpdateDto>($"{_appOptions.UrlUserService}/id", user.Value.UserId);
 
             var userResult = response as UserUpdateDto;

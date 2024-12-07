@@ -6,54 +6,56 @@
 
 <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 
-<div class="primary-container">
-    <div class="card-container">
-        <div class="left-container">
+<RoleBasedAccess Roles="Person">
+    <div class="primary-container">
+        <div class="card-container">
+            <div class="left-container">
 
-            <div class="header-container">
-                <p style="font-weight:bold; font-size:20px">@reportDetails.Title</p>
-                <img src="/ImagenCollector.jpg" class="img-reporter" />
-                <p style="font-weight:bold;">@reportDetails.Name</p>
+                <div class="header-container">
+                    <p style="font-weight:bold; font-size:20px">@reportDetails.Title</p>
+                    <img src="/ImagenCollector.jpg" class="img-reporter" />
+                    <p style="font-weight:bold;">@reportDetails.Name</p>
+                </div>
+
+                <p class="brand">Detalles</p>
+                <div class="details-container">
+                    <span class="badge bg-secondary">Status - @reportDetails.Status</span>
+                    <span class="badge bg-secondary mt-2">Fecha - @reportDetails.Date</span>
+                    <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
+                        Ubicación - <i class="fa-solid fa-location-dot" style="color: white;"></i>
+                    </a>
+                </div>
+
+                <p class="brand">Descripción</p>
+                <div class="description-container">
+                    <p>@reportDetails.Description</p>
+                </div>
             </div>
+            <div class="right-container">
 
-            <p class="brand">Detalles</p>
-            <div class="details-container">
-                <span class="badge bg-secondary">Status - @reportDetails.Status</span>
-                <span class="badge bg-secondary mt-2">Fecha - @reportDetails.Date</span>
-                <a href="@linkUri" target="_blank" class="Location-text badge bg-danger mt-2">
-                    Ubicación - <i class="fa-solid fa-location-dot" style="color: white;"></i>
-                </a>
-            </div>
+                <div class="close-button">
+                    <button onclick="@NavigateBack">
+                        <i class="fa-solid fa-xmark fa-xl" style="color: #ededed;"></i>
+                    </button>
+                </div>
 
-            <p class="brand">Descripción</p>
-            <div class="description-container">
-                <p>@reportDetails.Description</p>
-            </div>
-        </div>
-        <div class="right-container">
+                <div class="carrussel-container">
 
-            <div class="close-button">
-                <button onclick="@NavigateBack">
-                    <i class="fa-solid fa-xmark fa-xl" style="color: #ededed;"></i>
-                </button>
-            </div>
+                    <h4 style="font-weight:bold; font-size:larger; margin-bottom:10px">Imágenes del reporte</h4>
 
-            <div class="carrussel-container">
-
-                <h4 style="font-weight:bold; font-size:larger; margin-bottom:10px">Imágenes del reporte</h4>
-              
-                <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@reportDetails.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;" 
-                ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
-                    <ItemTemplate>
-                        <div class="d-flex flex-column flex-column justify-center" style="height:100%">
-                            <img src="@context" alt="Imagen del reporte" style="max-height:100%; max-width:100%;" />
-                        </div>
-                    </ItemTemplate>
-                </MudCarousel>
+                    <MudCarousel Class="mud-width-full" @ref="_carousel" ItemsSource="@reportDetails.ImageUrls" @bind-SelectedIndex="selectedIndex" Style="height:200px;"
+                                 ShowArrows="@_arrows" ShowBullets="@_bullets" EnableSwipeGesture="@_enableSwipeGesture">
+                        <ItemTemplate>
+                            <div class="d-flex flex-column flex-column justify-center" style="height:100%">
+                                <img src="@context" alt="Imagen del reporte" style="max-height:100%; max-width:100%;" />
+                            </div>
+                        </ItemTemplate>
+                    </MudCarousel>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</RoleBasedAccess>
 
 @code {
     [Parameter] public int Id { get; set; }

@@ -14,95 +14,101 @@
     <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 }
 
-<div class="first-container">
+<RoleBasedAccess Roles="Person,Institution">
+    <div class="first-container">
 
-    @if (!isDataLoaded)
-    {
-        <div class="loading-container">
-            <div class="spinner-border" role="status">
-            </div>
-            <h4 style="color:white; margin-top:8px;">Cargando datos...</h4>
-        </div>
-    }
-    else
-    {
-        @if (volunteers.Count() != 0)
+        @if (!isDataLoaded)
         {
-            <div class="d-flex flex-row">
-                <h2 class="title">VOLUNTARIADOS</h2>
-                <button @onclick="NavigateToCreateVolunteers"
-                        class="btn-new-report btn mt-3">
-                    Nuevo Voluntariado
-                </button>
+            <div class="loading-container">
+                <div class="spinner-border" role="status">
+                </div>
+                <h4 style="color:white; margin-top:8px;">Cargando datos...</h4>
             </div>
-
-            <main class="secundary-container">
-                @foreach (var volunteer in volunteers)
-                {
-                    <div class="card card-content">
-                        <img class="card-img-top" style="width:100%; height:250px;" src="@(volunteer.ImageUrls.Any() ? volunteer.ImageUrls[0]
-                        : "./BosqueLindo.png")" />
-                        <div class="card-body">
-                            <div class="card-body-container">
-                                <h6>@volunteer.InstitutionName</h6>
-
-                                <div style=" width:90%; border-bottom: 2px solid #515B3B; margin-bottom:8px;"></div>
-
-                                <p>@volunteer.Name</p>
-                            </div>
-                            <div class="date-container">
-                                @if (!volunteer.IsPrivate)
-                                {
-                                    <p><i class="fa-solid fa-circle fa-flip-both" style="color: #57c62f;"></i> Publico</p>
-                                }
-                                else
-                                {
-                                    <p><i class="fa-solid fa-circle fa-flip-both" style="color: #de940b;"></i> Privado</p>
-                                }
-                                <p>@volunteer.VolunteerDate</p>
-                            </div>
-
-                            <div class="btn-container">
-                                <button @onclick="() => GetReportById(volunteer.VolunteerId)" class="btn btn-details">
-                                    Ver más detalles
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
-                                    </svg>
-                                </button>
-                               
-                                <AuthorizeView Roles="Institution">
-                                  <Authorized>
-                                        <MudButton Variant="Variant.Outlined"
-                                                   OnClick="@(() => UpdateReport(volunteer.VolunteerId))"
-                                                   Style="background-color:transparent;
-                                                   width:20px; border: 3px solid #767572; color: #767572;
-                                                   border-radius: 0.5rem;font-weight: bold; margin-left:60px"> <i class="fa-solid fa-pen-to-square fa-lg"></i></MudButton>
-                                    </Authorized>
-                                </AuthorizeView>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </main>
         }
         else
         {
+            @if (volunteers.Count() != 0)
+            {
+                <AuthorizeView Roles="Institution">
+                    <Authorized>
+                        <div class="d-flex flex-row">
+                            <h2 class="title">VOLUNTARIADOS</h2>
+                            <button @onclick="NavigateToCreateVolunteers"
+                                    class="btn-new-report btn mt-3">
+                                Nuevo Voluntariado
+                            </button>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
 
-            <h2 class="title-noreports ">Voluntariados</h2>
-            <div class="container-no-reports col-6 offset-12 mt-3">
-                <div class="text-center">
-                    <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
-                    <h5 class="card-title mt-2 text-secondary">No se han encontrado voluntariados registrados ¿desea crear uno?</h5>
-                    <button @onclick="NavigateToCreateVolunteers"
-                            class="btn-new-no-report btn mt-3">
-                        Nuevo Voluntariado
-                    </button>
+                <main class="secundary-container">
+                    @foreach (var volunteer in volunteers)
+                    {
+                        <div class="card card-content">
+                            <img class="card-img-top" style="width:100%; height:250px;" src="@(volunteer.ImageUrls.Any() ? volunteer.ImageUrls[0]
+                        : "./BosqueLindo.png")" />
+                            <div class="card-body">
+                                <div class="card-body-container">
+                                    <h6>@volunteer.InstitutionName</h6>
+
+                                    <div style=" width:90%; border-bottom: 2px solid #515B3B; margin-bottom:8px;"></div>
+
+                                    <p>@volunteer.Name</p>
+                                </div>
+                                <div class="date-container">
+                                    @if (!volunteer.IsPrivate)
+                                    {
+                                        <p><i class="fa-solid fa-circle fa-flip-both" style="color: #57c62f;"></i> Publico</p>
+                                    }
+                                    else
+                                    {
+                                        <p><i class="fa-solid fa-circle fa-flip-both" style="color: #de940b;"></i> Privado</p>
+                                    }
+                                    <p>@volunteer.VolunteerDate</p>
+                                </div>
+
+                                <div class="btn-container">
+                                    <button @onclick="() => GetReportById(volunteer.VolunteerId)" class="btn btn-details">
+                                        Ver más detalles
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="white" />
+                                        </svg>
+                                    </button>
+
+                                    <AuthorizeView Roles="Institution">
+                                        <Authorized>
+                                            <MudButton Variant="Variant.Outlined"
+                                                       OnClick="@(() => UpdateReport(volunteer.VolunteerId))"
+                                                       Style="background-color:transparent;
+                                                   width:20px; border: 3px solid #767572; color: #767572;
+                                                   border-radius: 0.5rem;font-weight: bold; margin-left:60px"> <i class="fa-solid fa-pen-to-square fa-lg"></i></MudButton>
+                                        </Authorized>
+                                    </AuthorizeView>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </main>
+            }
+            else
+            {
+
+                <h2 class="title-noreports ">Voluntariados</h2>
+                <div class="container-no-reports col-6 offset-12 mt-3">
+                    <div class="text-center">
+                        <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
+                        <h5 class="card-title mt-2 text-secondary">No se han encontrado voluntariados registrados ¿desea crear uno?</h5>
+                        <button @onclick="NavigateToCreateVolunteers"
+                                class="btn-new-no-report btn mt-3">
+                            Nuevo Voluntariado
+                        </button>
+                    </div>
                 </div>
-            </div>
+            }
         }
-    }
-</div>
+    </div>
+</RoleBasedAccess>
 
 <style>
 
@@ -124,8 +130,8 @@
         color: white;
     }
 
-    .card-body{
-       padding:8px 8px;
+    .card-body {
+        padding: 8px 8px;
     }
 
     .loading-container {
@@ -207,6 +213,4 @@
     private void GetReportById(int Id) => navManager.NavigateTo($"/Volunteer/Details/{Id}");
 
     private void UpdateReport(int Id) => navManager.NavigateTo($"/Volunteer/Create/{Id}");
-
-
 }
