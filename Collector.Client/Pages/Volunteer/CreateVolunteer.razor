@@ -306,7 +306,7 @@ else
                 await JS.InvokeVoidAsync("showSweetAlert", message, "error");
                 return;
             }
-            Navigation.NavigateTo($"/Volunteer/MyVolunteers");
+            Navigation.NavigateTo($"/Volunteers");
             await JS.InvokeVoidAsync("showSweetAlert", "Voluntariado creado existosamente!", "success");
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Collector.Client.Dtos;
 using Collector.Client.Dtos.Login;
 using Collector.Client.Dtos.Response;
+using Collector.Client.Dtos.User;
 using Collector.Client.Dtos.Volunteer;
 using Collector.Client.Helpers;
 using Collector.Client.Utilities.Extensions;
@@ -135,7 +136,7 @@ namespace Collector.Client.Services.Volunteer
         {
             var volunteers = await _httpExtension.CustomGetAsync<Response<List<ResUserVolunteerDto>>>(_appOptions.UrlUserVolunteerService, id);
             var result = volunteers as Response<List<ResUserVolunteerDto>>;
-            return result.Value ?? [];
+            return result?.Value ?? [];
         }
 
         public async Task DeleteUserInVolunteer(int id, string userId) 
