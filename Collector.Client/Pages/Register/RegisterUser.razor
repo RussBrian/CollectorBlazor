@@ -16,14 +16,15 @@
         <ProgressBar Value="Value" />
 
         <div class="step-header">
-            <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-3</MudText>
             @if (!_IsInstitution)
             {
-                <MudText Typo="Typo.h6" Style="color:#8B8C89; margin-left: 120px;">Registrar Persona</MudText>
+                <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:10px">Paso @(step)-3</MudText>
+                <MudText Typo="Typo.h6" Style="color:#8B8C89;">Registrar Persona</MudText>
             }
             else
             {
-                <MudText Typo="Typo.h6" Style="color:#8B8C89; width:15px">Registrar Insitutución</MudText>
+                <MudText Typo="Typo.h6" Style="color:#7B885B; margin-left:6px">Paso @(step)-3</MudText>
+                <MudText Typo="Typo.h6" Style="color:#8B8C89; ">Registrar Institución</MudText>
             }
         </div>
 
@@ -139,16 +140,12 @@
     #region Utils
     private async Task NextStep()
     {
-        var validationResult = step switch
-        {
-            1 => validator.Validate(reqUserDto, options => options.IncludeRuleSets("Step1")),
-            2 => validator.Validate(reqUserDto, options => options.IncludeRuleSets("Step2")),
-            _ => null
-        };
+       
+        var validationResult = validator.Validate(reqUserDto, options => options.IncludeRuleSets($"Step{step}"));
 
         if (validationResult != null && !validationResult.IsValid)
         {
-            var errorMessage = "Debe completar el formulario correctamente.";
+            var errorMessage = string.Join("\n", validationResult.Errors.Select(e => e.ErrorMessage));
             await ShowAlert("Error de validación", errorMessage, "error");
             return;
         }

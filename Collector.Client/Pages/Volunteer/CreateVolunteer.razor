@@ -295,13 +295,17 @@ else
         }
         else
         {
-            ResVolunteerDto.FireBaseCode = "9zeirWQJnldZ2qizLbalnxjxpQh2";
             if (ResVolunteerDto.Images.Count() == 0)
             {
                 await JS.InvokeVoidAsync("showSweetAlert", "El voluntariado debe de contener al menos una imagen.", "error");
                 return;
             }
-            ResVolunteerDto? data = await _volunteerService.CreateVolunteer(ResVolunteerDto);
+            (bool success, string message) = await _volunteerService.CreateVolunteer(ResVolunteerDto);
+            if (!success)
+            {
+                await JS.InvokeVoidAsync("showSweetAlert", message, "error");
+                return;
+            }
             Navigation.NavigateTo($"/Volunteer/MyVolunteers");
         }
     }

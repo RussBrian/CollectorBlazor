@@ -7,7 +7,7 @@
 
 <MudNavMenu Class="heightFix d-flex flex-column align-items-center">
     <div style="display: flex; justify-content: center; align-items: center; margin: 20px;">
-        <img src="/ImagenCollector.jpg" style="border-radius: 20%; height: 50px; width: 50px; object-fit: cover;" />
+        <img src="@(resloginDto.Image != null ? resloginDto.Image : "./ImagenCollector.jpg")" style="border-radius: 20%; height: 50px; width: 50px; object-fit: cover;" />
     </div>
     <MudNavLink Class="my-3 menu-item" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Tertiary" Href="/Volunteers" Match="NavLinkMatch.All">
         <MudText Class="linkstyle">Voluntariados</MudText>
@@ -35,18 +35,29 @@
 </style>
 
 @code {
+    public ResLoginDto? resloginDto { get; set; } = new();
 
-    public ResLoginDto? resloginDto { get; set; }
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await GetLogUserInfo();
+            StateHasChanged();
+        }
+    }
 
     private async Task GetLogUserInfo()
     {
         var user = await _sessionStorage.GetAsync<ResLoginDto>("session");
-        resloginDto = user.Value;
+        if (user.Success && user.Value != null)
+        {
+            resloginDto = user.Value;
+        }
     }
 
     private async Task LogOutMethod()
     {
         await _loginService.Logout(null);
-        navigationManager.NavigateTo("/",forceLoad:true);
+        navigationManager.NavigateTo("/", forceLoad: true);
     }
 }
