@@ -13,121 +13,123 @@
     <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 }
 
-<div class="primary-container">
-    <main class="secondary-container">
-        <EditForm Model="@Report" OnValidSubmit="OnSubmitReport" class="edit-form-style">
+<RoleBasedAccess Roles="Person">
+    <div class="primary-container">
+        <main class="secondary-container">
+            <EditForm Model="@Report" OnValidSubmit="OnSubmitReport" class="edit-form-style">
 
-            <h3 class="title">Crea un reporte</h3>
-            <div class="card-body-container">
-                <FluentValidationValidator />
+                <h3 class="title">Crea un reporte</h3>
+                <div class="card-body-container">
+                    <FluentValidationValidator />
 
-                <div class="text-field-container align-content-center">
+                    <div class="text-field-container align-content-center">
 
-                    <div class="text-field-style">
-                        <div class="d-flex justify-content-between">
-                            <label class="custom-label">Título del reporte</label>
-                            <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
-                                           ToolTipDescription="Coloque un titulo que permita identificar su reporte.
-                                            Ej: Gran cantidad de basura en Sabana Perdida"
-                                           ToolTipStyle="color:#37490B" />
-                        </div>
-                        <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield: 0;" />
-                        <p class="text-secondary">Coloque un título que identifique su reporte.</p>
-                        <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Title)" />
-                    </div>
-
-                    <div class="text-field-style" style="width: 30%; position:relative">
-
-                        <button onclick="@NavigateBack" style="position: absolute; top: 0; right: 0; background: none; border: none;">
-                            <i class="fa-solid fa-xmark fa-xl" style="color: black;"></i>
-                        </button>
-
-                        <label class="custom-label">Fecha</label>
-                        <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
-                                      Variant="Variant.Outlined" Style="custom-textfield:0;" />
-
-                    </div>
-                </div>
-
-                <div class="description-container">
-                    <label class="custom-label">Descripción</label>
-                    <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Lines="5" Style="custom-textfield:0;" />
-                    <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
-                    <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Description)" />
-                </div>
-
-                <div class="map-container">
-                    <div>
-                        <MudStack Row="true">
-                            <MudItem Class="m-0">
-                                <label class="custom-label">Ubicación</label>
-                            </MudItem>
-                            <MudItem>
+                        <div class="text-field-style">
+                            <div class="d-flex justify-content-between">
+                                <label class="custom-label">Título del reporte</label>
                                 <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
-                                               ToolTipDescription="Debe colocar la ubicación exacta de la zona afectada o un aproximado,
+                                               ToolTipDescription="Coloque un titulo que permita identificar su reporte.
+                                            Ej: Gran cantidad de basura en Sabana Perdida"
+                                               ToolTipStyle="color:#37490B" />
+                            </div>
+                            <MudTextField @bind-Value="Report.Title" Variant="Variant.Outlined" Style="custom-textfield: 0;" />
+                            <p class="text-secondary">Coloque un título que identifique su reporte.</p>
+                            <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Title)" />
+                        </div>
+
+                        <div class="text-field-style" style="width: 30%; position:relative">
+
+                            <button onclick="@NavigateBack" style="position: absolute; top: 0; right: 0; background: none; border: none;">
+                                <i class="fa-solid fa-xmark fa-xl" style="color: black;"></i>
+                            </button>
+
+                            <label class="custom-label">Fecha</label>
+                            <MudTextField ReadOnly="true" InputType="InputType.Date" @bind-Value="TValue"
+                                          Variant="Variant.Outlined" Style="custom-textfield:0;" />
+
+                        </div>
+                    </div>
+
+                    <div class="description-container">
+                        <label class="custom-label">Descripción</label>
+                        <MudTextField @bind-Value="Report.Description" Variant="Variant.Outlined" Lines="5" Style="custom-textfield:0;" />
+                        <p class="text-secondary">Coloque una descripción que permita detallar el problema y/o puede indicar otros detalles.</p>
+                        <ValidationMessage style="validation-message: 0 ;" For="(() => Report.Description)" />
+                    </div>
+
+                    <div class="map-container">
+                        <div>
+                            <MudStack Row="true">
+                                <MudItem Class="m-0">
+                                    <label class="custom-label">Ubicación</label>
+                                </MudItem>
+                                <MudItem>
+                                    <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                                   ToolTipDescription="Debe colocar la ubicación exacta de la zona afectada o un aproximado,
                                                                    y/o puede indicar en la descripción
                                                                    detalles para identificar mejor la zona afectada."
-                                               ToolTipStyle="color:#37490B" />
-                            </MudItem>
-                        </MudStack>
-                        <CustomMap Width="275px"
-                                   Height="250px"
-                                   OnLocationSelected="HandleLocationSelected" />
-                    </div>
+                                                   ToolTipStyle="color:#37490B" />
+                                </MudItem>
+                            </MudStack>
+                            <CustomMap Width="275px"
+                                       Height="250px"
+                                       OnLocationSelected="HandleLocationSelected" />
+                        </div>
 
-                    <div>
-                        <MudStack Row="true">
-                            <MudItem Class="m-0">
-                                <label class="custom-label">Imágenes</label>
-                            </MudItem>
-                            <MudItem>
-                                <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
-                                               ToolTipDescription="Coloque una imagen de la zona afectada.
+                        <div>
+                            <MudStack Row="true">
+                                <MudItem Class="m-0">
+                                    <label class="custom-label">Imágenes</label>
+                                </MudItem>
+                                <MudItem>
+                                    <ToolTipCustom ToolTipTextStyle="font-weight:bold; font-size:small; width:250px"
+                                                   ToolTipDescription="Coloque una imagen de la zona afectada.
                                                Puede colocar hasta cuatro imágenes si asi lo desea."
-                                               ToolTipStyle="color:#37490B" />
-                            </MudItem>
-                        </MudStack>
-                        <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
-                        <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
+                                                   ToolTipStyle="color:#37490B" />
+                                </MudItem>
+                            </MudStack>
+                            <img class="rounded-3" src="@(FrontImage != "" ? FrontImage : "./BosqueLindo.png")" width="275px" height="250px" />
+                            <p class="text-secondary mx-8">Solo son admitidas 4 imagenes</p>
 
-                        <div class="d-flex">
-                            <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
-                                <ActivatorContent>
-                                    <MudButtonComponent Text="Añadir imagen"
-                                                        Variant="Variant.Outlined"
-                                                        Style="background-color:transparent;
+                            <div class="d-flex">
+                                <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                                    <ActivatorContent>
+                                        <MudButtonComponent Text="Añadir imagen"
+                                                            Variant="Variant.Outlined"
+                                                            Style="background-color:transparent;
                             width: 155px; border: 3px solid #767572; color: #767572;
                             border-radius: 0.5rem;font-weight: bold; margin-left:60px" />
-                                </ActivatorContent>
-                            </MudFileUpload>
+                                    </ActivatorContent>
+                                </MudFileUpload>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="m-4 d-flex justify-content-center">
+
+                        <MudTooltip Style="background-color:darkgray; color:black;"
+                                    Arrow="true" Placement="Placement.Right" Delay="400">
+                            <ChildContent>
+                                <MudIcon Style="color:#37490B; margin-top:5px" Icon="@Icons.Material.Filled.ErrorOutline"
+                                         Size="Size.Small" />
+                            </ChildContent>
+                        </MudTooltip>
+
+                        <p class="text-secondary text-center">Dar click sobre el icono para ver más detalles del campo a completar.</p>
+                    </div>
+
                 </div>
-
-                <div class="m-4 d-flex justify-content-center">
-
-                    <MudTooltip Style="background-color:darkgray; color:black;"
-                                Arrow="true" Placement="Placement.Right" Delay="400">
-                        <ChildContent>
-                            <MudIcon Style="color:#37490B; margin-top:5px" Icon="@Icons.Material.Filled.ErrorOutline"
-                                     Size="Size.Small" />
-                        </ChildContent>
-                    </MudTooltip>
-
-                    <p class="text-secondary text-center">Dar click sobre el icono para ver más detalles del campo a completar.</p>
-                </div>
-
-            </div>
-            <div class="button-send-container">
-                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
-                           Style="background-color:#515B3B;
+                <div class="button-send-container">
+                    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit"
+                               Style="background-color:#515B3B;
                         color:white; width:400px;">
-                    Crear reporte
-                </MudButton>
-            </div>
-        </EditForm>
-    </main>
-</div>
+                        Crear reporte
+                    </MudButton>
+                </div>
+            </EditForm>
+        </main>
+    </div>
+</RoleBasedAccess>
 
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -231,7 +233,7 @@
     public async Task OnSubmitReport()
     {
 
-        if(Report.Images.Count() == 0)
+        if (Report.Images.Count() == 0)
         {
             await JS.InvokeVoidAsync("showSweetAlert", "El reporte debe de contener al menos una imagen.", "error");
             return;
@@ -243,10 +245,10 @@
     }
     #endregion
 
-    #region NavigateBack 
+    #region NavigateBack
     private void NavigateBack()
     {
-        _NavManager.NavigateTo("/User/Reports", forceLoad:true);
+        _NavManager.NavigateTo("/User/Reports", forceLoad: true);
     }
     #endregion
 }

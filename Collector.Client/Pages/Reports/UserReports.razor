@@ -16,90 +16,91 @@
     <script src="https://kit.fontawesome.com/7302c44b99.js" crossorigin="anonymous"></script>
 }
 
-<div class="first-container">
-    @if (!isDataLoaded)
-    {
-        <!-- Mostrar un estado de carga mientras se obtienen los datos -->
-        <div class="loading-container">
-            <div class="spinner-border" role="status">
-            </div>
-            <h4 style="color:white; margin-top:8px;">Cargando datos...</h4>
-        </div>
-    }
-    else
-    {
-        @if (reportDtos.Count() != 0)
+<RoleBasedAccess Roles="Person">
+    <div class="first-container">
+        @if (!isDataLoaded)
         {
-            <div class="d-flex flex-row">
-                <h2 class="title">REPORTES</h2>
-                <button @onclick="NavigateToCreateReports"
-                        class="btn-new-report btn mt-3">
-                    Nuevo Reporte
-                </button>
+            <!-- Mostrar un estado de carga mientras se obtienen los datos -->
+            <div class="loading-container">
+                <div class="spinner-border" role="status">
+                </div>
+                <h4 style="color:white; margin-top:8px;">Cargando datos...</h4>
             </div>
-
-            <main class="secundary-container">
-                @foreach (var reports in reportDtos)
-                {
-                    <div class="card card-content">
-                        <img class="card-img-top" style="width:100%; height:250px;"
-                             src="@(reports.ImageUrls.Any() ? reports.ImageUrls[0]
-                         : "https://www.shutterstock.com/image-photo/empty-streets-sidewalks-5th-avenue-600nw-2459090389.jpg")" />
-                        <div class="card-body">
-                            <div class="card-body-container">
-                                <h6>@reports.Title</h6>
-
-                                <div style=" width:90%; border-bottom: 2px solid #515B3B; margin-bottom:8px;"></div>
-
-                                <p>@reports.Description</p>
-                            </div>
-                            <div class="date-container">
-                                <p><i class="fa-solid fa-circle fa-flip-both" style="color: #de940b;"></i> @reports.Status</p>
-                                <p>@reports.Date</p>
-                            </div>
-                        </div>
-                        <div class="btn-container">
-                            <button @onclick="() => GetReportById(reports.Id)"
-                                    class="btn btn-details">
-                                Ver más detalles
-                                <i class="fa-solid fa-arrow-right fa-lg" style="color: #f0f0f0;"></i>
-                            </button>
-                        </div>
-                    </div>
-                }
-            </main>
         }
         else
         {
-            <h2 class="title-noreports">REPORTES</h2>
-            <div class="container-no-reports col-6 offset-12 mt-3">
-                <div class="text-center">
-                    <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
-                    <h5 class="card-title mt-2 text-secondary">No se han encontrado reportes registrados ¿desea crear uno?</h5>
+            @if (reportDtos.Count() != 0)
+            {
+                <div class="d-flex flex-row">
+                    <h2 class="title">REPORTES</h2>
                     <button @onclick="NavigateToCreateReports"
-                            class="btn-new-no-report btn mt-3">
+                            class="btn-new-report btn mt-3">
                         Nuevo Reporte
                     </button>
                 </div>
-            </div>
+
+                <main class="secundary-container">
+                    @foreach (var reports in reportDtos)
+                    {
+                        <div class="card card-content">
+                            <img class="card-img-top" style="width:100%; height:250px;"
+                                 src="@(reports.ImageUrls.Any() ? reports.ImageUrls[0]
+                         : "https://www.shutterstock.com/image-photo/empty-streets-sidewalks-5th-avenue-600nw-2459090389.jpg")" />
+                            <div class="card-body">
+                                <div class="card-body-container">
+                                    <h6>@reports.Title</h6>
+
+                                    <div style=" width:90%; border-bottom: 2px solid #515B3B; margin-bottom:8px;"></div>
+
+                                    <p>@reports.Description</p>
+                                </div>
+                                <div class="date-container">
+                                    <p><i class="fa-solid fa-circle fa-flip-both" style="color: #de940b;"></i> @reports.Status</p>
+                                    <p>@reports.Date</p>
+                                </div>
+                            </div>
+                            <div class="btn-container">
+                                <button @onclick="() => GetReportById(reports.Id)"
+                                        class="btn btn-details">
+                                    Ver más detalles
+                                    <i class="fa-solid fa-arrow-right fa-lg" style="color: #f0f0f0;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </main>
+            }
+            else
+            {
+                <h2 class="title-noreports">REPORTES</h2>
+                <div class="container-no-reports col-6 offset-12 mt-3">
+                    <div class="text-center">
+                        <i class="fa-solid fa-clipboard fa-2xl" style="color: #ededed;"></i>
+                        <h5 class="card-title mt-2 text-secondary">No se han encontrado reportes registrados ¿desea crear uno?</h5>
+                        <button @onclick="NavigateToCreateReports"
+                                class="btn-new-no-report btn mt-3">
+                            Nuevo Reporte
+                        </button>
+                    </div>
+                </div>
+            }
         }
-    }
-</div>
+    </div>
+</RoleBasedAccess>
 
 <style>
-
-    .btn-new-no-report{
-         background-color: #7B885B;
-         height: 45px;
-         width: 200px;
-         border-radius: 10px;
-         color: white;
-         font-weight: bold;
+    .btn-new-no-report {
+        background-color: #7B885B;
+        height: 45px;
+        width: 200px;
+        border-radius: 10px;
+        color: white;
+        font-weight: bold;
     }
 
-    .title-noreports{
-        color:white;
-        font-weight:bold;
+    .title-noreports {
+        color: white;
+        font-weight: bold;
     }
 
     .title {
