@@ -122,8 +122,7 @@
             if (response.IsSuccess)
             {
                 await ShowAlert("Registro exitoso", "El usuario se registró correctamente.", "success");
-                await _registerService.ConfirmEmail(confirmEmail);
-                Navigation.NavigateTo("/");
+                Navigation.NavigateTo("/" , forceLoad:true);
             }
             else
             {

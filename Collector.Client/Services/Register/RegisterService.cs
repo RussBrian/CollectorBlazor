@@ -1,12 +1,10 @@
 ﻿using Collector.Client.Dtos.Login;
 using Collector.Client.Dtos.Response;
 using Collector.Client.Dtos.User;
-using Collector.Client.Dtos.Volunteer;
 using Collector.Client.Utilities.Extensions;
 using Collector.Client.Utilities.Options;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
 namespace Collector.Client.Services.Register
 {
@@ -23,7 +21,7 @@ namespace Collector.Client.Services.Register
             _httpClient = clientFactory.CreateClient();
         }
 
-        public async Task<ReqUserDto?> CreateUserAsync(ReqUserDto request)
+        public async Task<Response<ResUserDto>> CreateUserAsync(ReqUserDto request)
         {
             using var client = new HttpClient();
             var data = new HttpRequestMessage(HttpMethod.Post, $"{_appOptions.UrlRegisterUserService}/register");
@@ -64,7 +62,7 @@ namespace Collector.Client.Services.Register
             }
 
             var responseData = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ReqUserDto>(responseData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<Response<ResUserDto>>(responseData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
         public async Task SendCodeToEmail(UserEmailDto email)
