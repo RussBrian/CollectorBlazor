@@ -139,7 +139,6 @@
 
 @code {
     public UserUpdateDto UserUpdate { get; set; } = new();
-    public string UserId { get; set; } = string.Empty;
     public string ImagePreview { get; set; } = string.Empty;
 
     #region Handle Image Methods
@@ -154,7 +153,7 @@
         if (file != null)
         {
             ImagePreview = await ImageConverter.ConvertSingleImageToStringAsync(file);
-            await ImageConverter.ConvertToIFormFile(file);
+            UserUpdate.File = await ImageConverter.ConvertToIFormFile(file);
         }
     }
     #endregion
